@@ -1,0 +1,333 @@
+// Ionic Variables and Theming. For more info, please see:
+// http://ionicframework.com/docs/theming/
+
+/** Ionic CSS Variables **/
+:root {
+  /** primary **/
+  --ion-color-primary: #7e1946;
+  --ion-color-primary-rgb: 126, 25, 70;
+  --ion-color-primary-contrast: #ffffff;
+  --ion-color-primary-contrast-rgb: 255, 255, 255;
+  --ion-color-primary-shade: #6f163e;
+  --ion-color-primary-tint: #8b3059;
+
+  /** secondary **/
+  --ion-color-secondary: #FFB101;
+	--ion-color-secondary-rgb: 255,177,1;
+	--ion-color-secondary-contrast: #000000;
+	--ion-color-secondary-contrast-rgb: 0,0,0;
+	--ion-color-secondary-shade: #e09c01;
+	--ion-color-secondary-tint: #ffb91a;
+  
+
+
+  /** tertiary **/
+  --ion-color-tertiary: #7044ff;
+  --ion-color-tertiary-rgb: 112, 68, 255;
+  --ion-color-tertiary-contrast: #ffffff;
+  --ion-color-tertiary-contrast-rgb: 255, 255, 255;
+  --ion-color-tertiary-shade: #633ce0;
+  --ion-color-tertiary-tint: #7e57ff;
+
+  /** success **/
+  --ion-color-success: #10dc60;
+  --ion-color-success-rgb: 16, 220, 96;
+  --ion-color-success-contrast: #ffffff;
+  --ion-color-success-contrast-rgb: 255, 255, 255;
+  --ion-color-success-shade: #0ec254;
+  --ion-color-success-tint: #28e070;
+
+  /** warning **/
+  --ion-color-warning: #ffce00;
+  --ion-color-warning-rgb: 255, 206, 0;
+  --ion-color-warning-contrast: #ffffff;
+  --ion-color-warning-contrast-rgb: 255, 255, 255;
+  --ion-color-warning-shade: #e0b500;
+  --ion-color-warning-tint: #ffd31a;
+
+  /** danger **/
+  --ion-color-danger: #f04141;
+  --ion-color-danger-rgb: 245, 61, 61;
+  --ion-color-danger-contrast: #ffffff;
+  --ion-color-danger-contrast-rgb: 255, 255, 255;
+  --ion-color-danger-shade: #d33939;
+  --ion-color-danger-tint: #f25454;
+
+  /** dark **/
+  --ion-color-dark: #222428;
+  --ion-color-dark-rgb: 34, 34, 34;
+  --ion-color-dark-contrast: #ffffff;
+  --ion-color-dark-contrast-rgb: 255, 255, 255;
+  --ion-color-dark-shade: #1e2023;
+  --ion-color-dark-tint: #383a3e;
+
+  /** medium **/
+  --ion-color-medium: #989aa2;
+  --ion-color-medium-rgb: 152, 154, 162;
+  --ion-color-medium-contrast: #ffffff;
+  --ion-color-medium-contrast-rgb: 255, 255, 255;
+  --ion-color-medium-shade: #86888f;
+  --ion-color-medium-tint: #a2a4ab;
+
+  /** light **/
+  --ion-color-light: #f4f5f8;
+  --ion-color-light-rgb: 244, 244, 244;
+  --ion-color-light-contrast: #000000;
+  --ion-color-light-contrast-rgb: 0, 0, 0;
+  --ion-color-light-shade: #d7d8da;
+  --ion-color-light-tint: #f5f6f9;
+
+  --ion-checklist-option-background-color: #fff7e6;
+}
+
+.ion-color-resolved {
+  --ion-color-base: #33cd5f !important;
+  --ion-color-contrast: #ffffff !important;
+}
+
+.ion-color-re-open {
+  --ion-color-base: #63B9D5 !important;
+  --ion-color-contrast: #ffffff !important;
+}
+
+.ion-color-owner {
+  --ion-color-base: #00c853 !important;
+  --ion-color-contrast: #ffffff !important;
+}
+
+.ion-color-employee {
+  --ion-color-base: #757575 !important;
+  --ion-color-contrast: #ffffff !important;
+}
+
+.ion-color-tenant {
+  --ion-color-base: #029be4 !important;
+  --ion-color-contrast: #ffffff !important;
+}
+
+.ion-color-technician {
+  --ion-color-base: #00897b !important;
+  --ion-color-contrast: #ffffff !important;
+}
+
+.ion-color-admin {
+  --ion-color-base: #202020 !important;
+  --ion-color-contrast: #ffffff !important;
+}
+
+.ion-color-owner {
+  --ion-color-base: #33cd5f !important;
+  --ion-color-contrast: #ffffff !important;
+}
+
+.ion-color-vendor {
+  --ion-color-base: #ff9100 !important;
+  --ion-color-contrast: #ffffff !important;
+}
+
+.ion-color-contract-employee {
+  --ion-color-base: #9e9e9e !important;
+  --ion-color-contrast: #ffffff !important;
+}
+
+.ion-color-housekeeper {
+  --ion-color-base: #ff6e3f !important;
+  --ion-color-contrast: #ffffff !important;
+}
+
+.ion-color-gatekeeper {
+  --ion-color-base: #827717 !important;
+  --ion-color-contrast: #ffffff !important;
+}
+
+.ion-color-rejected {
+  --ion-color-base: #f84940 !important;
+  --ion-color-contrast: #ffffff !important;
+}
+
+.ion-color-open {
+  --ion-color-base: #ffc900 !important;
+  --ion-color-contrast: #ffffff !important;
+}
+
+.ion-color-pending {
+  --ion-color-base: #ffc900 !important;
+  --ion-color-contrast: #ffffff !important;
+}
+
+.ion-color-not-started {
+  --ion-color-base: #ECECEC !important;
+  --ion-color-contrast: #ffffff !important;
+}
+
+.ion-color-on-going {
+  --ion-color-base: #6AABE7 !important;
+  --ion-color-contrast: #ffffff !important;
+}
+
+.ion-color-completed {
+  --ion-color-base: #00B591 !important;
+  --ion-color-contrast: #ffffff !important;
+}
+
+.ion-color-on-hold {
+  --ion-color-base: #F1A46D !important;
+  --ion-color-contrast: #ffffff !important;
+}
+
+
+.ion-color-approved {
+  --ion-color-base: #33cd5f !important;
+  --ion-color-contrast: #ffffff !important;
+}
+
+
+
+.ion-color-ongoing {
+  --ion-color-base: #ffc900 !important;
+  --ion-color-contrast: #ffffff !important;
+}
+
+.ion-color-in-progress {
+  --ion-color-base: #387ef5 !important;
+  --ion-color-contrast: #ffffff !important;
+}
+
+.ion-color-upcoming {
+  --ion-color-base: #387ef5 !important;
+  --ion-color-contrast: #ffffff !important;
+}
+
+.ion-color-active-status {
+  --ion-color-base: #1bb293 !important;
+}
+
+.ion-color-open-active-status {
+  --ion-color-base: #97BE8D !important;
+}
+
+.ion-color-in-progress-active-status{
+  --ion-color-base: #1B7BCF !important;
+}
+
+.ion-color-in-progress-active-status{
+  --ion-color-base: var(--ion-color-medium) !important;
+}
+
+.ion-color-resolved-active-status {
+  --ion-color-base: #5EBC6D !important;
+}
+
+.ion-color-rejected-active-status {
+  --ion-color-base: #c4153b !important;
+}
+.ion-color-employee {
+  --ion-color-base: #3880ff !important; //main color
+  --ion-color-contrast: #ffffff !important;
+}
+
+.ion-color-delivery {
+  --ion-color-base: #7044ff !important;
+  --ion-color-contrast: #ffffff !important;
+}
+
+// .ion-color-vendor {
+//   --ion-color-base: #f04141 !important;
+//   --ion-color-contrast: #ffffff !important;
+// }
+
+.ion-color-guest {
+  --ion-color-base: #ffce00 !important;
+  --ion-color-contrast: #ffffff !important;
+}
+
+.ion-color-domestic-help {
+  --ion-color-base: #1bb293 !important;
+  --ion-color-contrast: #ffffff !important;
+}
+
+.ion-color-occupied_by_tenant {
+  --ion-color-base: #69f0ae !important;
+}
+
+.ion-color-under_notice {
+  --ion-color-base: #ffaead !important;
+  --ion-color-contrast: #000000 !important;
+}
+
+.ion-color-not_ready {
+  --ion-color-base: #acc0ff !important;
+}
+
+.ion-color-vacant {
+  --ion-color-base: #ffebb3 !important;
+}
+
+.ion-color-white {
+  --ion-color-contrast: #ffffff !important;
+}
+
+.ion-color-black {
+  --ion-color-base: #000000 !important;
+  --ion-color-contrast: #ececec !important;
+}
+
+.alert-button-inner.sc-ion-alert-md {
+  justify-content: center !important;
+}
+
+// .ion-color-active-status {
+//   color: #1bb293 !important;
+// }
+
+.custom-raise-ticket-modal-css .modal-wrapper {
+  height: 240px !important;
+  width: 60% !important;
+  position: absolute !important;
+  display: block !important;
+}
+.join-modal .popup {
+  width: 80%;
+  padding: 10px;
+}
+
+.select-org-popover {
+  --width: unset !important;
+  div {
+    .popover-content .sc-ion-popover-md {
+      width: 18em !important;
+    }
+  }
+}
+
+.list-md {
+  padding: 0px !important;
+}
+
+.ion-color-not-completed {
+  --ion-color-base: #ffaeae !important;
+  --ion-color-contrast: #000000 !important;
+}
+
+.ion-color-in-progress {
+  --ion-color-base: #acc1ff !important;
+  --ion-color-contrast: #000000 !important;
+}
+.ion-color-completed {
+  --ion-color-base: #33cd5f !important;
+  --ion-color-contrast: #ffffff !important;
+}
+
+.ion-color-roleName {
+  --ion-color-base: #acc1ff !important;
+  --ion-color-contrast: #ffffff !important;
+}
+
+// ion-item {
+//   .item-native {
+//     .item-inner {
+//       background: blue !important;
+//       --background: red !important;
+//     }
+//   }
+// }

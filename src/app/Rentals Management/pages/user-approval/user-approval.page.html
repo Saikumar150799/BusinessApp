@@ -1,0 +1,81 @@
+<ion-header>
+  <ion-toolbar color='primary'>
+    <ion-buttons slot="{{transService.getCurrentDirection()==='rtl'? 'end':'start'}}">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+    <ion-title [ngClass]="{'padding-0': transService.getCurrentDirection()==='ltr'}">
+      {{transService.getTranslatedData('User Approval')}}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+
+  <div class="txt-medium gotham margin-top-20 txt-brown center-text" *ngIf="approvals?.length === 0">
+    {{transService.getTranslatedData('No Approval Found!')}}
+  </div>
+
+  <ion-card *ngFor="let approval of approvals">
+    <div class="ticket-approval-card">
+      <ion-grid>
+        <ion-row>
+          <ion-col class=" padding-0">
+            <span class="gotham font-weight-600">
+              {{approval.user?.firstName}} {{approval.user?.lastName}}
+            </span>
+          </ion-col>
+          <ion-col class="padding-left-20 padding-bottom-0 text-align-end">
+            <ion-badge color="warning border-radius-25">
+              <p class="margin-0 gotham  ">
+                {{transService.getTranslatedData(approval.user?.roleName)}}
+              </p>
+            </ion-badge>
+          </ion-col>
+        </ion-row>
+        <ion-row ng-if="approval.user.phoneNumber">
+          <!-- <p style="font-size : 15px !important" class="margin-padding-zero txt-warm-grey gotham padding-top-5">
+            ({{approval.user?.countryCode}} {{approval.user?.phoneNumber}})
+          </p> -->
+        </ion-row>
+        <ion-row>
+          <p style="font-size : 15px !important" class="margin-0 padding-top-5 gont-12 txt-warm-grey gotham">
+            {{approval.user?.address}}
+          </p>
+        </ion-row>
+        <ion-row>
+          <p style="font-size : 15px !important" class="margin-0 font-12 padding-top-5 txt-warm-grey gotham  ">
+            {{approval.createdAt | agoFilter }}
+          </p>
+        </ion-row>
+        <ion-row class="padding-top-10">
+          <p class=" margin-padding-zero font-12 gotham  ">
+            {{transService.getTranslatedData('Requested By: ')}}</p>
+        </ion-row>
+        <ion-row>
+          <p class="padding-top-5 font-14 gotham margin-0 mar txt-warm-grey">
+            {{approval.submittedByUser?.firstName}} {{approval.submittedByUser?.lastName}}
+          </p>
+        </ion-row>
+      </ion-grid>
+    </div>
+    <div>
+      <ion-row class="ticket-approval-card2">
+        <ion-col>
+          <span class=" font-30"
+            [ngClass]="{'margin-right-10': transService.getCurrentDirection()==='rtl','margin-right-30 margin-left-10': transService.getCurrentDirection()==='ltr'}">
+            <ion-icon color="success" (click)="presentPopover('approve',approval._id)" name="checkmark-circle">
+            </ion-icon>
+          </span>
+          <span class=" font-30"
+            [ngClass]="{'margin-right-10': transService.getCurrentDirection()==='ltr','margin-right-30': transService.getCurrentDirection()==='rtl'}">
+            <ion-icon color="danger" (click)="presentPopover('reject',approval._id)" name="close-circle"></ion-icon>
+          </span>
+        </ion-col>
+        <ion-col class="text-align-end">
+          <span class=" font-30  margin-left-10 margin-right-10">
+            <ion-icon name="call" (click)="call(approval.user?.phoneNumber)"></ion-icon>
+          </span>
+        </ion-col>
+      </ion-row>
+    </div>
+  </ion-card>
+</ion-content>

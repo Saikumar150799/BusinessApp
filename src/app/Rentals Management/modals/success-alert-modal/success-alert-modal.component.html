@@ -1,0 +1,52 @@
+<ion-content class="padding-16" *ngIf="data?.reference==='ticketCheckList'">
+    <ion-row class="ion-justify-content-center padding-0 margin-top-32 ">
+      <ion-col size="6" class="ion-align-items-center padding-0 ion-justify-content-center margin-top-30 center-text">
+        <ion-icon src="../../../../assets/svg-icons/success-alert-modal.svg"
+          style="height: 70px !important; width: 70px !important;">
+        </ion-icon>
+      </ion-col>
+    </ion-row>
+    <ion-row class="ion-justify-content-center padding-0 margin-top-8 margin-bottom-30">
+      <ion-col size="8.5" class="success-modal-subheader-styles padding-0 center-text">
+        <ion-text  class="txt-slate-grey font-18 gotham-medium">{{translateService.getTranslatedData('Checklist Completed')}}</ion-text>
+      </ion-col>
+    </ion-row>
+    <ion-row class="display-flex justify-center">
+      <ion-button size="large" class="width-50-percent margin-auto ion-item-shadow-none text-transformation-none"
+      expand="block" color="primary" (click)="dismissModal()">
+      {{translateService.getTranslatedData('OK')}}</ion-button>
+    </ion-row>
+</ion-content>
+
+<ion-content class="padding-16" *ngIf="data.reference === 'common'">
+  <div class="display-flex flex-direction-column align-items-center justify-center height-100-percent">
+    <div class="margin-bottom-30">
+      <ion-icon src="../../../../assets/svg-icons/sucess-light-alert.svg"
+        style="height: 70px !important; width: 70px !important;">
+      </ion-icon>
+    </div>
+    <div class="padding-5">
+      <ion-text
+        class="display-flex font-18 line-height-22 gotham black-color ion-text-center">{{translateService.getTranslatedData(data?.subHeader)}}</ion-text>
+    </div>
+  </div>
+
+</ion-content>
+
+
+<ion-content class="padding-16" *ngIf="data?.reference ==='CiCoChecklist'">
+  <ion-row class="ion-justify-content-center padding-0 margin-top-32 ">
+    <ion-col size="6" class="ion-align-items-center padding-0 ion-justify-content-center margin-top-30 center-text">
+      <ion-icon color="success" src="../../../../assets/svg-icons/sucess-light-alert.svg"
+        style="height: 70px !important; width: 70px !important;border: 10px solid #E4F3E5;border-radius: 50%;">
+      </ion-icon>
+    </ion-col>
+  </ion-row>
+  <ion-row class="ion-justify-content-center padding-0 margin-top-8 margin-bottom-20">
+    <ion-col size="8.5" class="success-modal-subheader-styles padding-0 center-text">
+      <ion-text  class="font-20 gotham">{{translateService.getTranslatedData(data?.subHeader)}}</ion-text>
+      <p class="gotham-medium txt-slate-grey font-20 margin">{{translateService.getTranslatedData('Unit no : ')}} {{data?.block}} {{data?.door}}</p>
+    </ion-col>
+  </ion-row>
+
+</ion-content>

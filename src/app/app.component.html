@@ -1,0 +1,45 @@
+<ion-app>
+  <ion-split-pane>
+    <ion-menu [side]="translateService.getCurrentDirection()==='rtl'?'end': 'start'">
+      <ion-header>
+        <ion-toolbar color="primary">
+          <ion-menu-toggle>
+            <ion-title class="center-text">
+              {{translateService.getTranslatedData('Menu')}}
+              <!-- <p class="font-14 margin-bottom-3 font-weight-600">{{appPages.name}}</p>
+              <p class="margin-top-0 font-14 font-weight-600">{{appPages.phoneNumber}}</p> -->
+            </ion-title>
+          </ion-menu-toggle>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content>
+        <ion-list>
+          <ion-menu-toggle auto-hide="false" *ngFor="let p of appPages.pages" [hidden]="p[appSrc]===false || moduleAccess[p.moduleName][p.operation] === false ">
+            <ion-item lines="full" (click)="routeForword(p.url)">
+              <ion-icon slot="start" style="visibility: inherit;"
+                class="icon-25 margin-bottom-10 svg-color-primary {{translateService.getCurrentDirection()==='rtl'?'margin-left-20': 'margin-right-20'}}"
+                *ngIf="p.src" [src]="p.src">
+              </ion-icon>
+              <ion-label [ngClass]="{marginTop5: p.src?true:false}" class="margin-left-15  margin-right-15">
+                {{translateService.getTranslatedData(p.title)}}
+              </ion-label>
+            </ion-item>
+          </ion-menu-toggle>
+          <ion-menu-toggle>
+            <ion-item lines="full" (click)="onLogoutClick()">
+              <ion-icon slot="start" style="visibility: inherit;"
+                class="icon-25 margin-bottom-10 svg-color-primary {{translateService.getCurrentDirection()==='rtl'?'margin-left-20': 'margin-right-20'}}"
+                [src]="appPages.logout.src">
+              </ion-icon>
+              <ion-label class="marginTop5 margin-left-15  margin-right-15">
+                {{translateService.getTranslatedData(appPages.logout.title)}}
+              </ion-label>
+            </ion-item>
+          </ion-menu-toggle>
+        </ion-list>
+      </ion-content>
+      <p class="margin-left-10 font-10 gotham txt-slate-grey">{{translateService.getTranslatedData('App Version')}} : {{APP_VERSION}}</p>
+    </ion-menu>
+    <ion-router-outlet main></ion-router-outlet>
+  </ion-split-pane>
+</ion-app>

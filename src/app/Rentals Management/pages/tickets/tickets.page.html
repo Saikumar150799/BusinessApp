@@ -1,0 +1,144 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="{{transService.getCurrentDirection()==='rtl'? 'end':'start'}}">
+      <ion-back-button defaultHref="rentals-home"></ion-back-button>
+    </ion-buttons>
+    <ion-buttons slot="end">
+      <div (click)="openSortFilterModal()" >
+        <ion-buttons>
+          <img src="../../../../assets/Vector.png" alt="SortIcon"  width="18px">
+        </ion-buttons>
+      </div>
+      <ion-buttons slot="{{transService.getCurrentDirection()==='rtl'? 'start':'end'}}">
+        <ion-button (click)="openTicketFilterModal()">
+          <ion-icon name="funnel" mode="ios"></ion-icon>
+        </ion-button>
+      </ion-buttons>
+    </ion-buttons>
+
+    <ion-title class="padding-0">{{transService.getTranslatedData('Tickets')}}</ion-title>
+  </ion-toolbar>
+
+  <ion-segment [(ngModel)]="selectedTab" (ngModelChange)="onTabChange($event)" class="selectedTab">
+    <ion-segment-button value="on-demand">
+      <ion-label>ON DEMAND</ion-label>
+    </ion-segment-button>
+
+    <ion-segment-button value="ppm">
+      <ion-label>PPM</ion-label>
+    </ion-segment-button>
+
+    <ion-segment-button value="automated">
+      <ion-label>Automated</ion-label>
+    </ion-segment-button>
+  </ion-segment>
+
+  <div>
+    <ion-searchbar [(ngModel)]="filterData.searchText" placeholder="Search" debounce="500" (ngModelChange)="searchTickets($event)"
+      class="padding-0"></ion-searchbar>
+  </div>
+  
+  <div class="display-flex align-items-center justify-space-between padding-left-16 padding-right-16">
+    <p class="font-14 gotham">{{transService.getTranslatedData(togglePlaceholder)}}</p>
+      <ion-select label="Fixed label" class="gotham font-14 align-items-center"
+      (ionChange)="ticketsBelongsToFilter(filterData.filterBy)" 
+      [(ngModel)]="filterData.filterBy"
+      value="All" mode="md" 
+      [interfaceOptions]="interfaceOptions" 
+      interface="popover">
+      <ion-select-option class="gotham font-14" value="All">
+        {{transService.getTranslatedData('All')}}
+      </ion-select-option>
+        <ion-select-option class="gotham font-14" value="Self">
+          {{transService.getTranslatedData('Raised By Me')}}
+        </ion-select-option>
+        <ion-select-option class="gotham font-14" value="Tenant">
+          {{transService.getTranslatedData('Raised By My Customer')}}
+        </ion-select-option>
+        <ion-select-option class="gotham font-14"  value="Team">
+          {{transService.getTranslatedData('Raised By My Team')}}
+        </ion-select-option>
+      </ion-select>
+    </div>
+</ion-header>
+
+<ion-content>
+  <ion-refresher slot="fixed" (ionRefresh)="handleRefresh($event)">
+    <ion-refresher-content refreshingSpinner="lines"> </ion-refresher-content>
+  </ion-refresher>
+  <!-- <ion-item lines="none" class="ion-item">
+    <ion-toggle [(ngModel)]="showActiveUserTicket" (ionChange)="toggleChanged($event)"></ion-toggle>
+    <ion-label class="gotham font-14">{{transService.getTranslatedData(togglePlaceholder)}}</ion-label>
+  </ion-item>  -->
+
+  <div class="center-text margin-top-10" [hidden]="!showSpinner">
+    <ion-spinner></ion-spinner>
+  </div>
+  <p class="gotham center-text" *ngIf="!showSpinner && noTicket&&tickets.length==0">
+    {{transService.getTranslatedData('No Tickets Available')}}</p>
+
+    <p class="gotham center-text" *ngIf="pullToRefresh &&tickets.length==0">
+      {{transService.getTranslatedData('Loading tickets...')}}</p>
+  <ion-list class=" padding-bottom-0">
+    <ion-item *ngFor="let ticket of tickets" [routerLink]="['/rentals-ticket-details']" detail
+      [queryParams]="{ticketId: ticket._id}" lines="none">
+      <ion-label class="margin-0">
+        <p class="gotham-medium margin-bottom-8 " text-wrap>
+          <ion-grid class="padding-0">
+            <ion-row class="padding-0">
+              <ion-col class="padding-0" class="padding-0">
+                <span
+                  [ngClass]="{'float-right': transService.getCurrentDirection()==='rtl','float-left':transService.getCurrentDirection()==='ltr'}">#{{ticket.uid}}
+                  - </span>
+                <span class=""> {{ticket.ticketCategory}}</span>
+              </ion-col>
+              <ion-col class="padding-0" [hidden]="selectedTab==='ppm'">
+                <span class=" gotham"
+                  [ngClass]="{'float-left': transService.getCurrentDirection()==='rtl','float-right':transService.getCurrentDirection()==='ltr'}">
+                  {{ticket.createdAt|agoFilter}}</span>
+              </ion-col>
+            </ion-row>
+          </ion-grid>
+
+
+        </p>
+        <p class="gotham font-weight-600 txt-grey margin-bottom-8 white-space-initial">
+          <!-- {{ticket.block?ticket.block+' - ':''}}{{ticket.door}} {{ticket.propertyName}} - {{ticket.propertyLocality}} -->
+          {{ticket?.displayName || ''}}
+        </p>
+
+        <ion-grid class="padding-0">
+          <ion-row class="padding-0 align-items-center">
+            <ion-col class="padding-0" size="auto">
+              <ion-badge class="gotham font-weight-600 padding-top-7 date-bedge-color" mode="md"
+                *ngIf="ticket.jobDate||ticket.jobStartTime"
+                [ngClass]="{'margin-left-10': transService.getCurrentDirection()==='rtl','margin-right-10':transService.getCurrentDirection()==='ltr'}">
+                {{ticket.jobDate | date:'dd MMM yyyy'}}
+                {{ticket.jobStartTime | date:'hh:mm a'}}
+              </ion-badge>
+            </ion-col>
+            <ion-col class="padding-0" size="auto">
+              <ion-badge class="gotham font-weight-600 padding-top-6 text-transform-capitalize" color="{{ticket.status}}" mode="md"
+                [ngClass]="{'margin-left-10': transService.getCurrentDirection()==='rtl','margin-right-10':transService.getCurrentDirection()==='ltr'}">
+                {{ticket.status == 'in-progress' ? transService.getTranslatedData('In Progress') :
+                transService.getTranslatedData(ticket.status)}}
+              </ion-badge>
+            </ion-col>
+            <ion-col class="padding-0" size="auto" *ngIf="ticket.type==='PPM'">
+              <ion-badge class="gotham font-weight-600 padding-top-6 ppp-badge-color" mode="md" color="light"
+                [ngClass]="{'margin-left-10': transService.getCurrentDirection()==='rtl','margin-right-10':transService.getCurrentDirection()==='ltr'}">
+                PPM
+              </ion-badge>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </ion-label>
+    </ion-item>
+  </ion-list>
+
+  <ion-infinite-scroll threshold="5px" (ionInfinite)="fetchTickets($event)">
+    <ion-infinite-scroll-content loadingSpinner="bubbles"
+      loadingText="{{transService.getTranslatedData('Loading more data...')}}">
+    </ion-infinite-scroll-content>
+  </ion-infinite-scroll>
+</ion-content>

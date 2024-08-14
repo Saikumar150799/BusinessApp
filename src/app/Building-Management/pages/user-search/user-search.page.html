@@ -1,0 +1,26 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="end">
+      <ion-button (click)="closeModal(false)">
+        <ion-icon name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>{{transService.getTranslatedData('user-search.title')}}</ion-title>
+  </ion-toolbar>
+  <ion-searchbar [(ngModel)]="searchTerm" placeholder="{{transService.getTranslatedData('Search')}}">
+  </ion-searchbar>
+</ion-header>
+
+<ion-content>
+  <div class="center-text margin-top-10" [hidden]="!loading">
+    <ion-spinner></ion-spinner>
+  </div>
+  <ion-list>
+    <ion-radio-group [(ngModel)]="selectedUser.id">
+      <ion-item *ngFor="let user of users |PointOfContactFilter:searchTerm">
+        <ion-label>{{user.firstName}} {{user.lastName}}</ion-label>
+        <ion-radio value="{{user._id}}" slot="end" (click)="selectUser(user)"></ion-radio>
+      </ion-item>
+    </ion-radio-group>
+  </ion-list>
+</ion-content>

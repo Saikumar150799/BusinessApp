@@ -1,0 +1,431 @@
+<ion-content [ngClass]="{'aqaraty-login-background': app==='com.aqaraty.fm'}">
+  <div class="max-available-height full-width no-scroll"
+    [ngClass]="{'aqaraty-login-background': app==='com.aqaraty.fm'}">
+
+    <div class="webkit-center">
+
+      <div [hidden]=" visibleBlock === 'passwordSetInput' ">
+        <ion-row class="width-80-percent margin-top-30 margin-bottom-20">
+          <ion-col>
+            <img src="{{app==='com.aqaraty.fm'?'assets/icon/aqaraty-logo.png':'assets/login-pic.png'}}" />
+          </ion-col>
+        </ion-row>
+      </div>
+
+      <div [hidden]=" visibleBlock !== 'passwordSetInput' ">
+        <ion-row class="width-80-percent margin-top-30 margin-bottom-20">
+          <ion-col>
+            <p [hidden]="loginData.action !== 'resetPassword'" class="font-20 txt-bold margin-bottom-10">{{translateService.getTranslatedData('Reset Password')}}</p>
+            <p [hidden]="loginData.action === 'resetPassword'" class="font-20 txt-bold margin-bottom-10">{{translateService.getTranslatedData('Create New Password')}}</p>
+          </ion-col>
+        </ion-row>
+      </div>
+
+      <!-- <ion-row class="width-80-percent">
+        <div class="text-left">
+          <p class="font-20 margin-bottom-10">Welcome back,</p>
+        </div>
+      </ion-row> -->
+
+      <!-- Phone number input -->
+      <div [hidden]=" visibleBlock !== 'phoneInput' ">
+        <ion-row class="width-80-percent">
+          <div class="text-left">
+            <p class="font-20 margin-bottom-10">{{translateService.getTranslatedData('Welcome,')}}</p>
+          </div>
+        </ion-row>
+        <ion-row class="width-80-percent">
+          <div class="text-left">
+            <p class="font-14 margin-top-0">
+              {{translateService.getTranslatedData('Enter your phone number to continue')}}</p>
+          </div>
+        </ion-row>
+        <ion-row class="width-80-percent text-left direction-ltr">
+          <ion-col size="3">
+            <ion-item (click)="showCountryCodeModal()" class="direction-ltr">
+              <ion-input inputmode="text" [(ngModel)]="loginData.countryCode" readonly> </ion-input>
+              <ion-icon mode="md" class="txt-warm-grey" name="arrow-dropdown"></ion-icon>
+            </ion-item>
+          </ion-col>
+          <ion-col size="9">
+            <ion-item>
+              <ion-input inputmode="tel" type="tel" placeholder=" " (keyup.enter)="checkPlatform()"
+                [(ngModel)]="loginData.phoneNumber"> </ion-input>
+            </ion-item>
+          </ion-col>
+        </ion-row>
+        <ion-row *ngIf="isAccountLocked && lockedMessage" class="width-80-percent text-align-start">
+          <p class="margin-bottom-0 light-red-txt">{{translateService.getTranslatedData(lockedMessage)}}</p>
+          <ion-button (click)="reload()" class="full-button margin-top-15" expand="full" color="primary">
+            {{translateService.getTranslatedData('Reload')}}
+          </ion-button>
+        </ion-row>
+        <ion-row *ngIf="!isAccountLocked" class="width-80-percent center-text margin-top-10">
+          <ion-button (click)="checkPlatform()" class="full-button" expand="full" color="primary">
+            {{translateService.getTranslatedData('Submit')}}
+          </ion-button>
+        </ion-row>
+        <br>
+        <ion-row style="justify-content: center !important" class="width-80-percent">
+          <a class="font-16 cursor-pointer" (click)="needHelp()">{{translateService.getTranslatedData('Need help?')}}</a>
+        </ion-row>
+
+      </div>
+
+      <!-- Phone number input -->
+      <div [hidden]=" visibleBlock !== 'sendOtpInput' ">
+        <ion-row class="width-80-percent">
+          <div class="text-align-start">
+            <p class="font-14">{{translateService.getTranslatedData('Enter your registered phone number')}}</p>
+          </div>
+        </ion-row>
+        <ion-row class="width-80-percent text-left direction-ltr">
+          <ion-col size="3">
+            <ion-item (click)="showCountryCodeModal()">
+              <ion-input inputmode="text" [(ngModel)]="loginData.countryCode"> </ion-input>
+              <ion-icon mode="md" class="txt-warm-grey" name="arrow-dropdown"></ion-icon>
+            </ion-item>
+          </ion-col>
+          <ion-col size="9">
+            <ion-item>
+              <ion-input inputmode="tel" placeholder=" " [(ngModel)]="loginData.phoneNumber"> </ion-input>
+            </ion-item>
+          </ion-col>
+        </ion-row>
+        <ion-row class="width-80-percent center-text margin-top-10">
+          <ion-button (click)="sendOtp()" class="full-button" expand="full" color="primary">
+            {{translateService.getTranslatedData('Send OTP')}}</ion-button>
+        </ion-row>
+        <ion-row style="justify-content: center !important" class="width-80-percent margin-top-10">
+          <ion-col size="6">
+            <p class="cursor-pointer" (click)="setVisibleBlock('phoneInput')">{{translateService.getTranslatedData('Login')}}</p>
+          </ion-col>
+        </ion-row>
+      </div>
+
+      <!-- Password input -->
+      <div [hidden]=" visibleBlock !== 'passwordInput' ">
+        <ion-row class="width-80-percent text-left">
+          <ion-col>
+            <ion-item>
+              <ion-label position="stacked" class="font-20 margin-bottom-10"
+                [ngClass]="{'rtl-label-floating': translateService.getCurrentDirection()==='rtl'}">
+                {{translateService.getTranslatedData('Enter Password')}}</ion-label>
+                <div class="display-flex flex-direction-row width-100-percent">
+                  <ion-input type="{{passwordType}}" class="direction-ltr" placeholder=" " [(ngModel)]="loginData.password">
+                  </ion-input>
+                  <img src="../../assets/svg-icons/eye.svg" class="margin-right-5 cursor-pointer outline-none" height="40" width="20"
+                    *ngIf="passwordType==='text'" (click)="togglePasswordType('passwordType')">
+                  <img src="../../assets/svg-icons/invisible.svg" class="margin-right-5 cursor-pointer outline-none" height="40"
+                    width="19" *ngIf="passwordType==='password'" (click)="togglePasswordType('passwordType')">
+                </div>
+            </ion-item>
+          </ion-col>
+        </ion-row>
+        <ion-row *ngIf="isPasswordExpired" class="width-80-percent text-align-start">
+          <p class="margin-bottom-0 light-red-txt">{{translateService.getTranslatedData('Your password has expired. Kindly reset your password by clicking on the "Reset Password". Once you have successfully changed your password, please attempt to log in again.')}}</p>
+        </ion-row>
+        <ion-row class="width-80-percent center-text margin-top-10">
+          <ion-button class="full-button " expand="full" color="primary" (click)="signIn()">
+            {{translateService.getTranslatedData('Login')}}</ion-button>
+        </ion-row>
+        <ion-row style="justify-content: center !important" class="width-80-percent margin-top-10">
+          <ion-col size="6">
+            <p class="cursor-pointer" (click)="setVisibleBlock('phoneInput')">{{translateService.getTranslatedData('Go Back')}}</p>
+          </ion-col>
+          <ion-col size="6">
+            <p class="cursor-pointer" (click)="setVisibleBlock('sendOtpInput')">{{translateService.getTranslatedData('Reset password')}}</p>
+          </ion-col>
+        </ion-row>
+      </div>
+
+      <div [hidden]=" visibleBlock !== 'otpInput' ">
+        <ion-row class="width-80-percent text-align-start">
+          <ion-col>
+            <!-- <ion-item>
+              <ion-label position="stacked" class="font-20 margin-bottom-10">Enter OTP</ion-label>
+              <ion-input imputmode="tel" placeholder=" " [(ngModel)]="loginData.accessCode">
+              </ion-input>
+            </ion-item> -->
+
+            <p>{{translateService.getTranslatedData('Enter the 4-digit code sent to you at')}}</p>
+            <p class="direction-ltr">{{loginData.countryCode}} {{loginData.phoneNumber}}</p>
+            <ion-row class="direction-ltr">
+              <ion-col>
+                <ion-item>
+                  <ion-input placeholder="&bull;" class="center-text" #input1 type="tel" maxlength="1"
+                    pattern="[0-9]" [(ngModel)]="loginData.accessCode1"
+                    (keyup)="next(input2, '', loginData.accessCode1)">
+                  </ion-input>
+                </ion-item>
+              </ion-col>
+              <ion-col>
+                <ion-item>
+                  <ion-input placeholder="&bull;" class="center-text" #input2 type="tel" maxlength="1"
+                    pattern="[0-9]" [(ngModel)]="loginData.accessCode2"
+                    (keyup)="next(input3, input1, loginData.accessCode2)">
+                  </ion-input>
+                </ion-item>
+              </ion-col>
+              <ion-col>
+                <ion-item>
+                  <ion-input placeholder="&bull;" class="center-text" #input3 type="tel" maxlength="1"
+                    pattern="[0-9]" [(ngModel)]="loginData.accessCode3"
+                    (keyup)="next(input4, input2, loginData.accessCode3)">
+                  </ion-input>
+                </ion-item>
+              </ion-col>
+              <ion-col>
+                <ion-item>
+                  <ion-input placeholder="&bull;" class="center-text" #input4 type="tel" maxlength="1"
+                    pattern="[0-9]" [(ngModel)]="loginData.accessCode4"
+                    (keyup)="next('', input3, loginData.accessCode4)">
+                  </ion-input>
+                </ion-item>
+              </ion-col>
+            </ion-row>
+
+          </ion-col>
+        </ion-row>
+
+        <ion-row *ngIf="showOtpCounter" color="primary">
+          <ion-col class="center-text">
+            <a>{{translateService.getTranslatedData('Please wait for')}} {{timeLeft}} </a>
+          </ion-col>
+        </ion-row>
+        <ion-row *ngIf="!showOtpCounter" color="primary">
+          <ion-col class="center-text">
+            <a (click)="checkPlatform()">{{translateService.getTranslatedData('Resend OTP')}} </a>
+          </ion-col>
+        </ion-row>
+        <ion-row class="width-80-percent center-text margin-top-10">
+          <ion-button class="full-button " expand="full" color="primary" (click)="verifyOtp()">
+            {{translateService.getTranslatedData('Confirm')}}</ion-button>
+        </ion-row>
+        <br>
+        <ion-row style="justify-content: center !important" class="width-80-percent">
+          <ion-col size="6">
+            <a class="font-16 cursor-pointer" (click)="setVisibleBlock('phoneInput')">
+              {{translateService.getTranslatedData('Go Back')}}</a>
+          </ion-col>
+          <ion-col size="6">
+            <a class="font-16 cursor-pointer" (click)="needHelp()">{{translateService.getTranslatedData('Need help?')}}</a>
+          </ion-col>
+        </ion-row>
+        <!-- <ion-row style="justify-content: center !important" class="width-80-percent margin-top-10">
+          <p (click)="setVisibleBlock('phoneInput')">Login</p>
+        </ion-row> -->
+      </div>
+
+      <div [hidden]=" visibleBlock !== 'verifyOtpInput' ">
+        <ion-row class="width-80-percent text-align-start direction-ltr">
+          <ion-col>
+
+            <p>{{translateService.getTranslatedData('Enter the 4-digit code sent to you at')}}</p>
+            <p>{{loginData.countryCode}} {{loginData.phoneNumber}}</p>
+            <ion-row class="direction-ltr">
+              <ion-col>
+                <ion-item>
+                  <ion-input placeholder="&bull;" class="center-text" #input1 type="number" maxlength="1"
+                    pattern="[0-9]" [(ngModel)]="loginData.accessCode1"
+                    (keyup)="next(input2, '', loginData.accessCode1)">
+                  </ion-input>
+                </ion-item>
+              </ion-col>
+              <ion-col>
+                <ion-item>
+                  <ion-input placeholder="&bull;" class="center-text" #input2 type="number" maxlength="1"
+                    pattern="[0-9]" [(ngModel)]="loginData.accessCode2"
+                    (keyup)="next(input3, input1, loginData.accessCode2)">
+                  </ion-input>
+                </ion-item>
+              </ion-col>
+              <ion-col>
+                <ion-item>
+                  <ion-input placeholder="&bull;" class="center-text" #input3 type="number" maxlength="1"
+                    pattern="[0-9]" [(ngModel)]="loginData.accessCode3"
+                    (keyup)="next(input4, input2, loginData.accessCode3)">
+                  </ion-input>
+                </ion-item>
+              </ion-col>
+              <ion-col>
+                <ion-item>
+                  <ion-input placeholder="&bull;" class="center-text" #input4 type="number" maxlength="1"
+                    pattern="[0-9]" [(ngModel)]="loginData.accessCode4"
+                    (keyup)="next('', input3, loginData.accessCode4)">
+                  </ion-input>
+                </ion-item>
+              </ion-col>
+            </ion-row>
+
+          </ion-col>
+        </ion-row>
+
+        <ion-row *ngIf="showOtpCounter" color="primary">
+          <ion-col class="center-text">
+            <a>{{translateService.getTranslatedData('Please wait for')}} {{timeLeft}} </a>
+          </ion-col>
+        </ion-row>
+        <ion-row *ngIf="!showOtpCounter" color="primary">
+          <ion-col class="center-text">
+            <a (click)="sendOtp()">{{translateService.getTranslatedData('Resend OTP')}} </a>
+          </ion-col>
+        </ion-row>
+        <ion-row class="width-80-percent center-text margin-top-10">
+          <ion-button class="full-button " expand="full" color="primary" (click)="verifyOtp()">
+            {{translateService.getTranslatedData('Confirm')}}</ion-button>
+        </ion-row>
+        <br>
+        <ion-row style="justify-content: center !important" class="width-80-percent">
+          <a class="font-16 cursor-pointer" (click)="needHelp()">{{translateService.getTranslatedData("Need help?")}}</a>
+        </ion-row>
+
+      </div>
+
+      <div [hidden]=" visibleBlock !== 'onboardUser' ">
+        <ion-row class="width-80-percent">
+          <div class="text-left">
+            <p class="font-20 margin-bottom-10">{{translateService.getTranslatedData("Oops!")}}</p>
+          </div>
+        </ion-row>
+        <ion-row class="width-80-percent text-align-start">
+          <ion-col>
+            <p>{{translateService.getTranslatedData("We see you don't have an account,")}}</p>
+            <p>{{translateService.getTranslatedData("Please reach out to us to get your account created")}}</p>
+          </ion-col>
+        </ion-row>
+        <ion-row style="justify-content: center !important" class="width-80-percent">
+          <ion-col size="6">
+            <a class="font-16" (click)="setVisibleBlock('phoneInput')">
+              {{translateService.getTranslatedData("Go Back")}}</a>
+          </ion-col>
+          <ion-col size="6">
+            <a class="font-16" (click)="needHelp()">{{translateService.getTranslatedData("Contact Us")}}</a>
+          </ion-col>
+        </ion-row>
+        <!-- <ion-row class="width-80-percent center-text margin-top-10">
+          <ion-button (click)="sendOtp()" class="full-button" expand="full" color="primary">Proceed
+          </ion-button>
+        </ion-row> -->
+      </div>
+
+      <div [hidden]=" visibleBlock !== 'passwordSetInput' ">
+
+        <ion-row class="width-80-percent text-align-start">
+          <ion-col>
+            <ion-item>
+              <ion-label position="stacked" class="font-20 margin-bottom-10"
+                [ngClass]="{'rtl-label-floating': translateService.getCurrentDirection()==='rtl'}">
+                {{translateService.getTranslatedData("Enter New Password")}}</ion-label>
+                <div class="display-flex flex-direction-row width-100-percent">
+                  <ion-input type="{{passwordType}}" class="direction-ltr" placeholder="" debounce="300"
+                    oninput="this.value = this.value.replace(/\s/g, '')" [(ngModel)]="loginData.password"
+                    (ngModelChange)="passwordMatch(); validatePassword()">
+                  </ion-input>
+                  <img src="../../assets/svg-icons/eye.svg" class="margin-right-5 cursor-pointer outline-none" height="40" width="20"
+                    *ngIf="passwordType==='text'" (click)="togglePasswordType('passwordType')">
+                  <img src="../../assets/svg-icons/invisible.svg" class="margin-right-5 cursor-pointer outline-none" height="40" width="19"
+                    *ngIf="passwordType==='password'" (click)="togglePasswordType('passwordType')">
+                </div>
+            </ion-item>
+          </ion-col>
+        </ion-row>
+        <ion-row class="width-80-percent text-align-start">
+          <ion-col>
+            <ion-item>
+              <ion-label position="stacked" class="font-20 margin-bottom-10"
+                [ngClass]="{'rtl-label-floating': translateService.getCurrentDirection()==='rtl'}">
+                {{translateService.getTranslatedData("Confirm Password")}}</ion-label>
+                <div class="display-flex flex-direction-row width-100-percent">
+                  <ion-input type="{{confirmPasswordType}}"  placeholder="" class="direction-ltr" [(ngModel)]="loginData.passwordCheck" (ionBlur)="passwordMatch()">
+                  </ion-input>
+                  <img src="../../assets/svg-icons/eye.svg" class="margin-right-5 cursor-pointer outline-none" height="40" width="20"
+                    *ngIf="confirmPasswordType==='text'" (click)="togglePasswordType('confirmPasswordType')">
+                  <img src="../../assets/svg-icons/invisible.svg" class="margin-right-5 cursor-pointer outline-none" height="40" width="19"
+                    *ngIf="confirmPasswordType==='password'" (click)="togglePasswordType('confirmPasswordType')">
+                </div>
+            </ion-item>
+          </ion-col>
+        </ion-row>
+        <ion-row class="width-80-percent text-align-start">
+          <p [hidden]="!passwordMismatch" class="margin-bottom-0 light-red-txt">{{translateService.getTranslatedData("Password Mismatch")}}
+          </p>
+        </ion-row>
+        <ion-row [hidden]="passwordCheckObject.noSequence" class="width-80-percent text-align-start">
+          <p class="margin-bottom-0 light-red-txt">{{translateService.getTranslatedData("Do not include sequential characters in your password, such as 1234, abcd, etc")}}</p>
+        </ion-row>
+        <ion-row [hidden]="passwordCheckObject.noUserInfo" class="width-80-percent text-align-start">
+          <p class="margin-bottom-0 light-red-txt">{{translateService.getTranslatedData("Do not include user-specific information, such as your first name, last name, email, or organisation name, in the password.")}}</p>
+        </ion-row>
+        <ion-row [hidden]="passwordCheckObject.unusedPassword" class="width-80-percent text-align-start">
+          <p class="margin-bottom-0 light-red-txt">{{translateService.getTranslatedData("Old password can’t be used. Please set a fresh password and try again")}}</p>
+        </ion-row>
+        <ion-row class="margin-top-10 width-80-percent text-align-start">
+          <ion-icon class="check-icon"
+            [ngClass]="{'green-icon': passwordCheckObject.minCharacters, 'gray-icon': !passwordCheckObject.minCharacters}"
+            name="checkmark"></ion-icon>
+          <div class="margin-left-5 display-flex flex-direction-row justify-center align-items-center">
+            {{translateService.getTranslatedData("At least 8 charaters")}}</div>
+        </ion-row>
+        <ion-row class="width-80-percent text-align-start">
+          <ion-icon class="check-icon"
+            [ngClass]="{'green-icon': passwordCheckObject.lowerCase, 'gray-icon': !passwordCheckObject.lowerCase}"
+            name="checkmark"></ion-icon>
+          <div class="margin-left-5 display-flex flex-direction-row justify-center align-items-center">
+            {{translateService.getTranslatedData("Lower case")}}</div>
+        </ion-row>
+        <ion-row class="width-80-percent text-align-start">
+          <ion-icon class="check-icon"
+            [ngClass]="{'green-icon': passwordCheckObject.upperCase, 'gray-icon': !passwordCheckObject.upperCase}"
+            name="checkmark"></ion-icon>
+          <div class="margin-left-5 display-flex flex-direction-row justify-center align-items-center">
+            {{translateService.getTranslatedData("Upper case")}}</div>
+        </ion-row>
+        <ion-row class="width-80-percent text-align-start">
+          <ion-icon class="check-icon"
+            [ngClass]="{'green-icon': passwordCheckObject.digits, 'gray-icon': !passwordCheckObject.digits}"
+            name="checkmark"></ion-icon>
+          <div class="margin-left-5 display-flex flex-direction-row justify-center align-items-center">
+            {{translateService.getTranslatedData("Number")}}</div>
+        </ion-row>
+        <ion-row class="width-80-percent text-align-start">
+          <ion-icon class="check-icon"
+            [ngClass]="{'green-icon': passwordCheckObject.symbols, 'gray-icon': !passwordCheckObject.symbols}"
+            name="checkmark"></ion-icon>
+          <div class="margin-left-5 display-flex flex-direction-row justify-center align-items-center">
+            {{translateService.getTranslatedData("Special Charater")}}</div>
+        </ion-row>
+        <ion-row class="width-80-percent center-text margin-top-10">
+          <ion-button class="full-button " expand="full" color="primary" (click)="signIn()"
+            [hidden]="loginData.action === 'resetPassword'"
+            [disabled]="!loginData.password || !loginData.passwordCheck || !passwordValidated || passwordMismatch">
+            {{translateService.getTranslatedData("Confirm")}}</ion-button>
+        </ion-row>
+        <ion-row class="width-80-percent center-text margin-top-10" [hidden]="loginData.action !== 'resetPassword'">
+          <ion-button class="full-button " expand="full" color="primary" (click)="resetPassword()"
+            [disabled]="!loginData.password || !loginData.passwordCheck || !passwordValidated  || (loginData.password != loginData.passwordCheck)">
+            {{translateService.getTranslatedData("Confirm")}}</ion-button>
+        </ion-row>
+
+        <!-- <ion-row style="justify-content: center !important" class="width-80-percent margin-top-10">
+          <p (click)="setVisibleBlock('phoneInput')">Login</p>
+        </ion-row> -->
+
+      </div>
+
+    </div>
+
+    <!-- <ion-row>
+      <ion-col class="center-text">
+        <img class="thm-logo" src="assets/thm-branding.png" />
+      </ion-col>
+    </ion-row> -->
+
+  </div>
+
+</ion-content>
+
+<ion-footer class="center-text" no-border *ngIf="displayFooter">
+  <p class="margin-top-0 margin-bottom-minus-10 font-12">{{translateService.getTranslatedData("Powered by")}}</p>
+  <img class="thm-logo" src="assets/thm-branding.svg" />
+</ion-footer>

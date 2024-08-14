@@ -1,0 +1,33 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="end">
+      <ion-button (click)="closeModal(false)">
+        <ion-icon name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>{{transService.getTranslatedData('Select Ticket Category')}}</ion-title>
+  </ion-toolbar>
+  <!-- <ion-searchbar></ion-searchbar> -->
+</ion-header>
+
+<ion-content>
+  <div class="center-text margin-top-10" [hidden]="!loading">
+    <ion-spinner></ion-spinner>
+  </div>
+  <p class="gotham center-text" *ngIf="categories.length==0 && !loading">
+    {{transService.getTranslatedData('No Category Available')}}</p>
+  <ion-list>
+    <ion-radio-group [(ngModel)]="this.selectedCategory.ticketCategory">
+      <ion-item *ngFor="let category of categories">
+        <ion-label>{{category.name}}</ion-label>
+        <ion-radio value="{{category._id}}" slot="end" (click)="selectCategory(category)"></ion-radio>
+      </ion-item>
+    </ion-radio-group>
+  </ion-list>
+
+  <ion-infinite-scroll [hidden]="disableInfiniteScroll" threshold="5px" (ionInfinite)="getCategories($event)">
+    <ion-infinite-scroll-content loadingSpinner="bubbles"
+      loadingText="{{transService.getTranslatedData('Loading more data...')}}">
+    </ion-infinite-scroll-content>
+  </ion-infinite-scroll>
+</ion-content>

@@ -1,0 +1,28 @@
+.card-content {
+    position: absolute !important;
+    bottom: 10%;
+    left: 12%;
+}
+
+.image {
+    justify-content: flex-end !important;
+    display: flex !important;
+}
+
+.img-icon {
+    font-size: x-large !important;
+    position: absolute !important;
+}
+
+.ion-image-item {
+    --inner-padding-bottom: 0px;
+    --inner-padding-end: 0px;
+    --inner-padding-start: 0px;
+    --inner-padding-top: 0px;
+    --min-height: 24px;
+    --padding-bottom: 0px;
+    --padding-end: 0px;
+    --padding-start: 0px;
+    --padding-top: 0px;
+    --transition: background-color 15ms linear;
+  }

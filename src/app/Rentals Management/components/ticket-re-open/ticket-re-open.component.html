@@ -1,0 +1,60 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>{{translateService.getTranslatedData('Select option to reopen ticket')}}</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="closeModal()">
+        <ion-icon slot="icon-only" name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+  <ion-content>
+    <ion-list>
+      <ion-radio-group [(ngModel)]="selectedOption">
+  
+        <ion-item lines="none">
+          <ion-label class="white-space-initial font-14">{{translateService.getTranslatedData(reOpenOptions.OPTION_1)}}</ion-label>
+          <ion-radio class="margin-right-10" color="secondary" slot="start" [value]="reOpenOptions.OPTION_1"></ion-radio>
+        </ion-item>
+  
+        <ion-item lines="none">
+          <ion-label class="white-space-initial font-14">{{translateService.getTranslatedData(reOpenOptions.OPTION_2)}}</ion-label>
+          <ion-radio class="margin-right-10" color="secondary" slot="start" [value]="reOpenOptions.OPTION_2"></ion-radio>
+        </ion-item>
+  
+        <ion-item lines="none">
+          <ion-label class="white-space-initial font-14">{{translateService.getTranslatedData(reOpenOptions.OPTION_3)}}</ion-label>
+          <ion-radio class="margin-right-10" color="secondary" slot="start" [value]="reOpenOptions.OPTION_3"></ion-radio>
+        </ion-item>
+  
+        <ion-item lines="none">
+          <ion-label class="white-space-initial font-14">{{translateService.getTranslatedData(reOpenOptions.OPTION_4)}}</ion-label>
+          <ion-radio class="margin-right-10" color="secondary" slot="start" [value]="reOpenOptions.OPTION_4"></ion-radio>
+        </ion-item>
+  
+        <ion-item lines="none">
+          <ion-label class="white-space-initial font-14">{{translateService.getTranslatedData(reOpenOptions.OPTION_5.text)}}</ion-label>
+          <ion-radio class="margin-right-10" color="secondary" slot="start" [value]="reOpenOptions.OPTION_5.text"></ion-radio>
+        </ion-item>
+      </ion-radio-group>
+  
+      <ion-item lines="none" *ngIf="selectedOption === reOpenOptions.OPTION_5?.text">
+        <ion-textarea #textArea (ionFocus)="textArea.autoGrow=true" autocapitalize spellcheck enterkeyhint="enter"
+          rows="4" [(ngModel)]="reOpenOptions.OPTION_5.customText" placeholder="{{translateService.getTranslatedData('Tell us a little more about reason')}}"
+          class="text-area font-weight-400">
+        </ion-textarea>
+      </ion-item>
+    </ion-list>
+  
+  </ion-content>
+  
+  <ion-footer>
+    
+    <div class="display-flex justify-center">
+      <ion-button [disabled]="!selectedOption || (selectedOption === reOpenOptions.OPTION_5.text && !reOpenOptions.OPTION_5.customText)"
+      class="button-text height-45 full-width font-16 text-transform-capitalize ion-item-shadow-none margin-top-5 margin-bottom-5"
+      color="primary" (click)="updateTicketStatus()">
+      {{translateService.getTranslatedData("Submit")}}</ion-button>
+    </div>
+  </ion-footer>

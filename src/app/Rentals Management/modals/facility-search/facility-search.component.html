@@ -1,0 +1,46 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="end">
+      <ion-button (click)="closeModal(false)">
+        <ion-icon name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>Facility Search</ion-title>
+  </ion-toolbar>
+  <ion-searchbar
+    [(ngModel)]="filterData.searchTextBooking"
+    placeholder="Search"
+    (ngModelChange)="viewFacilities($event)"
+    class="padding-0"
+  ></ion-searchbar>
+</ion-header>
+
+
+<ion-content>
+  <div class="center-text margin-top-10" [hidden]="!loading">
+    <ion-spinner></ion-spinner>
+  </div>
+  <ion-list>
+    <ion-item *ngFor="let facility of facilityBooking"
+    (click)="selectFacility(facility)"
+    >
+
+        <ion-label>{{ facility.facility.name }}</ion-label>
+        <ion-checkbox
+          slot="end"
+          [checked]="selectSingleFacility.includes(facility._id) || facilityId==facility._id"
+        ></ion-checkbox>
+    </ion-item>
+  </ion-list>
+  <ion-infinite-scroll threshold="5px" (ionInfinite)="loadMoreFacilities($event)">
+    <ion-infinite-scroll-content
+      loadingSpinner="bubbles"
+      loadingText="loading..."
+    >
+    </ion-infinite-scroll-content>
+  </ion-infinite-scroll>
+</ion-content>
+
+<ion-button size="large" (click)="closeModal(true)" color="danger">
+  Apply</ion-button
+>

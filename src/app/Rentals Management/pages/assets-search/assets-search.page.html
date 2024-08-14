@@ -1,0 +1,45 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="end">
+      <ion-button (click)="closeModal(false)">
+        <ion-icon name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>{{transService.getTranslatedData('Assets')}}</ion-title>
+  </ion-toolbar>
+  <ion-searchbar class="padding-0" [(ngModel)]="filterData.searchText" placeholder="{{transService.getTranslatedData('Search')}}"
+  debounce="300" (ngModelChange)="searchAssets()">
+  </ion-searchbar>
+</ion-header>
+
+<ion-content>
+  <div class="center-text margin-top-10" [hidden]="!showLoading">
+    <ion-spinner></ion-spinner>
+  </div>
+
+  <div *ngIf="emptyAssetsScreen">
+    <p class="center-text">{{transService.getTranslatedData('No Assets found')}}</p>
+  </div>
+
+  <ion-list *ngIf="!emptyAssetsScreen">
+    <ion-item *ngFor="let asset of assets" (click)="selectAsset(asset)">
+      <ion-label class="flex-label">
+        <span class="white-space-initial">{{asset.assetId || ''}} {{asset.name || ''}}</span>
+      </ion-label>
+      <ion-checkbox value="{{asset._id}}" slot="end" [checked]="checkForAsset(asset)">
+      </ion-checkbox>
+    </ion-item>
+  </ion-list>
+
+  <ion-infinite-scroll threshold="5px" (ionInfinite)="fetchAssets($event)">
+    <ion-infinite-scroll-content loadingSpinner="bubbles"
+      loadingText="{{transService.getTranslatedData('Loading more data...')}}">
+    </ion-infinite-scroll-content>
+  </ion-infinite-scroll>
+</ion-content>
+
+<ion-footer>
+  <ion-button  [disabled]="selectedAssets.length==0"   (click)="closeModal(true)" expand="full" size="large" color="danger"  class="margin-0">
+    {{transService.getTranslatedData('Done')}}
+  </ion-button>
+</ion-footer>

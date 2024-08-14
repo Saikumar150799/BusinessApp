@@ -1,0 +1,273 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="{{transService.getCurrentDirection()==='rtl'? 'end':'start'}}">
+      <ion-back-button [routerLink]="['/rentals-ticket-details']" 
+      [queryParams]='{ticketId: ticket._id, tab: "CHECKLIST"}'></ion-back-button>
+    </ion-buttons>
+    <ion-title class="{{transService.getCurrentDirection()==='rtl'?'':'padding-left-0'}}">
+      {{transService.getTranslatedData('Checklist')}}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="">
+    <ion-item lines="none" class="ion-item  padding-right-10 padding-left-10 bg-white ">
+      <ion-icon slot="start" name="arrow-back" mode="ios" class="icon-30" (click)="prevSection()" [hidden]="index == 0"></ion-icon>
+      <p class="txt-slate-grey font-18 gotham-medium">
+        {{transService.getTranslatedData('Section ' + (index + 1)+ '. ' + section.sectionName)}}
+      </p>
+      <ion-icon name="arrow-forward" mode="ios" slot="end" class="icon-30"  (click)="nextSection()" [hidden]="ticket.checklist.checklistSections.length - 1 == index && !ticket.checklist.completionSection.enabled"></ion-icon>
+    </ion-item>
+    <!-- INSTRUCTION -->
+    <!-- <ion-list class="margin-bottom-10 margin-top-10 padding-16">
+      <ion-row >
+        <ion-icon name="information-circle-outline"  class="icon-20" mode="ios"></ion-icon>
+        <ion-col size="11" class="padding-left-16">
+          <p class="margin-0 txt-slate-grey gotham">
+            <ion-text  class="margin-0 font-16 txt-slate-grey gotham">{{transService.getTranslatedData('Shut the main valve before any Plumbing activity and restart the geyser')}}</ion-text>
+        </ion-col>
+      </ion-row>
+      <ion-button *ngIf="!showDoneButton" expand="full" class="text-transform-math-auto height-50 font-16" (click)="markAsDone()">
+       {{transService.getTranslatedData('Mark as done')}}
+      </ion-button>
+      <ion-button *ngIf="showDoneButton" color='success' class="full-width text-transform-capitalize height-50 font-16 border success-btn" fill="clear">
+        <ion-icon slot="start" name="information-circle-outline"></ion-icon>
+        {{transService.getTranslatedData('Done')}}
+      </ion-button>
+    </ion-list> -->
+    <div class="center-text margin-top-10" [hidden]="!showLoading">
+      <ion-spinner  name="lines"></ion-spinner>
+    </div>
+    <div *ngIf="showCompletionSection === false && paginatedCheckList?.length > 0" class="margin-top-10">
+      <ion-list class="padding-16 margin-bottom-10" *ngFor="let item of paginatedCheckList">
+        <div *ngIf="item.fieldType === 'radio'">
+          <ion-radio-group [value]="checkSelected(item)">
+            <ion-list-header class="padding-0">
+              <ion-label class="gotham txt-slate-grey font-17"> {{transService.getTranslatedData(item.name)}} <span class="asterisk" *ngIf="item.isMandatory">*</span></ion-label>
+            </ion-list-header>
+            <ion-item lines="none" *ngFor="let option of item.options" [ngClass]="option.selected ? 'selected': 'not-selected' ">
+              <ion-label class="gotham font-16">{{transService.getTranslatedData(option?.name)}}</ion-label>
+              <ion-radio slot="start" [value]="option._id" (ionFocus)="handleRadioChange(option,item.options)" class="margin-right-10"></ion-radio> 
+            </ion-item>
+          </ion-radio-group>
+        </div>
+
+        <div *ngIf="item.fieldType === 'checkbox'">
+          <ion-list-header class="padding-0">
+            <ion-label class="gotham txt-slate-grey font-17 margin-bottom-10"> {{transService.getTranslatedData(item.name)}} <span class="asterisk" *ngIf="item.isMandatory">*</span></ion-label>
+          </ion-list-header>
+          <ion-item  lines="none" *ngFor="let option of item.options; let i = index" [ngClass]="option.selected ? 'selected': 'not-selected'" >
+            <ion-checkbox color="primary" class="txt-warm-grey" [(ngModel)]="option.selected"
+            (ionChange)="handleChange(section.checklistItems)"></ion-checkbox>
+            <ion-label class="margin-left-20 font-16  gotham item-text-wrap">
+              {{transService.getTranslatedData(option.name)}}
+            </ion-label>
+          </ion-item>
+        </div>
+
+        <div *ngIf="item.fieldType === 'date'">
+          <ion-list lines="full">
+            <p class="gotham txt-slate-grey font-17 text-align-start padding-0">
+              {{transService.getTranslatedData(item.name)}} <span class="asterisk" *ngIf="item.isMandatory">*</span></p>
+            <ion-item class="ion-item">
+              <ion-datetime (ionChange)="handleChange(section.checklistItems)" [(ngModel)]="item.fieldValue" placeholder="{{transService.getTranslatedData('DD-MMM-YYYY')}}" class="gotham padding-left-0"
+                display-format="DD-MMMM-YYYY"
+                picker-format="DD-MMMM-YYYY">
+              </ion-datetime>
+            </ion-item>
+          </ion-list>
+        </div>
+
+        <div *ngIf="item.fieldType === 'time'">
+          <ion-list lines="full">
+            <p class="gotham txt-slate-grey font-17 text-align-start padding-0">
+              {{transService.getTranslatedData(item.name)}} <span class="asterisk" *ngIf="item.isMandatory">*</span></p>
+            <ion-item class="ion-item">
+              <ion-datetime (ionChange)="handleChange(section.checklistItems)" [(ngModel)]="item.fieldValue" placeholder="{{transService.getTranslatedData('HH:mm')}}" class="gotham padding-left-0"
+                display-format="HH:mm"
+                picker-format="HH:mm">
+              </ion-datetime>
+            </ion-item>
+          </ion-list>
+        </div>
+
+        <div *ngIf="item.fieldType === 'textarea'">
+          <ion-label class="gotham txt-slate-grey font-17 margin-left-0 text-align-start">
+            {{transService.getTranslatedData(item.name)}} <span class="asterisk" *ngIf="item.isMandatory">*</span></ion-label>
+          <ion-item lines="full" class="ion-item">
+            <ion-textarea  [(ngModel)]="item.fieldValue"  (ionChange)="handleChange(section.checklistItems)" class="gotham padding-0 txt-slate-grey font-17 padding-0" active
+              placeholder="{{transService.getTranslatedData('Briefly explain your issue here')}}" 
+              >
+            </ion-textarea>
+          </ion-item>
+        </div>
+
+        <div *ngIf="item.fieldType === 'dropdown'">
+          <!-- <ion-item class="ion-item">
+            <ion-label>{{transService.getTranslatedData(item.name)}} <span class="asterisk" *ngIf="item.isMandatory">*</span></ion-label>
+            <ion-select>
+              <ion-select-option  (ionChange)="handleChange(section.checklistItems)"*ngFor="let option of item.options" [value]="option.selected">{{transService.getTranslatedData(option.name)}}</ion-select-option>
+            </ion-select>
+          </ion-item> -->
+           <ion-label class="gotham txt-slate-grey font-17">{{transService.getTranslatedData(item.name)}}<span class="asterisk" *ngIf="item.isMandatory">*</span></ion-label>
+          <ion-item  class="ion-item" (click)="presentDropDownPopover($event,item.options)">
+            <ion-item lines="none" class="margin-top-minus-6 full-width ion-item">
+            <ion-icon name="arrow-down" slot="end" mode="ios"></ion-icon>
+            <ion-label>{{ getSelected(item).name  }}</ion-label>
+          </ion-item>
+          </ion-item>
+        </div>
+
+        <div *ngIf="item.fieldType === 'text'">
+          <p class="gotham txt-slate-grey font-17 margin-0 text-align-start">
+            {{transService.getTranslatedData(item.name)}} <span class="asterisk" *ngIf="item.isMandatory">*</span></p>
+          <ion-item lines="full" class="ion-item">
+            <ion-input (ionChange)="handleChange(section.checklistItems)" [(ngModel)]="item.fieldValue" inputmode="text" class="gotham padding-0 font-16" active
+              >
+            </ion-input>
+          </ion-item>
+        </div>
+
+        <ion-list class="margin-top-10 " *ngIf="item.imageRequired && item.imageRequired.addImage">
+          <ion-label class="gotham txt-slate-grey font-17"> {{ transService.getTranslatedData('Add Images')}} <span class="asterisk" *ngIf="item.imageRequired && item.imageRequired.isMandatory"> * </span></ion-label>
+          <ion-grid fixed class="padding-bottom-0 padding-top-0">
+            <ion-row class="padding-0 scrollable direction-ltr" *ngIf="item.files.length > 0">
+              <ion-col *ngFor="let img of item.files;let i = index" size="auto">
+                <ion-item class="ion-image-item ion-item fit-content-width" lines="none">
+                  <ion-icon class="img-icon icon-15 padding-5 margin-5" (click)="removeImage(section.checklistItems,item,img);"
+                    src="../../../../assets/svg-icons/close-button.svg">
+                  </ion-icon>
+                  <img *ngIf="img.aws_url" class="border-radius-8 max-height-140 max-width-fit-content min-width-100" [src]="img.aws_original_url">
+                  <img *ngIf="img.image" class="border-radius-8 max-height-140 max-width-fit-content min-width-100" [src]="img.image|imageHelper">
+                </ion-item>
+              </ion-col>
+            </ion-row>
+          </ion-grid>
+    
+          <ion-row class="justify-center media margin-top-15" (click)="presentActionSheet(item);">
+            <ion-button color="primary" class="full-width text-transform-math-auto height-45 margin-0 font-16" fill="clear">
+              <ion-icon slot="start" name="image"></ion-icon>
+              {{transService.getTranslatedData('Add media')}}
+            </ion-button>
+            <!-- <ion-item lines="none">
+                <ion-label class="display-flex gotham-medium font-17 text-align-center justify-center add-media-btn margin-0">
+                  <ion-icon slot="start" class="margin-left-10 margin-right-10 icon-20 gotham" name="image" mode="ios"></ion-icon>
+                      {{transService.getTranslatedData('Add media')}}
+                </ion-label>
+            </ion-item> -->
+          </ion-row>
+        </ion-list>
+
+        <ion-list class="margin-top-20" *ngIf="item.noteRequired && item.noteRequired.addNote">
+          <p class="gotham txt-slate-grey font-16 margin-0 text-align-start">
+            {{transService.getTranslatedData('Add Note')}}<span class="asterisk" *ngIf="item.noteRequired && item.noteRequired.isMandatory"> * </span></p>
+          <ion-item class="margin-bottom-10 ion-item">
+            <ion-input (ionChange)="handleChange(section.checklistItems)" placeholder="{{transService.getTranslatedData('Write here')}}" [(ngModel)]="item.note" class="gotham padding-0 padding-0" active>
+            </ion-input>
+          </ion-item>
+        </ion-list>
+        </ion-list>
+
+      </div>
+
+      <ion-row *ngIf="emptySection"
+      class="txt-small txt-brown gotham-medium font-14 center-text margin-top-15">
+      <ion-col>{{transService.getTranslatedData('Section is empty')}}</ion-col>
+    </ion-row>
+
+      <!-- COMPLETION SECTION FORM -->
+      <div *ngIf="showCompletionSection === true">
+        <div class="ticket-details-card">
+          <ion-row>
+            <ion-col>
+              <p class="txt-slate-grey margin-padding-zero font-14 gotham-medium margin-bottom-3">
+                {{transService.getTranslatedData('Name')}}</p>
+              <P class="gotham-medium margin-top-10 font-14 dark-grey">{{transService.getTranslatedData(completionForm.name)}}</P>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col>
+              <p class="txt-slate-grey margin-padding-zero gotham-medium font-14 margin-bottom-3">
+                {{transService.getTranslatedData('Phone Number')}}</p>
+              <P class="gotham-medium margin-top-10 font-14 dark-grey">{{transService.getTranslatedData(completionForm.countryCode + ' ' + completionForm.phoneNumber)}}</P>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col>
+              <p class="txt-slate-grey margin-padding-zero font-14 gotham-medium margin-bottom-3">
+                {{transService.getTranslatedData('Start Date')}}</p>
+              <p
+                class="gotham-medium margin-top-10 font-14 dark-grey direction-ltr {{transService.getCurrentDirection()==='rtl'?'text-align-end':'text-align-start'}}">{{completionForm.date | date: 'dd-MMMM-yyyy'}}</p>
+            </ion-col>
+            <ion-col>
+              <p class="txt-slate-grey margin-padding-zero font-14 gotham-medium margin-bottom-3">
+                {{transService.getTranslatedData('Start Time')}}</p>
+              <p
+                class="gotham-medium margin-top-10 font-14 dark-grey direction-ltr {{transService.getCurrentDirection()==='rtl'?'text-align-end':'text-align-start'}}">
+                {{completionForm.time | date: 'hh:mm a'}}</p>
+            </ion-col>
+          </ion-row>
+        </div>
+
+        <ion-list class="padding-10 margin-top-20 margin-bottom-20">
+        <ion-label class="margin-bottom-10 gotham font-weight-500">{{transService.getTranslatedData('Location')}} <span class="asterisk">*</span></ion-label>
+        <div>
+          <p *ngIf="location.address" class="margin-top-0">{{transService.getTranslatedData(location.address)}}</p>
+          <div class="center-text margin-left-20" [hidden]="!loading">
+            <ion-spinner  name="lines"></ion-spinner>
+          </div>
+        </div>  
+        <ion-row class="justify-center margin-top-20" (click)="fetchLocation();">
+            <ion-button class="full-width text-transform-math-auto height-50 font-16" fill="outline">
+              <ion-icon slot="start" name="pin"></ion-icon>
+              {{transService.getTranslatedData(location.address ? 'Fetch Again' : 'Fetch Location')}}
+            </ion-button>
+          </ion-row>
+        </ion-list>
+
+        <ion-list class="padding-10 margin-top-20 margin-bottom-20">
+          <ion-label class="gotham"> {{ transService.getTranslatedData('Signature')}} <span class="asterisk"> *</span></ion-label>
+          <img *ngIf="completionForm.signature" src="{{completionForm.signature}}" alt="signature" class="full-width max-height-150 object-fit-contain">
+          <ion-row class="justify-center" (click)="openSignaturePad();">
+            <ion-button class="full-width text-transform-math-auto height-50 font-16" fill="outline">
+              {{transService.getTranslatedData(completionForm.signature ? 'Redo Sign' : 'Click here to sign')}}
+            </ion-button>
+          </ion-row>
+        </ion-list>
+      </div>
+    </div>
+    <ion-infinite-scroll  [hidden]="disableInfiniteScroll" threshold="5px" (ionInfinite)="loadMore($event)">
+      <ion-infinite-scroll-content
+        loadingSpinner="bubbles"
+        loadingText="Loading more items...">
+      </ion-infinite-scroll-content>
+    </ion-infinite-scroll>
+</ion-content>
+<ion-footer class="margin-0 padding-0"  [hidden]="section.length === 0">
+  <ion-toolbar>
+    <div class="display-flex justify-center">
+
+      <ion-button  (click)="updateChecklistSection('draft')"
+      class="height-50 font-16 gotham-medium width-95-percent ion-item-shadow-none text-transform-capitalize margin-top-12 margin-bottom-24"
+      color="primary" fill="outline">
+      {{transService.getTranslatedData("Save as draft")}}</ion-button>
+
+      <ion-button  [hidden]="(((ticket.checklist.checklistSections.length - 1) == index && !ticket.checklist.completionSection.enabled) || index >= ticket.checklist.checklistSections.length)" [disabled]="!isButtonAvailable" (click)="updateChecklistSection('save')"
+        class="height-50 font-16 gotham-medium width-95-percent ion-item-shadow-none text-transform-capitalize margin-top-12 margin-bottom-24"
+        color="primary">
+        {{transService.getTranslatedData("Save & Continue")}}</ion-button>
+
+        <ion-button [disabled]="!isButtonAvailable" *ngIf="(ticket.checklist.checklistSections.length - 1) == index && !ticket.checklist.completionSection.enabled" (click)="updateChecklistSection('save')"
+        class="height-50 font-16 gotham-medium width-95-percent ion-item-shadow-none text-transform-capitalize margin-top-12 margin-bottom-24"
+        color="primary">
+        {{transService.getTranslatedData("Submit")}}</ion-button>
+
+        <ion-button *ngIf="ticket.checklist.completionSection.enabled && index >= ticket.checklist.checklistSections.length" (click)="updateChecklist()"
+        [disabled]="!location.address || !completionForm.signature"
+        class="height-50 font-16 gotham-medium width-95-percent ion-item-shadow-none text-transform-capitalize margin-top-12 margin-bottom-24"
+        color="primary">
+        {{transService.getTranslatedData("Submit")}}</ion-button>
+
+    </div>
+  </ion-toolbar>
+</ion-footer>

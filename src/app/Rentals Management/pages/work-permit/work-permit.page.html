@@ -1,0 +1,89 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="rentals-home"></ion-back-button>
+    </ion-buttons>
+    <ion-buttons slot="end">
+      <ion-button (click)="openFilterModal()">
+        <ion-icon name="funnel" mode="ios"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title class="padding-0">{{transService.getTranslatedData('Work Permit Approvals')}}</ion-title>
+  </ion-toolbar>
+
+  <ion-segment [(ngModel)]="selectedTab" (click)="tabChanged($event)" class="selectedTab">
+    <ion-segment-button value="myApprovals" style="padding: 0px;">
+      <ion-label class="gotham text-transform-capitalize font-weight-600 margin-0">{{transService.getTranslatedData('View my Approvals')}}</ion-label>
+    </ion-segment-button>
+
+    <ion-segment-button value="all">
+      <ion-label class="gotham text-transform-capitalize font-weight-600 margin-0">{{transService.getTranslatedData('View All')}}</ion-label>
+    </ion-segment-button>
+  </ion-segment>
+  
+  <div>
+    <ion-searchbar [(ngModel)]="workPermitFilter.searchText" placeholder="Search" debounce="300"
+      (ngModelChange)="searchWorkPermit($event)" class="padding-0"></ion-searchbar>
+  </div>
+</ion-header>
+
+<ion-content>
+  <div class="width-100-percent height-55 display-flex flex-direction-column justify-center align-items-center"
+    *ngIf="workPermits.length === 0 && noWorkPermit">
+    <img src="../../../../assets/svg-icons/gatepass-empty.svg" alt="img">
+    <p class="gotham center-text margin-top-17">
+      {{transService.getTranslatedData('There are no work permits for you to approve')}}</p>
+  </div>
+  <ion-list class="padding-bottom-0">
+    <ion-item *ngFor="let workPermit of workPermits" (click)="routeToWorkPermitDetails(workPermit)" detail
+      lines="none">
+      <ion-label class="margin-0 padding-top-7">
+        <p class="gotham-medium margin-bottom-8 " text-wrap>
+          <ion-grid class="padding-0">
+            <ion-row class="padding-0">
+              <ion-col class="padding-0" class="padding-0" size="7">
+                <span
+                  [ngClass]="{'float-right': transService.getCurrentDirection()==='rtl','float-left':transService.getCurrentDirection()==='ltr'}">#{{workPermit?.uid}}
+                  </span>
+                  <span class="padding-left-5">
+                    {{workPermit?.workType}}
+                  </span>
+              </ion-col>
+              <ion-col class="padding-0">
+                <span class="gotham"
+                  [ngClass]="{'float-left': transService.getCurrentDirection()==='rtl','float-right':transService.getCurrentDirection()==='ltr'}">
+                  {{workPermit?.createdAt | agoFilter }}</span>
+              </ion-col>
+            </ion-row>
+          </ion-grid>
+        </p>
+        <p class="gotham font-weight-600 txt-grey margin-bottom-8 white-space-initial">
+          {{transService.getTranslatedData('Unit : ')}} {{workPermit?.unitName}}
+        </p>
+
+        <ion-grid class="padding-0">
+          <ion-row class="padding-0 align-items-center">
+            <ion-col class="padding-0" size="auto">
+              <ion-badge class="gotham text-transform-capitalize font-weight-600 padding-top-7" mode="md" color="{{workPermit?.approvalStatus}}"
+                [ngClass]="{'margin-left-10': transService.getCurrentDirection()==='rtl','margin-right-10':transService.getCurrentDirection()==='ltr'}">
+              {{workPermit?.approvalStatus}}
+              </ion-badge>
+            </ion-col>
+            <ion-col *ngIf="workPermit?.approvalStatus === 'approved'" class="padding-0" size="auto">
+              <ion-badge [ngStyle]="{'color': workPermit?.workStatus === 'not-started' ? '#646464' : '#FFFFFF'}" class="gotham font-weight-600 padding-top-6" mode="md" color="{{workPermit?.workStatus}}" 
+                [ngClass]="{'margin-left-10': transService.getCurrentDirection()==='rtl','margin-right-10':transService.getCurrentDirection()==='ltr'}">
+                {{workStatusOptions[workPermit?.workStatus]}}
+              </ion-badge>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </ion-label>
+    </ion-item>
+  </ion-list>
+
+  <ion-infinite-scroll threshold="5px" (ionInfinite)="fetchworkPermits($event)">
+    <ion-infinite-scroll-content loadingSpinner="bubbles"
+      loadingText="{{transService.getTranslatedData('Loading more data...')}}">
+    </ion-infinite-scroll-content>
+  </ion-infinite-scroll>
+</ion-content>

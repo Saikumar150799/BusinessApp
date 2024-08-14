@@ -1,0 +1,52 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="end">
+      <ion-button (click)="closeModal(false)">
+        <ion-icon name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>{{transService.getTranslatedData('Contract Search')}}</ion-title>
+  </ion-toolbar>
+  <ion-searchbar
+    [(ngModel)]="filterData.searchText"
+    placeholder="{{transService.getTranslatedData('Search')}}"
+    (ngModelChange)="resetFilterAndSearch()"
+  >
+  </ion-searchbar>
+</ion-header>
+
+<ion-content>
+
+  <div class="center-text margin-top-10" [hidden]="!loading">
+    <ion-spinner></ion-spinner>
+  </div>
+
+  <p class="center-text" *ngIf="!loading && homes.length==0">
+    {{transService.getTranslatedData('No Homes Available')}}
+  </p>
+
+  <ion-list>
+    <ion-radio-group [(ngModel)]="selectedHome.ticketBelongsToRefId">
+      <ion-item *ngFor="let home of homes">
+        <ion-label class="white-space-initial font-15 line-height-20">{{home.displayName}}</ion-label>
+        <ion-radio
+          value="{{home._id}}"
+          slot="end"
+          (click)="selectHome(home)"
+        ></ion-radio>
+      </ion-item>
+    </ion-radio-group>
+  </ion-list>
+
+  <ion-infinite-scroll
+    threshold="5px"
+    (ionInfinite)="searchHome($event)"
+  >
+    <ion-infinite-scroll-content
+      loadingSpinner="bubbles"
+      loadingText="{{transService.getTranslatedData('Loading more data...')}}"
+    >
+    </ion-infinite-scroll-content>
+  </ion-infinite-scroll>
+
+</ion-content>

@@ -1,0 +1,11 @@
+ion-content {
+    --background: #ecebe6 !important;
+}
+
+.date-chip {
+    background-color: var(--ion-date-bg-color);
+    border: 1.5px solid var(--ion-color-secondary);
+    border-radius: 5px;
+    font-family: "Gotham-Medium" !important;
+    padding: 0 15px !important;
+}

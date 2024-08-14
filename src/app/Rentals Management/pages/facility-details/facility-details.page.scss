@@ -1,0 +1,60 @@
+.border-top {
+  border-top: 1px solid lightgray;
+}
+
+ion-item {
+  border-bottom: 1px solid lightgray;
+}
+
+ion-label {
+  padding-top: 10px !important;
+  padding-bottom: 10px !important;
+}
+
+ion-list {
+  padding-top: 0px !important;
+}
+
+.bgColor {
+  background-color: white;
+}
+.margin {
+  margin-top: 1.5%;
+  margin-left: 3%;
+}
+
+ion-content {
+  --background: #ecebe6;
+}
+
+.truncateFacility {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.approve-div {
+  border: 1px solid var(--ion-color-success);
+  width: 100%;
+  height: 40px;
+}
+
+.reject-div {
+  border: 1px solid var(--ion-color-danger);
+  width: 100%;
+  height: 40px;
+}
+
+.cancel-div {
+  border: 1px solid lightgray;
+  width: 100%;
+  height: 40px;
+}
+
+.success {
+  color: var(--ion-color-success);
+}
+
+.danger {
+  color: var(--ion-color-danger);
+}

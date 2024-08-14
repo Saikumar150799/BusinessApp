@@ -1,0 +1,55 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="end">
+      <ion-button (click)="closeModal(false)">
+        <ion-icon name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>{{transService.getTranslatedData('Property Search')}}</ion-title>
+  </ion-toolbar>
+  <ion-searchbar [(ngModel)]="filterData.searchText" placeholder="{{transService.getTranslatedData('Search')}}"
+    debounce="500" (ngModelChange)="resetFilterAndSearch()">
+  </ion-searchbar>
+</ion-header>
+
+<ion-content>
+
+  <div class="center-text margin-top-10" [hidden]="!loading">
+    <ion-spinner></ion-spinner>
+  </div>
+
+  <!-- <ion-list>
+
+    <ion-radio-group>
+      <ion-item *ngFor="let project of projects">
+        <ion-label>{{project.name}} {{selectedProject}}</ion-label>
+        <ion-radio value="project._id" slot="end" [(ngModel)]="selectedProject"></ion-radio>
+      </ion-item>
+    </ion-radio-group>
+
+  </ion-list> -->
+
+  <ion-list *ngIf="projects.length > 0">
+    <ion-radio-group [(ngModel)]="selectedProject.ticketBelongsToRefId">
+      <ion-item *ngFor="let project of projects">
+        <ion-label class="white-space-initial font-15 line-height-20">{{project.name}}</ion-label>
+        <ion-radio value="{{project._id}}" slot="end" (click)="selectProject(project)"></ion-radio>
+      </ion-item>
+    </ion-radio-group>
+  </ion-list>
+
+  <div *ngIf="noProjects">
+    <div class="center-text margin-top-10">
+      {{transService.getTranslatedData('No projects found.')}}
+    </div>
+  </div>
+
+  <ion-infinite-scroll threshold="5px" (ionInfinite)="searchProject($event)">
+    <ion-infinite-scroll-content
+      loadingSpinner="bubbles"
+      loadingText="loading..."
+    >
+    </ion-infinite-scroll-content>
+  </ion-infinite-scroll>
+
+</ion-content>

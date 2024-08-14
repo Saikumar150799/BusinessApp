@@ -1,0 +1,832 @@
+<ion-header no-border id="header">
+  <ion-toolbar color="primary">
+    <ion-buttons slot="{{transService.getCurrentDirection()==='rtl'? 'end':'start'}}">
+      <ion-back-button defaultHref="rentals-tickets"></ion-back-button>
+    </ion-buttons>
+    <ion-buttons slot="{{transService.getCurrentDirection()==='rtl'? 'start':'end'}}">
+      <ion-button [hidden]="!moduleAccess.tickets.update" (click)="routToTicketEdit(ticket)">
+        {{transService.getTranslatedData('EDIT')}}
+      </ion-button>
+    </ion-buttons>
+    <ion-title class="center-text" [ngClass]="{ 'margin-left-neg': !moduleAccess.tickets.update }">
+      {{transService.getTranslatedData('Ticket')}}
+      {{transService.getCurrentDirection()==='rtl'? ticket.uid + "#" : "#" + ticket.uid}}
+    </ion-title>
+  </ion-toolbar>
+  <div dir="ltr">
+    <ion-segment scrollable class=" shadow margin-padding-zero " [(ngModel)]="selectedTab">
+      <ion-segment-button *ngFor="let segment of segments" class="margin-padding-zero font-12" [value]="segment.value"
+        (click)="segment.value === 'INTERNAL COMMENTS' ? caller('internal') : segment.value === 'EXTERNAL COMMENTS' ? caller('external') : clrInterval()">
+        <ion-label class="margin-padding-zero">{{transService.getTranslatedData(segment.label)}}</ion-label>
+      </ion-segment-button>
+    </ion-segment>
+  </div>
+</ion-header>
+
+<ion-content>
+
+  <div [ngSwitch]="selectedTab">
+
+    <div *ngSwitchCase="'SUMMARY'">
+      <div class="ticket-details-card">
+        <ion-row>
+          <ion-col *ngIf="ticket?.ticketBelongsTo ==='Home'">
+            <p class="txt-slate-grey margin-padding-zero font-14 gotham-medium margin-bottom-3">
+              {{transService.getTranslatedData(organizationType === 'residential' ? 'Unit' : 'Contract')}}</p>
+            <p
+              class="gotham-medium margin-top-10 font-14 dark-grey direction-ltr {{transService.getCurrentDirection()==='rtl'?'text-align-end':'text-align-start'}}">
+              {{ticket?.homeDisplayName}}</p>
+          </ion-col>
+          <ion-col *ngIf="ticket?.ticketBelongsTo ==='Project'">
+            <p class="txt-slate-grey margin-padding-zero font-14 gotham-medium margin-bottom-3">
+              {{transService.getTranslatedData('Project')}}</p>
+            <p
+              class="gotham-medium margin-top-10 font-14 dark-grey direction-ltr {{transService.getCurrentDirection()==='rtl'?'text-align-end':'text-align-start'}}">
+              {{ticket?.projectDisplayName}}</p>
+          </ion-col>
+          <ion-col *ngIf="organizationType != 'residential' && ticket?.listingDisplayName">
+            <p class="txt-slate-grey margin-padding-zero font-14 gotham-medium margin-bottom-3">
+              {{transService.getTranslatedData('Unit')}}</p>
+            <p
+              class="gotham-medium margin-top-10 font-14 dark-grey direction-ltr {{transService.getCurrentDirection()==='rtl'?'text-align-end':'text-align-start'}}">
+              {{ticket?.listingDisplayName}}</p>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col>
+            <p class="txt-slate-grey margin-padding-zero font-14 gotham-medium margin-bottom-3">
+              {{transService.getTranslatedData('CATEGORY')}}</p>
+            <P class="gotham-medium margin-top-10 font-14 dark-grey">{{ticket.ticketCategory}}</P>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col>
+            <p class="txt-slate-grey margin-padding-zero gotham-medium font-14 margin-bottom-3">
+              {{transService.getTranslatedData('SUB CATEGORY')}}</p>
+            <P class="gotham-medium margin-top-10 font-14 dark-grey">{{ticket.ticketSubCategory}}</P>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col>
+            <p class="txt-slate-grey margin-padding-zero font-14 gotham-medium margin-bottom-3">
+              {{transService.getTranslatedData('CREATED ON')}}</p>
+            <p
+              class="gotham-medium margin-top-10 font-14 dark-grey direction-ltr {{transService.getCurrentDirection()==='rtl'?'text-align-end':'text-align-start'}}">
+              {{ticket.createdAt | date:'dd MMM yyyy' }}</p>
+          </ion-col>
+          <ion-col>
+            <p class="txt-slate-grey margin-padding-zero font-14 gotham-medium margin-bottom-3">
+              {{transService.getTranslatedData('DUE DATE')}}</p>
+            <p
+              class="gotham-medium margin-top-10 font-14 dark-grey direction-ltr {{transService.getCurrentDirection()==='rtl'?'text-align-end':'text-align-start'}}">
+              {{ticket.deadlineDate | date:'dd MMM yyyy'}}</p>
+          </ion-col>
+        </ion-row>
+        <ion-row *ngIf="ticket?.facility">
+          <ion-col>
+            <p class="txt-slate-grey margin-padding-zero font-14 gotham-medium margin-bottom-3">
+              {{transService.getTranslatedData('Facility')}}</p>
+            <p class="gotham-medium margin-top-10 font-14 dark-grey">
+              {{ticket?.facility?.name}}</p>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col>
+            <p class="txt-slate-grey margin-padding-zero font-14 gotham-medium margin-bottom-3">
+              {{transService.getTranslatedData('DESCRIPTION')}}</p>
+            <p class="gotham-medium margin-top-10 font-14 dark-grey">
+              {{ticket.notes}}</p>
+            <p class="gotham-medium margin-top-10 font-14 dark-grey" [hidden]="ticket.notes">
+              {{transService.getTranslatedData('Ticket description not available')}}</p>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <!-- <ion-col>
+            <p class="txt-slate-grey margin-padding-zero font-14 gotham-medium margin-bottom-3">LOCATION</p>
+            <p class="gotham-medium margin-top-10 font-14 dark-grey">
+              <span class="gotham-medium ">{{address.block}}</span>
+              <span class=" gotham-medium ">{{address.door}}</span>
+              {{address.name}}
+            </p>
+          </ion-col> -->
+          <ion-col>
+            <p class="txt-slate-grey font-14 margin-padding-zero gotham-medium margin-bottom-3">
+              {{transService.getTranslatedData('PRIORITY')}}</p>
+            <p class="gotham-medium margin-top-10 font-14 dark-grey">{{ticket.priority}}</p>
+          </ion-col>
+        </ion-row>
+      </div>
+
+      <div class="ticket-details-card dark-grey">
+        <ion-row>
+          <ion-col>
+            <p class="txt-slate-grey font-14 gotham-medium">{{transService.getTranslatedData('PEOPLE')}}
+            </p>
+          </ion-col>
+        </ion-row>
+
+        <ion-row class="margin-bottom-10">
+          <ion-col size="2">
+            <ngx-avatar initialsSize="2" textSizeRatio="2" name="{{ticket.raisedBy?.firstName}}"></ngx-avatar>
+          </ion-col>
+          <ion-col size="8">
+            <p class="gotham-medium font-14 dark-grey margin-padding-zero">
+              {{transService.getTranslatedData('Raised by')}}</p>
+            <p *ngIf="ticket.raisedBy"
+              class="txt-warm-grey font-14 gotham-medium font-weight-500 margin-top-8 txt-nowrap white-space-initial">
+              {{ticket.raisedBy.firstName}} {{ticket.raisedBy.lastName}}
+            </p>
+            <!-- <p class="txt-warm-grey font-14 gotham-medium font-weight-500 margin-padding-zero">Click here to add</p> -->
+          </ion-col>
+          <ion-col class="text-align-end" size="2">
+            <ion-icon class=" icon-25 svg-color-primary" src="/assets/svg-icons/contact-us.svg"
+              (click)="call(ticket.raisedBy.phoneNumber)"></ion-icon>
+          </ion-col>
+        </ion-row>
+        <ion-segment scrollable class=" shadow margin-padding-zero width-60-percent"  [(ngModel)]="selectedPocTechnicainTab">
+          <ion-segment-button class="margin-padding-zero font-12" value="poc">
+            <ion-label class="margin-padding-zero">{{transService.getTranslatedData("Poc's")}}</ion-label>
+          </ion-segment-button>
+          <ion-segment-button class="font-12" value="technician" >
+            <ion-label class="margin-padding-zero">{{transService.getTranslatedData('Technician')}}</ion-label>
+          </ion-segment-button>
+        </ion-segment>
+        <div [ngSwitch]="selectedPocTechnicainTab" class="margin-top-10">
+          <div *ngSwitchCase="'poc'">
+            <div *ngIf="ticket.contactPoints && ticket.contactPoints.length > 0">
+              <ion-row class=" margin-bottom-10" *ngFor="let poc of ticket.contactPoints">
+                <ion-col size="2">
+                  <ngx-avatar textSizeRatio="2" initialsSize="2" name="{{poc.firstName}}"></ngx-avatar>
+                </ion-col>
+                <ion-col>
+                  <p class="gotham-medium font-14 dark-grey margin-padding-zero">
+                    {{transService.getTranslatedData('Point Of Contact')}}</p>
+                  <p *ngIf="ticket.contactPoint"
+                    class="txt-warm-grey font-14 gotham-medium font-weight-500 margin-top-8 txt-nowrap white-space-initial">
+                    {{poc.firstName}} {{poc.lastName}}
+                  </p>
+                  <p *ngIf="!ticket.contactPoint"
+                    class="txt-warm-grey gotham-medium font-14 font-weight-500 margin-top-8 txt-nowrap">
+                    {{transService.getTranslatedData(' Not Added')}}
+                  </p>
+                </ion-col>
+                <ion-col size="2" class="display-flex">
+                  <span [hidden]="!moduleAccess.tickets.update" *ngIf="ticket.contactPoints" class="{{transService.getCurrentDirection()==='rtl'?'float-left':'float-right'}} font-14 txt-warm-grey align-self-center
+                  gotham-medium font-weight-500" (click)="openUserSearchModal('poc')">
+                    {{transService.getTranslatedData('Change')}}</span>
+                  <span [hidden]="!moduleAccess.tickets.update" *ngIf="!ticket.contactPoints" class="{{transService.getCurrentDirection()==='rtl'?'float-left':'float-right'}} font-14 align-self-center
+                      txt-warm-grey gotham-medium font-weight-500" (click)="openUserSearchModal('poc')">
+                    {{transService.getTranslatedData('Add')}}</span>
+                </ion-col>
+              </ion-row>
+            </div>
+            <div *ngIf="ticket.contactPoints && ticket.contactPoints.length === 0">
+              <ion-row class=" margin-bottom-10">
+                <ion-col size="2">
+                  <ngx-avatar textSizeRatio="2" initialsSize="2" name="{{ticket.contactPoint?.firstName}}"></ngx-avatar>
+                </ion-col>
+                <ion-col>
+                  <p class="gotham-medium font-14 dark-grey margin-padding-zero">
+                    {{transService.getTranslatedData('Point Of Contact')}}</p>
+                  <p *ngIf="ticket.contactPoint"
+                    class="txt-warm-grey font-14 gotham-medium font-weight-500 margin-top-8 txt-nowrap white-space-initial">
+                    {{ticket.contactPoint.firstName}} {{ticket.contactPoint.lastName}}
+                  </p>
+                  <p *ngIf="!ticket.contactPoint"
+                    class="txt-warm-grey gotham-medium font-14 font-weight-500 margin-top-8 txt-nowrap">
+                    {{transService.getTranslatedData(' Not Added')}}
+                  </p>
+                </ion-col>
+                <ion-col size="2" class="display-flex">
+                  <span [hidden]="!moduleAccess.tickets.update" *ngIf="ticket.contactPoint" class="{{transService.getCurrentDirection()==='rtl'?'float-left':'float-right'}} font-14 txt-warm-grey align-self-center
+                  gotham-medium font-weight-500" (click)="openUserSearchModal('poc')">
+                    {{transService.getTranslatedData('Change')}}</span>
+                  <span [hidden]="!moduleAccess.tickets.update" *ngIf="!ticket.contactPoint" class="{{transService.getCurrentDirection()==='rtl'?'float-left':'float-right'}} font-14 align-self-center
+                      txt-warm-grey gotham-medium font-weight-500" (click)="openUserSearchModal('poc')">
+                    {{transService.getTranslatedData('Add')}}</span>
+                </ion-col>
+              </ion-row>
+            </div>
+          </div>
+          <div *ngSwitchCase="'technician'">
+            <ion-row class="margin-bottom-10" *ngFor="let agent of ticket.agents">
+              <ion-col size="2">
+                <ngx-avatar initialsSize="2" textSizeRatio="2" class="margin-padding-zero font-14"
+                  name="{{agent?.firstName}}">
+                  <div class="margin-padding-zero"></div>
+                </ngx-avatar>
+              </ion-col>
+              <ion-col>
+                <p class="gotham-medium font-14 dark-grey margin-padding-zero">
+                  {{transService.getTranslatedData('Technician')}}</p>
+                <p *ngIf="agent"
+                  class="txt-warm-grey font-14 gotham-medium font-weight-500 margin-top-8 txt-nowrap white-space-initial">
+                  {{agent.firstName}} {{agent.lastName}}
+                </p>
+                <p *ngIf="!agent" class="txt-warm-grey font-14 gotham-medium font-weight-500 margin-top-8 txt-nowrap">
+                  {{transService.getTranslatedData("Not added")}}
+                </p>
+              </ion-col>
+              <ion-col size="2" class="display-flex justify-flex-end">
+                <span [hidden]="!moduleAccess.tickets.update" *ngIf="ticket.agents.length > 0"
+                  class="{{transService.getCurrentDirection()==='rtl'?'float-left':'float-right'}} font-14 gotham-medium font-weight-500 align-self-center super-script"
+                  (click)="deleteUser(agent._id)">{{transService.getTranslatedData('Delete')}}</span>
+              </ion-col>
+              <ion-col size="2" class="display-flex">
+                <span [hidden]="!moduleAccess.tickets.update" *ngIf="ticket.agents.length > 0"
+                  class="{{transService.getCurrentDirection()==='rtl'?'float-left':'float-right'}} font-14 txt-warm-grey gotham-medium font-weight-500 align-self-center"
+                  (click)="openUserSearchModal('agent',agent._id)">{{transService.getTranslatedData('Change')}}</span>
+                <span [hidden]="!moduleAccess.tickets.update" *ngIf="ticket.agents.length === 0" class="{{transService.getCurrentDirection()==='rtl'?'float-left':'float-right'}} font-14 txt-warm-grey align-self-center
+                  gotham-medium font-weight-500" (click)="openUserSearchModal('agent')">
+                  {{transService.getTranslatedData('Add')}}</span>
+              </ion-col>
+            </ion-row>
+            <ion-row [hidden]="ticket.agents?.length !== 0" class="margin-bottom-10">
+              <ion-col size="2" class="padding-left-20">
+    
+              </ion-col>
+              <ion-col size="8">
+                <p class="gotham-medium font-14 dark-grey margin-padding-zero">
+                  {{transService.getTranslatedData('Technician')}}</p>
+    
+                <p class="txt-warm-grey font-14 gotham-medium font-weight-500 margin-top-8 txt-nowrap">
+                  {{transService.getTranslatedData("Not added")}}
+                </p>
+              </ion-col>
+              <ion-col size="2" class="display-flex">
+                <span [hidden]="!moduleAccess.tickets.update" class="{{transService.getCurrentDirection()==='rtl'?'float-left':'float-right'}} font-14 txt-warm-grey align-self-center
+                  gotham-medium font-weight-500" (click)="openUserSearchModal('agent')">
+                  {{transService.getTranslatedData('Add')}}</span>
+              </ion-col>
+            </ion-row>
+          </div>
+        </div>
+      </div>
+
+      <div class="ticket-details-card">
+        <ion-row>
+          <ion-col>
+            <p class="txt-slate-grey font-14 gotham-medium margin-bottom-3">
+              {{transService.getTranslatedData('PHOTOS')}}</p>
+          </ion-col>
+        </ion-row>
+        <ion-row style="flex-wrap: wrap;">
+
+          <ion-col size="3" style="position: relative;" *ngFor="let file of ticket.files">
+            <!-- <img src="assets/icon/delete.png"
+              style="height: 25px; width: 25px; position: absolute; right: 6px; top: 6px;"
+              (click)="removeImage(file._id)"> -->
+            <img src="{{file.aws_url}}" (click)="openImage(file.aws_url)"
+              class="img-responsive height-70 border-radius-10 " />
+          </ion-col>
+
+          <ion-col [hidden]="!moduleAccess.tickets.update" size="3" class="center-text" (click)="presentActionSheet()">
+            <img src="assets/icon/add-green.png" class="height-30 width-30 border-radius-10 " />
+            <p class="txt-slate-grey gotham-medium margin-top-10 font-weight-500 font-14">
+              {{transService.getTranslatedData('Add photo')}}</p>
+          </ion-col>
+
+        </ion-row>
+        <div class="font-14 txt-brown center-text" *ngIf="ticket.files?.length == 0">
+          {{transService.getTranslatedData('No pictures attached to this ticket')}}</div>
+      </div>
+
+      <div class="ticket-details-card">
+        <ion-row>
+          <ion-col>
+            <p class="txt-slate-grey gotham-medium font-14 margin-bottom-10  ">
+              {{transService.getTranslatedData('JOB DETAILS')}}</p>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col>
+            <p class="txt-slate-grey font-14 gotham-medium margin-padding-zero">
+              {{transService.getTranslatedData('JOB START DATE')}}</p>
+            <p *ngIf="ticket.jobDate"
+              class="gotham-medium dark-grey font-14 margin-top-10 margin-bottom-3 direction-ltr {{transService.getCurrentDirection()==='rtl'?'text-align-end':'text-align-start'}}">
+              {{ticket.jobDate | date:'dd MMM yyyy'}}</p>
+            <span *ngIf="!ticket.jobDate"
+              class="txt-warm-grey font-14 gotham-medium font-weight-500">{{transService.getTranslatedData('Add')}}</span>
+          </ion-col>
+          <ion-col>
+            <p class="txt-slate-grey gotham-medium font-14 margin-padding-zero">
+              {{transService.getTranslatedData('TIME')}}</p>
+            <p *ngIf="ticket.jobStartTime"
+              class="gotham-medium dark-grey margin-top-10 font-14 margin-bottom-3 direction-ltr {{transService.getCurrentDirection()==='rtl'?'text-align-end':'text-align-start'}}">
+              {{ticket.jobStartTime |date:'h:mm a'}}</p>
+            <span *ngIf="!ticket.jobStartTime"
+              class="txt-warm-grey gotham-medium font-14 font-weight-500">{{transService.getTranslatedData('Add')}}</span>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col>
+            <p class="txt-slate-grey gotham-medium font-14 margin-padding-zero">
+              {{transService.getTranslatedData('JOB END DATE')}}</p>
+            <p *ngIf="ticket.jobEndDate"
+              class="gotham-medium dark-grey margin-top-10 font-14 margin-bottom-3 direction-ltr {{transService.getCurrentDirection()==='rtl'?'text-align-end':'text-align-start'}}">
+              {{ticket.jobEndDate | date:'dd MMM yyyy'}}</p>
+            <span *ngIf="!ticket.jobEndDate"
+              class="txt-warm-grey font-14 gotham-medium font-weight-500">{{transService.getTranslatedData('Add')}}</span>
+          </ion-col>
+          <ion-col>
+            <p class="txt-slate-grey gotham-medium margin-padding-zero font-14">
+              {{transService.getTranslatedData('TIME')}}</p>
+            <p *ngIf="ticket.jobEndTime"
+              class="gotham-medium dark-grey margin-top-10 margin-bottom-3 font-14 direction-ltr {{transService.getCurrentDirection()==='rtl'?'text-align-end':'text-align-start'}}">
+              {{ticket.jobEndTime | date:'hh:mm a'}}</p>
+            <span *ngIf="!ticket.jobEndTime"
+              class="txt-warm-grey gotham-medium font-14 font-weight-500">{{transService.getTranslatedData('Add')}}</span>
+          </ion-col>
+        </ion-row>
+      </div>
+    </div>
+
+    <div *ngSwitchCase="'ASSETS'" class="full-width max-available-height margin-top-5">
+      <div class="ticket-assets-card" *ngFor="let asset of ticket.assets">
+        <ion-row>
+          <ion-col>
+            <p class="txt-slate-grey font-14 gotham-medium margin-bottom-0">
+              {{transService.getTranslatedData('ASSET ID')}}</p>
+            <p class="margin-top-10 font-14 margin-bottom-10 gotham-medium dark-grey">{{asset.assetId}}</p>
+          </ion-col>
+          <ion-col>
+            <p class="txt-slate-grey font-14 gotham-medium margin-bottom-0">
+              {{transService.getTranslatedData('ASSET NAME')}}</p>
+            <p class="margin-bottom-10 font-14 margin-top-10 gotham-medium dark-grey">{{asset.name}}</p>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col>
+            <p class="txt-slate-grey font-14 gotham-medium margin-padding-zero">
+              {{transService.getTranslatedData('LOCATION')}}</p>
+            <p class="margin-bottom-10 margin-top-10 font-14 gotham-medium dark-grey ">
+              {{asset.location || transService.getTranslatedData('Not available')}}</p>
+          </ion-col>
+          <ion-col>
+            <p class="txt-slate-grey font-14 gotham-medium margin-padding-zero">
+              {{transService.getTranslatedData('FLOOR')}}</p>
+            <p class="margin-bottom-0 margin-top-10 font-14 gotham-medium dark-grey">
+              {{asset.floor || transService.getTranslatedData('Not available')}}
+            </p>
+          </ion-col>
+        </ion-row>
+
+        <ion-row>
+          <ion-col>
+            <p class="txt-slate-grey font-14 gotham-medium margin-padding-zero">
+              {{transService.getTranslatedData('DESCRIPTION')}}</p>
+            <p class=" font-14 margin-bottom-0 margin-top-10 gotham-medium dark-grey">
+              {{asset.description || transService.getTranslatedData('Not available')}}</p>
+          </ion-col>
+        </ion-row>
+      </div>
+
+      <div *ngIf="ticket?.assets?.length === 0" class="full-width display-flex justify-center align-items-center bg-white flex-direction-column">
+        <ion-row
+          class="txt-small txt-brown gotham-medium font-14 center-text margin-top-15">
+          <ion-col>{{transService.getTranslatedData('No Assets attached to this ticket')}}</ion-col>
+        </ion-row>
+
+        <ion-row class=" float-right margin-top-15" (click)="routToTicketEdit(ticket)" dir="ltr">
+          <img src="assets/icon/add-green.png" class="height-25 width-25 border-radius-10 " />
+          <p class="gotham-medium dark-grey margin-left-5 margin-right-10 font-17 "
+            [ngClass]="{'margin-top-7': transService.getCurrentDirection()==='ltr'}">
+            {{transService.getTranslatedData('Add new asset')}}
+          </p>
+        </ion-row>
+      </div>
+
+    </div>
+
+    <div *ngSwitchCase="'INTERNAL COMMENTS'" class="full-width max-available-height margin-top-5 direction-ltr"
+      id="ionList" style="overflow: scroll;">
+      <!-- <ion-row class="padding-10 ">
+        <ion-col>
+          <textarea rows="7" class="border-grey-1 font-14 full-width "
+            placeholder="{{transService.getTranslatedData('Type your comment here')}}" [(ngModel)]="ticket.commentText">
+          </textarea>
+          <ion-button class="float-right" style="margin: 5px; padding: 0" (click)="createComment('internal')">
+            <p class="gotham font-14 margin-padding-zero">
+              {{transService.getTranslatedData('Comment')}}</p>
+          </ion-button>
+        </ion-col>
+      </ion-row> -->
+      <!-- Tickets comments section -->
+
+      <p class="center-text" *ngIf="!hideLoading">
+        <ion-spinner name="lines"></ion-spinner>
+      </p>
+
+      <ion-row *ngIf="internalComments?.length === 0&&hideLoading"
+        class="txt-small txt-brown gotham-medium center-text font-14 center margin-top-15">
+        <ion-col>{{transService.getTranslatedData('No comments found')}}</ion-col>
+      </ion-row>
+
+
+      <div *ngFor="let comment of internalComments" style="margin-bottom:8px !important;" lines="full">
+
+        <div *ngIf="comment.createdBy._id !== userId">
+          <ion-row class="margin-left-10 margin-right-10">
+            <ion-col size="2" class="ion-align-items-start">
+              <ngx-avatar initialsSize="2" class="gotham-medium" name="{{comment.createdBy.firstName}}"></ngx-avatar>
+            </ion-col>
+            <ion-col size="10">
+              <div [ngClass]="{'direction-rtl': transService.getCurrentDirection()==='rtl'}"
+                class="discussion-comment border-not-left-top-radius-10 padding-top-bottom-right-10 padding-left-7 margin-right-10 fit-content">
+                <p class="padding-0 margin-0 margin-bottom-10 width-auto font-14  dark-grey gotham-medium fit-content">
+                  {{comment.createdBy.firstName}}
+                  {{comment.createdBy.lastName}} </p>
+                <p
+                  class="font-14 white-space-initial gotham-medium txt-warm-grey font-14 margin-bottom-0 line-height padding-bottom-0 margin-top-8">
+                  {{comment.text}}
+                </p>
+              </div>
+            </ion-col>
+          </ion-row>
+        </div>
+
+        <div *ngIf="comment.createdBy._id === userId">
+          <ion-row class="ion-align-items-end">
+            <ion-col size="10" class="padding-left-10">
+              <div [ngClass]="{'direction-rtl': transService.getCurrentDirection()==='rtl'}"
+                class="discussion-comment border-not-right-top-radius-10  padding-top-bottom-right-10 padding-left-7 fit-content margin-left-auto bg-warn-grey">
+                <p class="padding-0 margin-0 margin-bottom-10 width-auto  font-14 gotham-medium fit-content">
+                  {{transService.getTranslatedData('You')}}</p>
+                <p
+                  class="font-14 white-space-initial gotham-medium txt-warm-grey font-14 margin-bottom-0 line-height padding-bottom-0 margin-top-8">
+                  {{comment.text}}
+                </p>
+              </div>
+            </ion-col>
+            <ion-col size="2">
+              <ngx-avatar class="gotham-medium" initialsSize="2" name="{{comment.createdBy.firstName}}"></ngx-avatar>
+            </ion-col>
+          </ion-row>
+        </div>
+        <!-- 
+        <ngx-avatar *ngIf="comment.createdBy._id !== userId"  class="gotham-medium" name="{{comment.createdBy.firstName}}"></ngx-avatar>
+        <ion-label  class="margin-right-10 margin-left-10">
+          <p>
+            <span *ngIf="comment.createdBy._id !== userId" class=" font-14 dark-grey gotham-medium"> {{comment.createdBy.firstName}}
+              {{comment.createdBy.lastName}} </span>
+            
+            <span
+              class="font-14 {{ comment.createdBy._id === userId ? 'float-left':'float-right'}} gotham-medium txt-warm-grey font-14 margin-bottom-0 padding-bottom-0 ">
+              {{comment.createdAt|agoFilter}}
+            </span>
+              to disply user comment  
+            <span *ngIf="comment.createdBy._id === userId" class="float-right font-14 dark-grey gotham-medium">{{transService.getTranslatedData('You')}}</span>
+          </p>
+          <div class="{{ comment.createdBy._id !== userId ? 'float-left':'float-right'}}">
+            <span
+              class="font-14 white-space-initial gotham-medium txt-warm-grey font-14 margin-bottom-0 padding-bottom-0 margin-top-8">
+              {{comment.text}}
+            </span>
+          </div>
+          
+        </ion-label>
+        <ngx-avatar *ngIf="comment.createdBy._id === userId"  class="gotham-medium" name="{{comment.createdBy.firstName}}"></ngx-avatar> -->
+      </div>
+    </div>
+
+    <div *ngSwitchCase="'EXTERNAL COMMENTS'" class="full-width max-available-height margin-top-5 direction-ltr"
+      id="ionList" style="overflow: scroll;">
+      <!-- <ion-row class="padding-10 ">
+        <ion-col>
+          <textarea rows="7" class="border-grey-1 font-14 full-width "
+            placeholder="{{transService.getTranslatedData('Type your comment here')}}" [(ngModel)]="ticket.commentText">
+          </textarea>
+          <ion-button class="float-right" style="margin: 5px; padding: 0" (click)="createComment('external')">
+            <p class="gotham font-14 margin-padding-zero">
+              {{transService.getTranslatedData('Comment')}}</p>
+          </ion-button>
+        </ion-col>
+      </ion-row> -->
+      <!-- Tickets comments section -->
+
+      <p class="center-text" *ngIf="!hideLoading">
+        <ion-spinner name="lines"></ion-spinner>
+      </p>
+
+
+      <ion-row *ngIf="externalComments?.length === 0&&hideLoading"
+        class="txt-small txt-brown gotham-medium center-text font-14 center margin-top-15">
+        <ion-col>{{transService.getTranslatedData('No comments found')}}</ion-col>
+      </ion-row>
+
+
+      <div *ngFor="let comment of externalComments" style="margin-bottom:5px !important;" lines="full">
+
+        <div *ngIf="comment.createdBy._id !== userId">
+          <ion-row class="margin-left-10 margin-right-10">
+            <ion-col size="2" class="ion-align-items-start">
+              <ngx-avatar class="gotham-medium" initialsSize="2" name="{{comment.createdBy.firstName}}"></ngx-avatar>
+            </ion-col>
+            <ion-col size="10">
+              <div [ngClass]="{'direction-rtl': transService.getCurrentDirection()==='rtl'}"
+                class="discussion-comment border-not-left-top-radius-10 padding-top-bottom-right-10 padding-left-7 margin-right-10 fit-content">
+                <p class="padding-0 margin-0 margin-bottom-10 width-auto font-14  dark-grey gotham-medium fit-content">
+                  {{comment.createdBy.firstName}}
+                  {{comment.createdBy.lastName}} </p>
+                <p
+                  class="font-14 white-space-initial gotham-medium txt-warm-grey font-14 margin-bottom-0 line-height padding-bottom-0 margin-top-8">
+                  {{comment.text}}
+                </p>
+              </div>
+            </ion-col>
+          </ion-row>
+        </div>
+
+        <div *ngIf="comment.createdBy._id === userId">
+          <ion-row class="ion-align-items-end">
+            <ion-col size="10" class="padding-left-10">
+              <div [ngClass]="{'direction-rtl': transService.getCurrentDirection()==='rtl'}"
+                class="discussion-comment border-not-right-top-radius-10  padding-top-bottom-right-10 padding-left-7 fit-content margin-left-auto bg-warn-grey">
+                <p class="padding-0 margin-0 margin-bottom-10 width-auto  font-14 gotham-medium fit-content">
+                  {{transService.getTranslatedData('You')}}</p>
+                <p
+                  class="font-14 white-space-initial gotham-medium txt-warm-grey font-14 margin-bottom-0 line-height padding-bottom-0 margin-top-8">
+                  {{comment.text}}
+                </p>
+              </div>
+            </ion-col>
+            <ion-col size="2">
+              <ngx-avatar class="gotham-medium" initialsSize="2" name="{{comment.createdBy.firstName}}"></ngx-avatar>
+            </ion-col>
+          </ion-row>
+        </div>
+
+
+
+
+
+        <!-- <ngx-avatar class="gotham-medium" name="{{comment.createdBy.firstName}}"></ngx-avatar>
+        <ion-label class="margin-right-10 margin-left-10">
+          <p>
+            <span class=" font-14 dark-grey gotham-medium"> {{comment.createdBy.firstName}}
+              {{comment.createdBy.lastName}} </span>
+            <span
+              class="font-14 {{transService.getCurrentDirection()==='rtl'?'float-left':'float-right'}} gotham-medium txt-warm-grey font-14 margin-bottom-0 padding-bottom-0 ">
+              {{comment.createdAt|agoFilter}}
+            </span>
+          </p>
+
+          <span
+            class="font-14 txt-align-start white-space-initial gotham-medium txt-warm-grey font-14 margin-bottom-0 padding-bottom-0 margin-top-8">
+            {{comment.text}}
+          </span>
+        </ion-label> -->
+      </div>
+    </div>
+
+    <p class="center-text" [hidden]="selectedTab!='CHECKLIST'" *ngIf="checkListLoading">
+      <ion-spinner name="lines"></ion-spinner>
+    </p>
+
+    <div *ngSwitchCase="'CHECKLIST'" class="full-width max-available-height margin-top-5 margin-bottom-10">
+      <!-- <div class="ticket-details-list" *ngIf="ticket.checklist?.length > 0">
+        <ion-list class="padding-bottom-0">
+
+          <ion-item *ngFor="let data of ticket.checklist; let i = index">
+            <ion-checkbox [disabled]="!moduleAccess.tickets.update" class="txt-warm-grey" [(ngModel)]="data.completed"
+              (ionChange)="updateCheckList(data.completed, i)"></ion-checkbox>
+            <ion-label class="margin-right-20 margin-left-20 font-14  gotham item-text-wrap opacity-1">
+              {{data.name}}
+            </ion-label>
+          </ion-item>
+
+        </ion-list>
+
+      </div> -->
+        <div class="ticket-details-list padding-16 margin-bottom-10" *ngIf="ticket.checklist && ticket.checklist?.checklistSections?.length > 0">
+          <p class="txt-slate-grey font-18 margin-top-0 gotham-medium">
+            {{ticket.checklist?.name}}</p>
+            <p *ngIf="ticket.checklist?.description" class="txt-slate-grey gotham font-16">{{ticket.checklist?.description}}</p>
+            <ion-row class="margin-bottom-10 margin-top-10 font-14">
+              <ion-text class="gotham">{{transService.getTranslatedData('Overall Progress: ')}} {{progressPercentage | number:'1.0-0'}}%</ion-text>
+              <ion-progress-bar class="margin-bottom-10 margin-top-10 ticket-checklist-progress-bar height-10 border-radius-10" [value]="progressValue"></ion-progress-bar>
+            </ion-row>
+
+              <ion-button class="text-transform-capitalize ion-button" [hidden]="ticket.checklist.completed" (click)="routeToCheckList(ticket)">{{transService.getTranslatedData(progressPercentage > 0 ? 'Resume' : 'Start')}}</ion-button>
+              <ion-button class="text-transform-capitalize ion-button" [hidden]="!ticket.checklist.completed" (click)="sendEmail();">{{transService.getTranslatedData('View Report')}}</ion-button>
+
+        </div>
+
+        <div  *ngIf="ticket.checklist && ticket.checklist.checklistSections">
+          <div *ngFor="let section of ticket.checklist.checklistSections; let i = index">
+            <ion-row  class="ticket-details-card margin-bottom-10" (click)="routeToCheckList(ticket, i)">
+              <ion-col size="1" *ngIf="section.completed"><ion-icon name="checkmark-circle"  color="active-status" class="icon-30"></ion-icon></ion-col>
+              <ion-col size="1" *ngIf="!section.completed"><ion-icon name="alert" color="warning" class="icon-30"></ion-icon></ion-col>
+              <ion-col size="11" class="padding-left-15">
+                <ion-text class="margin-0 text-transform-upper txt-slate-grey font-14 gotham-medium">
+                  <ion-text  class="margin-0 txt-slate-grey gotham-medium">{{transService.getTranslatedData('Section')}} {{i + 1}}.</ion-text>
+                  {{transService.getTranslatedData(section.sectionName)}}</ion-text>
+                  <p class="gotham margin-bottom-0 font-14">{{transService.getTranslatedData('Total')}} <span>{{sectionProgress(ticket.checklist.checklistSections, i)}}</span></p>
+                </ion-col>
+              </ion-row>
+            </div>
+          </div>
+
+      <div *ngIf="emptyCheckList" class="full-width display-flex justify-center align-items-center bg-white flex-direction-column">
+        <ion-row 
+        class="txt-small txt-brown gotham-medium font-14 center-text margin-top-15">
+        <ion-col>{{transService.getTranslatedData('No checklist found')}}</ion-col>
+        </ion-row>
+
+        <ion-row class=" float-right margin-top-15" (click)="routToTicketEdit(ticket)" dir="ltr">
+          <img src="assets/icon/add-green.png" class="height-25 width-25 border-radius-10 " />
+          <p class="gotham-medium dark-grey margin-left-5 margin-right-10 font-17 "
+            [ngClass]="{'margin-top-7': transService.getCurrentDirection()==='ltr'}">
+            {{transService.getTranslatedData('Add new checklist')}}
+          </p>
+        </ion-row>
+      </div>
+    </div>
+
+    <div *ngSwitchCase="'QUOTATIONS'" class="full-width max-available-height margin-top-5">
+      <div class="ticket-details-list" *ngIf="ticket.estimates.length > 0">
+        <ion-list class="padding-0" *ngFor="let estimate of ticket.estimates">
+          <ion-item lines="full" [routerLink]="['/rentals-estimate']" [queryParams]="{estimateId: estimate._id}">
+            <ion-label>
+              <ion-row>
+                <ion-col>
+                  <p class="gotham-medium font-14 dark-grey ">
+                    {{transService.getTranslatedData('Quotation')}}
+                    {{transService.getCurrentDirection()==='rtl'? estimate.uid + "#" : "#" + estimate.uid}}
+                  </p>
+                  <p
+                    class="gotham font-14 font-weight-600 txt-warm-grey direction-ltr {{transService.getCurrentDirection()==='rtl'?'text-align-end':'text-align-start'}}">
+                    {{estimate.createdAt | date:'dd MMM yyyy'}}
+                  </p>
+                </ion-col>
+                <ion-col class="padding-top-0">
+                  <p
+                    class="gotham font-14 font-weight-600 direction-ltr {{transService.getCurrentDirection()==='rtl'?'float-left':'float-right'}} padding-right-10 txt-warm-grey">
+                    {{app==='com.aqaraty.fm'? alertService.getNumberFormat(estimate.totalAmount)+'
+                    '+'KWD':alertService.getNumberFormat(estimate.totalAmount)}}
+                  </p>
+                </ion-col>
+              </ion-row>
+            </ion-label>
+            <ion-icon slot="end" class="font-20 ion-item-detail-icon-color"
+              [name]="transService.getCurrentDirection()==='rtl'? 'ios-arrow-back':'ios-arrow-forward'"></ion-icon>
+          </ion-item>
+        </ion-list>
+      </div>
+
+      <ion-row *ngIf="ticket.estimates?.length == 0"
+        class="txt-small txt-brown gotham-medium font-14 center-text margin-top-15">
+        <ion-col>
+          {{transService.getTranslatedData('No estimate found')}}
+        </ion-col>
+      </ion-row>
+    </div>
+
+    <div *ngSwitchCase="'MATERIALS'" class="full-width max-available-height margin-top-5">
+      <div *ngIf="activeMaterialSection == 'description'" class="ticket-details-list full-width">
+        <ion-row class="margin-0 padding-top-5 border-bottom-grey-1"
+          *ngFor="let item of ticket.itemDetails let i = index">
+          <ion-col size="1" class="margin-right-8 center-text">
+            <p class="gotham-medium font-14 dark-grey margin-padding-zero">{{i+1}}</p>
+          </ion-col>
+          <ion-col size="8" class="margin-right-10">
+            <p class="gotham-medium font-14 dark-grey margin-padding-zero">{{item.product.name}}</p>
+            <p *ngIf="item.borneByEndUser"
+              class="txt-warm-grey font-14 gotham-medium margin-bottom-0 font-weight-500 margin-top-8 txt-nowrap">
+              {{transService.getTranslatedData('Borne by customer')}}
+            </p>
+            <p class="txt-warm-grey font-14 gotham-medium margin-top-8  font-weight-500txt-nowrap">
+              {{transService.getTranslatedData('Quantity')}} {{item.quantity}}
+            </p>
+          </ion-col>
+          <ion-col [hidden]="!moduleAccess.tickets.update"
+            class="margin-left-10 margin-top-3 padding-top-0 center-text">
+            <img class="icon-25 " src="assets/icon/delete.png" (click)="removeMaterial(item._id)">
+          </ion-col>
+        </ion-row>
+      </div>
+
+      <div *ngIf="activeMaterialSection == 'materialForm'">
+        <div class="padding-25">
+          <ion-list>
+            <ion-list-header class="gotham font-16 font-weight-500">
+              {{transService.getTranslatedData('Material')}}</ion-list-header>
+            <ion-item (click)="openMaterialSearchModal()">
+              <ion-input inputmode="text" [(ngModel)]="materialData.name" class="gotham"
+                placeholder="{{transService.getTranslatedData('Click here to select material')}}">
+              </ion-input>
+              <ion-icon class="float-right" name="arrow-dropdown"></ion-icon>
+            </ion-item>
+          </ion-list>
+          <ion-list>
+            <ion-list-header class="gotham font-16 font-weight-500">
+              {{transService.getTranslatedData('Quantity')}}</ion-list-header>
+            <ion-item>
+              <ion-input inputmode="number" [(ngModel)]="materialData.quantity" class="gotham"
+                placeholder="{{transService.getTranslatedData('Enter quantity')}}">
+              </ion-input>
+            </ion-item>
+          </ion-list>
+          <!-- <ion-list no-lines> -->
+          <ion-item lines="none">
+            <ion-label>{{transService.getTranslatedData('Borne by customer?')}}</ion-label>
+            <ion-checkbox slot="start" [(ngModel)]="materialData.borneByEndUser"></ion-checkbox>
+          </ion-item>
+          <!-- </ion-list> -->
+
+          <ion-row class="center-text" dir="ltr">
+            <ion-col>
+              <ion-button (click)="hideMaterialForm()" color="danger" class="full-width">
+                {{transService.getTranslatedData('Cancel')}}</ion-button>
+            </ion-col>
+            <ion-col>
+              <ion-button color="success" class="full-width" (click)="tagMaterial()">
+                {{transService.getTranslatedData('Add')}}</ion-button>
+            </ion-col>
+          </ion-row>
+
+        </div>
+      </div>
+
+      <div class="full-width display-flex justify-center align-items-center bg-white flex-direction-column">
+        <ion-row *ngIf="ticket.itemDetails?.length == 0" [hidden]="activeMaterialSection == 'materialForm'"
+        class="txt-small center-text txt-brown gotham-medium font-14 margin-top-15">
+        <ion-col>{{transService.getTranslatedData('No materials found')}}</ion-col>
+        </ion-row>
+      
+        <ion-row [hidden]="!moduleAccess.tickets.update" class=" float-right margin-top-15" (click)="showMaterialForm()"
+          *ngIf="activeMaterialSection == 'description'" dir="ltr">
+          <img src="assets/icon/add-green.png" class="height-25 width-25 border-radius-10 " />
+          <p class="gotham-medium dark-grey margin-left-5 margin-right-10 font-17 "
+            [ngClass]="{'margin-top-7': transService.getCurrentDirection()==='ltr'}">
+            {{transService.getTranslatedData('Add new material')}}
+          </p>
+        </ion-row>
+      </div>
+    </div>
+
+  </div>
+</ion-content>
+<ion-footer id="footer"
+  [ngClass]="{'display-flex justify-center': selectedTab!=='EXTERNAL COMMENTS'&&selectedTab!=='INTERNAL COMMENTS'}">
+  <ion-row [hidden]="!moduleAccess.tickets.update"  [ngClass]="{'width-50-percent': ticket.status=='on-hold'}" class="width-95-percent margint-top-10 center-text justify-center"
+    dir="ltr" *ngIf="selectedTab!=='EXTERNAL COMMENTS'&&selectedTab!=='INTERNAL COMMENTS'">
+    <ion-col [hidden]="ticket.status=='on-hold'">
+      <ion-icon class="icon-40" name="radio-button-off" color="open-active-status"></ion-icon>
+      <p class="font-12 margin-0">{{transService.getTranslatedData(ticket.status==='re-open' ? 'Re-Open' : 'Open')}}</p>
+    </ion-col>
+    <ion-col (click)="updatStatus('in-progress')" [hidden]="ticket.status == 'resolved' || ticket.status == 'rejected' ">
+      <ion-icon name="more" mode="ios" class="icon-30 margin-top-3 in-active-status" [ngClass]="{'in-progress-active-status': ticket.status=='in-progress'||ticket.status=='resolved'||ticket.status=='rejected'}"
+        [color]="ticket.status=='in-progress'||ticket.status=='resolved'||ticket.status=='rejected'?'in-progress-active-status':'in-progress-in-active-status'">
+      </ion-icon>
+      <p class="font-12 margin-0">{{transService.getTranslatedData('In Progress')}}</p>
+    </ion-col>
+    <ion-col *ngIf="ticket.status!='rejected'" [hidden]="ticket.status=='on-hold'" (click)="ticketConfig.isImageUploadMandatoryForTicketClosing  &&  ticket?.type !=='PPM' && ticket?.type!=='automated' ? uploadImage() : updatStatus('resolved')" >
+      <ion-icon name="checkmark" class="icon-30 margin-top-3 in-active-status" [ngClass]="{'resolved-active-status': ticket.status=='resolved'}"
+      [color]="ticket.status=='resolved'?'resolved-active-status':'medium'">
+      </ion-icon>
+      <p class="font-12 margin-0">{{transService.getTranslatedData('Resolved')}}</p>
+    </ion-col>
+    <ion-col *ngIf="ticket.status!='resolved'" [hidden]="ticket.status =='re-open' || ticket.status=='on-hold'  || (!hasAccessToTicketReject && ticket.status!='rejected')" (click)="updatStatus('rejected')" >
+      <ion-icon name="close" class="icon-30 margin-top-3 in-active-status" [ngClass]="{'rejected-active-status': ticket.status=='rejected'}"
+        [color]="ticket.status=='rejected'?'rejected-active-status':'medium'">
+      </ion-icon>
+      <p class="font-12 margin-0">{{transService.getTranslatedData('Rejected')}}</p>
+    </ion-col>
+
+    <ion-col *ngIf="ticket.status === 'resolved' && hasAccessToReOpenedTicket" [hidden]="ticket.status=='on-hold'" class="padding-top-7" (click)="openTicketReOpen()">
+      <ion-icon src="/assets/svg-icons/re-open.svg" class="icon-20 padding-5 in-active-status" [ngClass]="{'re-opened-active-status': ticket.status=='re-open'}"
+      [color]="ticket.status=='re-open'?'active-status':'medium'"></ion-icon>
+      <p class="font-12 margin-0">{{transService.getTranslatedData('Re-Open')}}</p>
+    </ion-col>
+
+    <ion-col *ngIf="ticket.status != 'resolved' && hasAccessToOnHoldTicket" class="padding-top-7" (click)="openTicketOnHold()">
+      <ion-icon name="pause" class="icon-20 padding-5 in-active-status" [ngClass]="{'on-hold-active-status': ticket.status=='on-hold'}"
+      [color]="ticket.status=='on-hold'?'on-hold-active-status':'medium'"></ion-icon>
+      <p class="font-12 margin-0">{{transService.getTranslatedData('On-Hold')}}</p>
+    </ion-col>
+
+  </ion-row>
+  <ion-item no-padding lines="none" class="ion-item-comment direction-ltr" *ngIf="selectedTab==='EXTERNAL COMMENTS'">
+    <label class=" grey-back full-width">
+      <ion-input [(ngModel)]="ticket.commentText" placeholder="{{transService.getTranslatedData('comment here...')}}"
+        [ngClass]="{'text-align-start': transService.getCurrentDirection()==='ltr','text-align-end': transService.getCurrentDirection()==='rtl'}"
+        class="font-14 height-50 gotham border-0 padding-left-10"></ion-input>
+    </label>
+    <ion-button class="ion-comment-button" [disabled]="!ticket.commentText" (click)="createComment('external')">
+      <ion-icon name="paper-plane">
+      </ion-icon>
+    </ion-button>
+  </ion-item>
+  <ion-item no-padding lines="none" class="ion-item-comment direction-ltr" *ngIf="selectedTab==='INTERNAL COMMENTS'">
+    <label class=" grey-back full-width">
+      <ion-input [(ngModel)]="ticket.commentText" placeholder="{{transService.getTranslatedData('comment here...')}}"
+        [ngClass]="{'text-align-start': transService.getCurrentDirection()==='ltr','text-align-end': transService.getCurrentDirection()==='rtl'}"
+        class="font-14 height-50 gotham border-0 padding-left-10"></ion-input>
+    </label>
+    <ion-button class="ion-comment-button" [disabled]="!ticket.commentText" (click)="createComment('internal')">
+      <ion-icon name="paper-plane">
+      </ion-icon>
+    </ion-button>
+  </ion-item>
+</ion-footer>

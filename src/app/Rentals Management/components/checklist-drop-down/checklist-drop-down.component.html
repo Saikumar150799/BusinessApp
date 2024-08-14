@@ -1,0 +1,7 @@
+<ion-radio-group>
+  <ion-item *ngFor="let option of options " lines="none" (click)="selectOption(option,options)">
+    <ion-label class="header-text font-14 line-height-17 {{transService.getCurrentDirection()}}">{{option.name}}
+    </ion-label>
+    <ion-radio mode="ios" slot="end" [(ngModel)]="option.selected"></ion-radio>
+  </ion-item>
+</ion-radio-group>

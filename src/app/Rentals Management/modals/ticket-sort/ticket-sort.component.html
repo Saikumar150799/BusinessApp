@@ -1,0 +1,45 @@
+<ion-row>
+  <ion-list>
+    <ion-radio-group [(ngModel)]="ticketSort[0]">
+      <ion-item lines="none" (click)="selectSortValue('jobDate,jobStartTime')">
+        <ion-label> {{translateService.getTranslatedData('Job Start Date')}} • {{translateService.getTranslatedData('Oldest first')}}</ion-label>
+        <ion-radio slot="start" value="jobDate,jobStartTime"></ion-radio>
+      </ion-item>
+
+      <ion-item lines="none" (click)="selectSortValue('-jobDate,-jobStartTime')">
+        <ion-label>{{translateService.getTranslatedData('Job Start Date')}} • {{translateService.getTranslatedData('Newest first')}}</ion-label>
+        <ion-radio slot="start" value="-jobDate,-jobStartTime"></ion-radio>
+      </ion-item>
+
+      <ion-item lines="none" (click)="selectSortValue('jobEndDate,jobEndTime')">
+        <ion-label>{{translateService.getTranslatedData('Job End Date')}} • {{translateService.getTranslatedData('Oldest first')}}</ion-label>
+        <ion-radio slot="start" value="jobEndDate,jobEndTime"></ion-radio>
+      </ion-item>
+
+      <ion-item lines="none" (click)="selectSortValue('-jobEndDate,-jobEndTime')">
+        <ion-label>{{translateService.getTranslatedData('Job End Date')}} • {{translateService.getTranslatedData('Newest first')}}</ion-label>
+        <ion-radio slot="start" value="-jobEndDate,-jobEndTime"></ion-radio>
+      </ion-item>
+
+      <ion-item lines="none" (click)="selectSortValue('createdAt')">
+        <ion-label>{{translateService.getTranslatedData('Created')}} • {{translateService.getTranslatedData('Oldest first')}}</ion-label>
+        <ion-radio slot="start" value="createdAt"></ion-radio>
+      </ion-item>
+
+      <ion-item lines="none" (click)="selectSortValue('-createdAt')">
+        <ion-label>{{translateService.getTranslatedData('Created')}} • {{translateService.getTranslatedData('Newest first')}}</ion-label>
+        <ion-radio slot="start" value="-createdAt"></ion-radio>
+      </ion-item>
+
+      <ion-item lines="none" (click)="selectSortValue('deadlineDate')">
+        <ion-label>{{translateService.getTranslatedData('Due Date')}} • {{translateService.getTranslatedData('Oldest first')}}</ion-label>
+        <ion-radio slot="start" value="deadlineDate"></ion-radio>
+      </ion-item>
+
+      <ion-item lines="none" (click)="selectSortValue('-deadlineDate')">
+        <ion-label>{{translateService.getTranslatedData('Due Date')}} • {{translateService.getTranslatedData('Newest first')}}</ion-label>
+        <ion-radio slot="start" value="-deadlineDate"></ion-radio>
+      </ion-item>
+    </ion-radio-group>
+  </ion-list>
+</ion-row>

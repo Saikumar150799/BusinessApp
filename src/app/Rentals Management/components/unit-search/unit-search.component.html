@@ -1,0 +1,38 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="end">
+      <ion-button (click)="closeModal()">
+        <ion-icon name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>{{transService.getTranslatedData('Units')}}</ion-title>
+  </ion-toolbar>
+  <div>
+    <ion-searchbar class="padding-0" [(ngModel)]="searchText" placeholder="Search" debounce="500" (ngModelChange)="searchListings($event)"></ion-searchbar>
+  </div>
+</ion-header>
+
+<ion-content>
+  <div class="center-text margin-top-10" [hidden]="!showSpinner">
+    <ion-spinner name="lines"></ion-spinner>
+  </div>
+  <ion-list *ngIf="listings.length > 0">
+    <ion-item *ngFor="let listing of listings" (click)="selectListing(listing._id)">
+      <ion-label class="white-space-initial font-15 line-height-20"> {{listing.displayName }}</ion-label>
+      <ion-checkbox [checked]="checkForSelectedListings(listing._id)" slot="end"></ion-checkbox>
+    </ion-item>
+  </ion-list>
+
+  <div *ngIf="emptyListings" class="ion-text-center margin-top-10">
+    <ion-label>{{transService.getTranslatedData('No units found')}}</ion-label>
+  </div>
+
+  <ion-infinite-scroll threshold="5px" (ionInfinite)="getListings($event)">
+    <ion-infinite-scroll-content loadingSpinner="bubbles" loadingText="loading...">
+    </ion-infinite-scroll-content>
+  </ion-infinite-scroll>
+</ion-content>
+
+
+<ion-button size="large"  (click)="applyFilter()" color="danger">
+  {{transService.getTranslatedData('APPLY')}}</ion-button>

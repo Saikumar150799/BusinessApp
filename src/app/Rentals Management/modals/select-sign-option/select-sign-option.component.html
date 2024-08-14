@@ -1,0 +1,21 @@
+<ion-content mode="md">
+  <div class="display-flex flex-direction-column justify-center align-items-center">
+    <ion-list-header class="padding-left-20 padding-right-20 padding-top-20">
+      <ion-label class="gotham center-text font-20 full-width">{{translateService.getTranslatedData('Tenant signature')}}</ion-label>
+    </ion-list-header>
+    <ion-list class="padding-20 margin-0 full-width" mode="md">
+      <ion-item lines="none" mode="md" class="margin-bottom-10">
+        <ion-button (click)="closeModal('sign')"
+        class="height-50 font-16 gotham-medium width-95-percent ion-item-shadow-none text-transform-capitalize margin-top-12 margin-bottom-24"
+        color="primary">
+        {{translateService.getTranslatedData("Sign now")}}</ion-button>
+      </ion-item>
+      <ion-item lines="none" mode="md" *ngIf="tenantAppPermission">
+        <ion-button fill="outline" (click)="closeModal('skip')"
+        class="height-50 font-16 gotham-medium width-95-percent ion-item-shadow-none text-transform-capitalize margin-top-12 margin-bottom-24"
+        color="primary">
+        {{translateService.getTranslatedData("Sign on Tenant App")}}</ion-button>
+      </ion-item>
+    </ion-list>
+  </div>
+</ion-content>

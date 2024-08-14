@@ -1,0 +1,49 @@
+<ion-header no-border class="display-flex">
+  <ion-title class="font-16 gotham-medium">{{transService.getTranslatedData('Activity')}}</ion-title>
+  <ion-buttons slot="end">
+    <ion-button (click)="dismiss()">
+      <ion-icon slot="icon-only" name="close"></ion-icon>
+    </ion-button>
+  </ion-buttons>
+</ion-header>
+
+<ion-content>
+  <ion-row>
+    <ion-item lines="none">
+      <ion-label>
+        <ion-label class="gotham">{{transService.getTranslatedData(title)}}</ion-label>
+        <p class="display-flex margin-top-5 margin-bottom-5 align-items-center gotham text-transform-capitalize">
+          {{transService.getTranslatedData('By')}} {{data?.createdBy?.firstName}} {{data?.createdBy?.lastName}} 
+          <ion-badge class="margin-left-10 gotham padding-top-4 padding-left-10 padding-right-10"  mode="md" color="roleName">
+            {{data?.createdBy?.roleName}}
+          </ion-badge>
+        </p>
+        <p class="gotham"> 
+          {{transService.getTranslatedData('On')}} 
+          {{data.createdAt | date: 'MMMM dd, yyyy'}} | {{data.createdAt | date: 'hh:mm a'}}
+        </p>
+      </ion-label>
+    </ion-item>
+  </ion-row>
+
+  <ion-list>
+    <ion-row *ngFor="let level of data.approval">
+      <ion-item lines="none" *ngIf="level?.actionTakenBy">
+        <ion-label>
+          <ion-label class="gotham display-flex align-items-center">{{transService.getTranslatedData('Level')}} {{level?.level}}
+            <ion-badge class="margin-left-10 gotham padding-left-10 padding-right-10 text-transform-capitalize padding-top-4"  mode="md" color="{{level.status}}">{{level.status}}</ion-badge>
+          </ion-label>
+          <p class="margin-top-5 margin-bottom-5 align-items-center gotham text-transform-capitalize">
+            {{transService.getTranslatedData('By')}} {{level?.actionTakenBy?.firstName}}  {{level?.actionTakenBy?.lastName}}</p>
+          <p class="gotham display-flex align-items-center">
+            {{transService.getTranslatedData('On')}}
+            {{level?.actionTimestamp | date: 'MMMM dd, yyyy'}} | {{level?.actionTimestamp | date: 'hh:mm a'}}
+            <ion-badge class="margin-left-10 gotham padding-left-10 padding-top-4 padding-right-10 text-transform-capitalize"  mode="md" color="roleName">
+              {{level?.actionTakenBy?.roleName}}
+            </ion-badge>
+          </p>
+        </ion-label>
+      </ion-item>
+    </ion-row>
+  </ion-list>
+</ion-content>

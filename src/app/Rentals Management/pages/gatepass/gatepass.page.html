@@ -1,0 +1,86 @@
+<ion-header>
+    <ion-toolbar color="primary">
+      <ion-buttons slot="start">
+        <ion-back-button defaultHref="rentals-home"></ion-back-button>
+      </ion-buttons>
+      <ion-buttons slot="end">
+        <ion-button (click)="openFilterModal()">
+          <ion-icon name="funnel" mode="ios"></ion-icon>
+        </ion-button>
+      </ion-buttons>
+      <ion-title class="padding-0">{{transService.getTranslatedData('Gatepass Approvals')}}</ion-title>
+    </ion-toolbar>
+
+    <div>
+      <ion-searchbar [(ngModel)]="gatepassFilteredData.searchText" placeholder="Search" debounce="300" (ngModelChange)="searchGatePasses($event)"
+        class="padding-0"></ion-searchbar>
+    </div>
+</ion-header>
+
+<ion-content>
+  <ion-item lines="none" class="ion-item">
+    <ion-toggle [(ngModel)]="toggleValue" (ionChange)="toggleChanged($event)"></ion-toggle>
+    <ion-label class="gotham font-14">{{transService.getTranslatedData('Show Gatepass Requiring My Approval')}}</ion-label>
+  </ion-item>
+
+  <div class="center-text margin-top-10" [hidden]="!loader">
+    <ion-spinner name="lines"></ion-spinner>
+  </div>
+
+  <div class="width-100-percent height-55 display-flex flex-direction-column justify-center align-items-center" *ngIf="gatePasses.length === 0 && noGatePasses">
+    <img src="../../../../assets/svg-icons/gatepass-empty.svg" alt="img">
+    <p class="gotham center-text margin-top-17" >
+      {{transService.getTranslatedData('There are no gate passes for approvals')}}</p>
+  </div>
+  <ion-list class=" padding-bottom-0">
+    <ion-item *ngFor="let gatepass of gatePasses" (click)="routeToGatePassDetails(gatepass)" detail
+      lines="none">
+      <ion-label class="margin-0">
+        <p class="gotham-medium margin-bottom-8 " text-wrap>
+          <ion-grid class="padding-0">
+            <ion-row class="padding-0">
+              <ion-col class="padding-0" class="padding-0" size="7">
+                <span
+                  [ngClass]="{'float-right': transService.getCurrentDirection()==='rtl','float-left':transService.getCurrentDirection()==='ltr'}">#{{gatepass?.uid}}
+                  </span>
+              </ion-col>
+              <ion-col class="padding-0">
+                <span class=" gotham"
+                  [ngClass]="{'float-left': transService.getCurrentDirection()==='rtl','float-right':transService.getCurrentDirection()==='ltr'}">
+                  {{gatepass?.createdAt | agoFilter}}</span>
+              </ion-col>
+            </ion-row>
+          </ion-grid>
+
+
+        </p>
+        <p class="gotham font-weight-600 txt-grey margin-bottom-8 white-space-initial">
+          {{transService.getTranslatedData('Unit : ')}} {{gatepass?.unitName}}
+        </p>
+
+        <ion-grid class="padding-0">
+          <ion-row class="padding-0 align-items-center">
+            <ion-col class="padding-0" size="auto">
+              <ion-badge class="gotham font-weight-600 padding-top-7 text-transform-capitalize" mode="md" color="{{gatepass?.approvalStatus}}"
+                [ngClass]="{'margin-left-10': transService.getCurrentDirection()==='rtl','margin-right-10':transService.getCurrentDirection()==='ltr'}">
+              {{gatepass?.approvalStatus}}
+              </ion-badge>
+            </ion-col>
+            <ion-col class="padding-0" size="auto">
+              <ion-badge class="gotham font-weight-600 padding-top-6 Returnable-badge" mode="md" 
+                [ngClass]="{'margin-left-10': transService.getCurrentDirection()==='rtl','margin-right-10':transService.getCurrentDirection()==='ltr'}">
+                {{gatepass?.movementType ==='returnable' ? transService.getTranslatedData('Returnable') : transService.getTranslatedData('Non-returnable')}}
+              </ion-badge>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </ion-label>
+    </ion-item>
+  </ion-list>
+
+  <ion-infinite-scroll threshold="5px" (ionInfinite)="fetchGatePasses($event)">
+    <ion-infinite-scroll-content loadingSpinner="bubbles"
+      loadingText="{{transService.getTranslatedData('Loading more data...')}}">
+    </ion-infinite-scroll-content>
+  </ion-infinite-scroll>
+</ion-content>

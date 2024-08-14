@@ -1,0 +1,31 @@
+.border-top {
+  border-top: 1px solid lightgray;
+}
+
+ion-item {
+  // border-top: 1px solid lightgray;
+  border-bottom: 1px solid lightgray;
+}
+
+ion-label {
+  padding-top: 10px !important;
+  padding-bottom: 10px !important;
+}
+
+ion-list {
+  padding-top: 0px !important;
+}
+
+.overflow-span {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.class1 {
+  display: flex !important;
+  margin-bottom: 8px !important;
+}
+ion-badge {
+  --padding: 4px !important;
+}

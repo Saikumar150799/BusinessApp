@@ -1,0 +1,52 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="end">
+      <ion-button (click)="closeModal(false)">
+        <ion-icon name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>{{transService.getTranslatedData('User Search')}}</ion-title>
+  </ion-toolbar>
+  <ion-searchbar [(ngModel)]="filterData.searchText" placeholder="{{transService.getTranslatedData('Search')}}">
+  </ion-searchbar>
+</ion-header>
+
+<ion-content>
+  <div class="center-text margin-top-10" [hidden]="!loading">
+    <ion-spinner></ion-spinner>
+  </div>
+  <ion-list>
+    <ion-item *ngFor="let user of users |PointOfContactFilter:filterData.searchText" (click)="selectUser(user)">
+      <ion-label class="flex-label" [ngStyle]="{'opacity': type === 'poc' || type === 'createdBy' || type === 'tenants' ? '1' : ''}">
+        <span class="white-space-initial">{{user.firstName?user.firstName:''}} {{user.lastName?user.lastName:''}}</span>
+        <span>
+          <ion-badge color="light" class="margin-h-5 txt-grey white-space-initial" mode="ios">{{user.roleName}}
+          </ion-badge>
+        </span>
+      </ion-label>
+      <ion-checkbox [ngStyle]="{'opacity': type === 'poc' || type === 'createdBy' || type === 'tenants' ? '1' : ''}" [ngClass]="{'checkbox-circle': type === 'agent'}" value="{{user._id}}" slot="end"
+          [checked]="checkForUser(user)">
+      </ion-checkbox>
+    </ion-item>
+  </ion-list>
+  <!-- <ion-list>
+    <ion-radio-group >
+      <ion-item>
+        <ion-label>{{user.firstName?user.firstName:''}} {{user.lastName?user.lastName:''}}</ion-label>
+        <ion-radio value="{{user._id}}" slot="end" [checked]="checkForUser(user)"  (click)="selectUser(user)"></ion-radio>
+      </ion-item>
+    </ion-radio-group>
+  </ion-list> -->
+  <!-- <ion-infinite-scroll [hidden]="disableInfiniteScroll" threshold="5px" (ionInfinite)="searchUsers($event)">
+    <ion-infinite-scroll-content loadingSpinner="bubbles"
+      loadingText="{{transService.getTranslatedData('Loading more data...')}}">
+    </ion-infinite-scroll-content>
+  </ion-infinite-scroll> -->
+
+</ion-content>
+
+<ion-footer *ngIf="type === 'poc' || type === 'createdBy' || type === 'tenants'">
+  <ion-button  [disabled]="selectedUsers.length==0"   (click)="closeModal(true)" expand="full" size="large" color="danger"  class="margin-0">
+    {{transService.getTranslatedData('Done')}}
+  </ion-button>
+</ion-footer>

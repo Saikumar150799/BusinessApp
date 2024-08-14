@@ -1,0 +1,7 @@
+{
+  "name": "TheHouseMonk-Business",
+  "integrations": {
+    "cordova": {}
+  },
+  "type": "angular"
+}

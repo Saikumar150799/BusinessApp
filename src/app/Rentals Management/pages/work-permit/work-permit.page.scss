@@ -1,0 +1,26 @@
+.border-top {
+    border-top: 1px solid lightgray;
+}
+
+.height-55 {
+    height: 55%;
+}
+
+ion-item {
+    // border-top: 1px solid lightgray;
+    border-bottom: 1px solid lightgray;
+}
+
+ion-label {
+    padding-top: 10px !important;
+    padding-bottom: 10px !important;
+}
+
+ion-list {
+    padding-top: 0px !important;
+}
+
+
+ion-badge{
+    padding: 6px 15px !important;
+}

@@ -1,0 +1,43 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="end">
+      <ion-button (click)="closeModal()">
+        <ion-icon name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>{{transService.getTranslatedData('Select Project')}}</ion-title>
+  </ion-toolbar>
+  <ion-searchbar [(ngModel)]="filterData.searchText" placeholder="{{transService.getTranslatedData('Search')}}"
+    (ngModelChange)="resetFilterAndSearch()">
+  </ion-searchbar>
+</ion-header>
+
+<ion-content>
+
+  <div class="center-text margin-top-10" *ngIf="loading">
+    <ion-spinner></ion-spinner>
+  </div>
+  <ion-list>
+    <ion-item *ngIf="!loading &&projects.length>0" (click)="selectAllProject()">
+      <ion-label>{{transService.getTranslatedData('Select All')}}</ion-label>
+      <ion-checkbox [(ngModel)]="checked"></ion-checkbox>
+    </ion-item>
+    <ion-item *ngFor="let project of projects" (click)="selectSingleProject(project)">
+      <ion-label>{{project.name}}</ion-label>
+      <ion-checkbox slot="end" [checked]="checkForSingleProject(project)">
+      </ion-checkbox>
+    </ion-item>
+  </ion-list>
+
+  <ion-infinite-scroll [hidden]="disableInfiniteScroll" threshold="5px" (ionInfinite)="searchProject($event)">
+    <ion-infinite-scroll-content loadingSpinner="bubbles"
+      loadingText="{{transService.getTranslatedData('Loading more data...')}}">
+    </ion-infinite-scroll-content>
+  </ion-infinite-scroll>
+</ion-content>
+<ion-footer *ngIf="selectedProjects">
+  <ion-button expand="full" size="large" color="danger" (click)="closeProjectModal()" class="margin-0"
+    [disabled]="selectedProjects.length==0">
+    {{transService.getTranslatedData('Done')}}
+  </ion-button>
+</ion-footer>

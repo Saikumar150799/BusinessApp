@@ -1,0 +1,18 @@
+.bg-img-overlay-paymentdetails {
+    border-top: none !important;
+    background-image: url("/assets/bedroom3.png");
+    background-repeat: no-repeat;
+    background-size: 100%;
+    position: relative;
+    box-shadow: inset 0 0 0 1000px rgba(0, 0, 0, 0.7);
+  }
+  ion-content {
+    --ion-background-color: #ecebe6;
+  }
+  ion-item {
+    --inner-padding-end: 0px;
+    --inner-padding-start: 0px;
+    --padding-end: 0px;
+    --padding-start: 0px;
+  }
+  

@@ -1,0 +1,128 @@
+<ion-header no-border>
+  <ion-toolbar>
+    <ion-buttons slot="end">
+      <ion-button (click)="close()">
+        <ion-icon slot="icon-only" name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="webkit-center">
+    <ion-row class="width-80-percent ">
+      <ion-col>
+        <img src="assets/support.png" />
+      </ion-col>
+    </ion-row>
+  </div>
+  <ion-row>
+    <div class="max-available-height full-width">
+      <ion-list class="margin-left-20 margin-right-20 padding-top-0">
+        <ion-item class="margin-top-10">
+          <ion-label position="floating" class="font-19 dark-grey"
+            [ngClass]="{'rtl-label-floating': translateService.getCurrentDirection()==='rtl'}">
+            {{translateService.getTranslatedData("Name")}}<sup style="font-size : 18px !important;"> *
+            </sup>
+          </ion-label>
+          <ion-input inputmode="text" [(ngModel)]="requestData.name" class="margin-top-10   font-14" placeholder=" ">
+          </ion-input>
+        </ion-item>
+
+        <ion-list-header class="margin-top-20 padding-left-0 padding-right-0"><span
+            class="dark-grey">{{translateService.getTranslatedData("Phone Number")}}<sup
+              style="font-size : 18px !important;"> *
+            </sup></span>
+        </ion-list-header>
+
+        <ion-row class="margin-top-minus-10 direction-ltr">
+          <ion-col size="3" class="padding-top-0 padding-bottom-0">
+            <ion-item (click)="countryCodeModal()" class="direction-ltr">
+              <ion-input inputmode="text" [readonly]="true" class="gotham input-padding-0 ion-input"
+                [(ngModel)]="requestData.countryCode">
+              </ion-input>
+              <ion-icon mode="md" class="txt-warm-grey" name="arrow-dropdown"></ion-icon>
+            </ion-item>
+          </ion-col>
+          <ion-col size="9" class="padding-top-0 padding-bottom-0">
+            <ion-item>
+              <ion-input type="number" inputmode="tel" [(ngModel)]="requestData.phoneNumber"
+                class="gotham input-padding-0  ion-input" placeholder=" ">
+              </ion-input>
+            </ion-item>
+          </ion-col>
+        </ion-row>
+
+        <ion-item class="margin-top-10">
+          <ion-label position="floating" class="font-19 dark-grey"
+            [ngClass]="{'rtl-label-floating': translateService.getCurrentDirection()==='rtl'}">
+            {{translateService.getTranslatedData("Email Address")}}
+          </ion-label>
+          <ion-input inputmode="text" class="margin-top-10   font-14" [(ngModel)]="requestData.email" placeholder=" ">
+          </ion-input>
+        </ion-item>
+
+        <ion-item class="margin-top-10">
+          <ion-label class="margin-bottom-10 " class="font-19 dark-grey"
+            [ngClass]="{'rtl-label-floating': translateService.getCurrentDirection()==='rtl'}" position="stacked">
+            {{translateService.getTranslatedData("Comments")}}
+          </ion-label>
+          <ion-textarea rows="4" [(ngModel)]="requestData.comments" class="margin-top-10   font-14"></ion-textarea>
+          <!-- <ion-input inputmode="" class="margin-top-10  margin-left-10 font-14" placeholder=" "> -->
+          <!-- </ion-input> -->
+        </ion-item>
+
+      </ion-list>
+    </div>
+  </ion-row>
+
+</ion-content>
+<!-- <ion-content *ngIf="!nextForm">
+  <div class="webkit-center">
+    <div>
+      <ion-row class="width-80-percent margin-top-30 margin-bottom-20">
+        <ion-col>
+          <img src="assets/login-pic1.png" />
+        </ion-col>
+      </ion-row>
+    </div>
+  </div>
+  <ion-row>
+    <div class="max-available-height full-width">
+      <ion-list class="margin-left-20 margin-right-20">
+        <ion-item class="margin-top-10">
+          <ion-label position="floating" class="font-19 dark-grey opecity-1">Select orgaination<sup
+              style="font-size : 18px !important;"> * </sup>
+          </ion-label>
+          <ion-input inputmode="text" (click)="orgSearch('org')" class="margin-top-10  margin-left-10 font-14 opecity-1"
+            placeholder=" "  [readonly]="true" value="{{org.name}}||' '">
+          </ion-input>
+        </ion-item>
+        <ion-item class="margin-top-10">
+          <ion-label position="floating" class="font-19 dark-grey opecity-1">Select project<sup
+              style="font-size : 18px !important;"> * </sup>
+          </ion-label>
+          <ion-input inputmode="text" (click)="orgSearch('project',org._id)"
+            class="margin-top-10  margin-left-10 font-14 opecity-1" placeholder=" " 
+            value="{{project.name}}" [readonly]="true">
+          </ion-input>
+        </ion-item>
+        <ion-item class="margin-top-10">
+          <ion-label position="floating" class="font-19 dark-grey opecity-1">Select unit<sup
+              style="font-size : 18px !important;"> * </sup>
+          </ion-label>
+          <ion-input inputmode="text" (click)="orgSearch('door',project._id)"
+            class="margin-top-10  margin-left-10 font-14 opecity-1" value="{{door.block}} {{door.floor}} {{door.door}}"
+            placeholder=" " [readonly]="true">
+          </ion-input>
+        </ion-item>
+      </ion-list>
+    </div>
+  </ion-row>
+</ion-content> -->
+<ion-footer style="background: #f04141 !important;">
+  <ion-button class="font-12"
+    [disabled]="!requestData.phoneNumber||!requestData.name||!requestData.comments||!requestData.email"
+    (click)="sendRequest()" expand="full" color="danger">{{translateService.getTranslatedData('Submit')}}
+  </ion-button>
+</ion-footer>

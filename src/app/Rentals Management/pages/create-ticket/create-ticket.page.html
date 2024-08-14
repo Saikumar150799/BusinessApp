@@ -1,0 +1,349 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="{{transService.getCurrentDirection()==='rtl'? 'end':'start'}}">
+      <ion-back-button defaultHref="rentals-home"></ion-back-button>
+    </ion-buttons>
+    <ion-title class="{{transService.getCurrentDirection()==='rtl'?'':'padding-left-0'}}">
+      {{transService.getTranslatedData(title)}}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+
+  <div class="">
+    <!-- input -->
+    <div [hidden]="flow == 'editTicket'">
+      <ion-row>
+        <ion-col>
+          <p class="gotham font-16 margin-left-10 margin-bottom-0">
+            {{transService.getTranslatedData('Raise Ticket For')}}{{ticketData.raisedFor}}</p>
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+        <ion-col class="padding-left-10">
+          <ion-chip [ngClass]="ticketData.ticketBelongsTo == 'Home' ? 'Home' : 'a'" outline="true" color="primary"
+            (click)="selectTicketBelongsTo('Home')">
+            <ion-label class="font-16 font-weight-500">{{transService.getTranslatedData('Unit')}}
+            </ion-label>
+          </ion-chip>
+
+          <ion-chip [ngClass]="ticketData.ticketBelongsTo == 'Project' ? 'Project' : 'b'" outline="true" color="primary"
+            (click)="selectTicketBelongsTo('Project')">
+            <ion-label class="font-16 font-weight-500">{{transService.getTranslatedData('Common Area')}}
+            </ion-label>
+          </ion-chip>
+
+          <ion-chip [ngClass]="ticketData.ticketBelongsTo == 'Facility' ? 'Facility' : 'b'" outline="true" color="primary"
+            (click)="selectTicketBelongsTo('Facility')">
+            <ion-label class="font-16 font-weight-500">{{transService.getTranslatedData('Facility')}}
+            </ion-label>
+          </ion-chip>
+        </ion-col>
+      </ion-row>
+    </div>
+
+    <!-- imput -->
+    <div [hidden]="flow == 'editTicket'">
+      <ion-row>
+        <ion-col>
+          <p class="font-weight-500 font-16 gotham margin-left-10 margin-bottom-5 ">
+            {{transService.getTranslatedData('Priority')}}</p>
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+        <ion-col class="padding-left-10">
+          <ion-chip [ngClass]="ticketData.priority == 'low' ? 'low' : 'a'" outline="true" color="primary"
+            (click)="selectPriority('low')">
+            <ion-label class="font-16 font-weight-500">{{transService.getTranslatedData('Low')}}
+            </ion-label>
+          </ion-chip>
+
+          <ion-chip [ngClass]="ticketData.priority == 'medium' ? 'medium' : 'a'" outline="true" color="primary"
+            (click)="selectPriority('medium')">
+            <ion-label class="font-16 font-weight-500">{{transService.getTranslatedData('Medium')}}
+            </ion-label>
+          </ion-chip>
+
+          <ion-chip [ngClass]="ticketData.priority == 'high' ? 'high' : 'b'" outline="true" color="primary"
+            (click)="selectPriority('high')">
+            <ion-label class="font-16 font-weight-500">{{transService.getTranslatedData('High')}}
+            </ion-label>
+          </ion-chip>
+        </ion-col>
+      </ion-row>
+    </div>
+
+    <ion-list [hidden]="flow == 'editTicket'" *ngIf="ticketData.ticketBelongsTo == 'Home' && organizationType!=='residential'">
+      <ion-list-header class="gotham font-16 font-weight-500">
+        {{transService.getTranslatedData('Contract')}}
+      </ion-list-header>
+      <ion-item (click)="openModal(ticketData.ticketBelongsTo)" class="ion-padding-start-0">
+        <!-- <ion-input inputmode="text" readonly [(ngModel)]="ticketData.ticketBelongsToName" class="gotham  margin-left-10"
+          placeholder="{{transService.getTranslatedData('Click here to select a contract')}}"
+          (click)="openModal(ticketData.ticketBelongsTo)">
+        </ion-input> -->
+        <ion-label class="gotham margin-left-16 white-space-initial line-height-20" [ngClass]="{'txt-slate-grey': !ticketData.ticketBelongsToName}">
+          {{ticketData.ticketBelongsToName ? ticketData.ticketBelongsToName : transService.getTranslatedData( 'Click here to select a contract')}}
+        </ion-label>
+        <ion-icon class="float-right" name="arrow-dropdown"></ion-icon>
+      </ion-item>
+    </ion-list>
+
+    <ion-list [hidden]="flow == 'editTicket'" *ngIf="ticketData.ticketBelongsTo !== 'Home'">
+      <ion-list-header class="gotham font-16 font-weight-500">
+        {{transService.getTranslatedData('Property')}}
+      </ion-list-header>
+      <ion-item (click)="openModal(ticketData.ticketBelongsTo === 'Facility' ? 'Project' : ticketData.ticketBelongsTo)" class="ion-padding-start-0">
+        <!-- <ion-input inputmode="text" readonly [(ngModel)]="ticketData.ticketBelongsToName" class="gotham  margin-left-10"
+          placeholder="{{ticketData.ticketBelongsTo == 'Home' ? transService.getTranslatedData('Click here to select a unit') : transService.getTranslatedData('Click here to select a property')}}"
+          (click)="openModal(ticketData.ticketBelongsTo === 'Facility' ? 'Project' : ticketData.ticketBelongsTo)">
+        </ion-input> -->
+        <ion-label class="gotham white-space-initial font-15 line-height-20 margin-left-16" [ngClass]="{'txt-slate-grey': !ticketData.ticketBelongsToName}">
+          {{ticketData.ticketBelongsToName ? ticketData.ticketBelongsToName : transService.getTranslatedData(ticketData.ticketBelongsTo == 'Home' ? 'Click here to select a unit' : 'Click here to select a property')}}
+        </ion-label>
+        <ion-icon class="float-right" name="arrow-dropdown"></ion-icon>
+      </ion-item>
+    </ion-list>
+
+    <ion-list [hidden]="flow == 'editTicket'" *ngIf="ticketData.ticketBelongsTo === 'Facility'">
+      <ion-list-header class="gotham font-16 font-weight-500">
+        {{transService.getTranslatedData('Facility')}}
+      </ion-list-header>
+      <ion-item (click)="openFacilitySearchModal()" class="ion-padding-start-0">
+        <!-- <ion-input inputmode="text" readonly [(ngModel)]="ticketData.ticketBelongsToFacilityName" class="gotham  margin-left-10"
+          placeholder="{{transService.getTranslatedData('Click here to select a facility')}}"
+          (click)="openFacilitySearchModal()">
+        </ion-input> -->
+        <ion-label class="gotham margin-left-16" [ngClass]="{'txt-slate-grey': !ticketData.ticketBelongsToFacilityName}">
+          {{ticketData.ticketBelongsToFacilityName ? ticketData.ticketBelongsToFacilityName : transService.getTranslatedData('Click here to select a facility')}}
+        </ion-label>
+        <ion-icon class="float-right" name="arrow-dropdown"></ion-icon>
+      </ion-item>
+    </ion-list>
+
+    <ion-list [hidden]="flow == 'editTicket'" *ngIf="ticketData.ticketBelongsTo == 'Home' && (ticketData.ticketBelongsToRefId || organizationType === 'residential')">
+      <ion-list-header class="gotham font-16 font-weight-500">
+        {{transService.getTranslatedData('Unit')}}
+      </ion-list-header>
+      <ion-item  (click)="openModal('Unit')" class="ion-padding-start-0 white-space-initial">
+        <ion-label class="gotham margin-left-16 white-space-initial font-15 line-height-20" [ngClass]="{'txt-slate-grey': !ticketData.listingName}">
+          {{ticketData.listingName ? ticketData.listingName : transService.getTranslatedData('Click here to select a Unit')}}
+        </ion-label>
+        <!-- <ion-input inputmode="text" readonly [(ngModel)]="ticketData.listingName" class="gotham  margin-left-10"
+          placeholder="{{transService.getTranslatedData('Click here to select a Unit')}}"
+          (click)="openModal('Unit')">
+        </ion-input> -->
+        <ion-icon class="float-right" name="arrow-dropdown"></ion-icon>
+      </ion-item>
+    </ion-list>
+
+    <ion-list>
+      <ion-list-header class="gotham font-16 font-weight-500">
+        {{transService.getTranslatedData('Category')}}</ion-list-header>
+      <ion-item (click)="openModal('ticketCategory')" class="ion-padding-start-0">
+        <ion-label class="gotham margin-left-16" [ngClass]="{'txt-slate-grey': !ticketData.ticketCategoryName}">
+          {{ticketData.ticketCategoryName ? ticketData.ticketCategoryName : transService.getTranslatedData('Category')}}
+        </ion-label>
+        <!-- <ion-input inputmode="text" [(ngModel)]="ticketData.ticketCategoryName" class="gotham  margin-left-10"
+          placeholder="{{transService.getTranslatedData('Category')}}" (click)="openModal('ticketCategory')" readonly>
+        </ion-input> -->
+        <ion-icon class="float-right" name="arrow-dropdown"></ion-icon>
+      </ion-item>
+    </ion-list>
+    <ion-list *ngIf="subCategories.length>0">
+      <ion-list-header class="gotham font-16 font-weight-500">
+        {{transService.getTranslatedData('Sub Category')}}</ion-list-header>
+      <ion-item (click)="openModal('ticketSubCategory')" class="ion-padding-start-0">
+        <ion-label class="gotham margin-left-16" [ngClass]="{'txt-slate-grey': !ticketData.ticketSubCategoryName}">
+          {{ticketData.ticketSubCategoryName ? ticketData.ticketSubCategoryName : transService.getTranslatedData('Click here to select a sub category')}}
+        </ion-label>
+        <!-- <ion-input inputmode="text" [(ngModel)]="ticketData.ticketSubCategoryName" class="gotham  margin-left-10"
+          placeholder="{{transService.getTranslatedData('Click here to select a sub category')}}"
+          (click)="openModal('ticketSubCategory')" readonly>
+        </ion-input> -->
+        <ion-icon class="float-right" name="arrow-dropdown"></ion-icon>
+      </ion-item>
+    </ion-list>
+
+  </div>
+
+  <div class="webkit-center">
+
+    <ion-list [hidden]="flow == 'editTicket'" class="margin-top-10">
+
+      <p class="gotham font-16 margin-bottom-0 margin-left-15  margin-right-15 text-align-start">
+        {{transService.getTranslatedData('Ticket Description')}} <sup class="super-script font-15">*</sup></p>
+      <ion-item>
+        <ion-textarea class="gotham line-height-20" active
+          placeholder="{{transService.getTranslatedData('Briefly explain your issue here')}}"
+          [(ngModel)]="ticketData.notes">
+        </ion-textarea>
+      </ion-item>
+
+    </ion-list>
+
+    <ion-list>
+      <ion-list-header class="gotham font-16 font-weight-500">{{transService.getTranslatedData('Point of contact')}}
+      </ion-list-header>
+      <ion-item (click)="openModal('poc')" class="ion-padding-start-0">
+        <ion-label class="gotham margin-left-16" [ngClass]="{'txt-slate-grey': !pocInputValue}">
+          {{pocInputValue ? pocInputValue : transService.getTranslatedData('Click here to select a poc')}}
+        </ion-label>
+        <!-- <ion-input inputmode="text" [(ngModel)]="pocInputValue" class="gotham  margin-left-10"
+          placeholder="{{transService.getTranslatedData('Click here to select a poc')}}" (click)="openModal('poc')"
+          readonly>
+        </ion-input> -->
+        <ion-icon class="float-right" name="arrow-dropdown"></ion-icon>
+      </ion-item>
+    </ion-list>
+    <ion-list>
+      <ion-list-header class="gotham font-16 font-weight-500">
+        {{transService.getTranslatedData('Technical staff')}}</ion-list-header>
+      <ion-item class="ion-padding-start-0">
+        <div class="full-width">
+          <ion-row class="padding-0">
+            <ion-col class="padding-0" *ngFor="let agent of ticketData.agents">
+              <ion-chip>
+                <ion-icon name="md-person"></ion-icon>
+                <ion-label>{{agent?.name}}</ion-label>
+                <ion-icon name="close-circle" (click)="remove(agent)"></ion-icon>
+              </ion-chip>
+            </ion-col>
+          </ion-row>
+          <ion-label *ngIf="ticketData.agents&&ticketData.agents.length <= 0" (click)="openModal('agent')" class="gotham margin-left-16 txt-slate-grey">
+            {{transService.getTranslatedData('Click here to select a technician')}}
+          </ion-label>
+          <!-- <ion-input inputmode="text" class="gotham  margin-left-10"
+            *ngIf="ticketData.agents&&ticketData.agents.length <= 0"
+            [placeholder]="transService.getTranslatedData('Click here to select a technician')"
+            (click)="openModal('agent')" readonly>
+          </ion-input> -->
+        </div>
+        <ion-icon slot="end" *ngIf="ticketData.agents&&ticketData.agents.length === 0" class="float-right"
+          name="arrow-dropdown">
+        </ion-icon>
+        <ion-icon slot="end" *ngIf="ticketData.agents&&ticketData.agents.length > 0" (click)="openModal('agent')"
+          class="float-right" name="md-add"></ion-icon>
+      </ion-item>
+    </ion-list>
+    <!-- <ion-row>
+      <ion-col>
+        <ion-list>
+          <ion-list-header class="gotham font-16 font-weight-500 text-align-start">
+            {{transService.getTranslatedData('Job start date')}}</ion-list-header>
+          <ion-item>
+            <ion-datetime placeholder="{{transService.getTranslatedData('DD-MMM-YYYY')}}" class="gotham padding-left-0"
+              [doneText]="transService.getTranslatedData('Done')"
+              [cancelText]="transService.getTranslatedData('Cancel')" display-format="DD-MMMM-YYYY"
+              picker-format="DD-MMMM-YYYY" [(ngModel)]="ticketData.jobDate">
+            </ion-datetime>
+            <ion-icon class="float-right" name="arrow-dropdown"></ion-icon>
+          </ion-item>
+        </ion-list>
+      </ion-col>
+      <ion-col>
+        <ion-list>
+          <ion-list-header class="gotham font-16 font-weight-500 text-align-start">
+            {{transService.getTranslatedData('Job start time')}}</ion-list-header>
+          <ion-item>
+            <ion-datetime placeholder="{{transService.getTranslatedData('HH:mm')}}" class="gotham padding-left-0"
+              display-format="HH:mm" picker-format="HH:mm" [(ngModel)]="ticketData.jobStartTime"
+              [doneText]="transService.getTranslatedData('Done')"
+              [cancelText]="transService.getTranslatedData('Cancel')"></ion-datetime>
+            <ion-icon class="float-right" name="arrow-dropdown"></ion-icon>
+          </ion-item>
+        </ion-list>
+      </ion-col>
+    </ion-row> -->
+    <!-- <ion-row>
+      <ion-col>
+        <ion-list>
+          <ion-list-header class="gotham font-16 font-weight-500 text-align-start">
+            {{transService.getTranslatedData('Job end date')}}</ion-list-header>
+          <ion-item>
+            <ion-datetime placeholder="{{transService.getTranslatedData('DD-MMM-YYYY')}}" class="gotham padding-left-0"
+              display-format="DD-MMMM-YYYY" picker-format="DD-MMMM-YYYY" [(ngModel)]="ticketData.jobEndDate"
+              [doneText]="transService.getTranslatedData('Done')"
+              [cancelText]="transService.getTranslatedData('Cancel')">
+            </ion-datetime>
+            <ion-icon class="float-right" name="arrow-dropdown"></ion-icon>
+          </ion-item>
+        </ion-list>
+      </ion-col>
+      <ion-col>
+        <ion-list>
+          <ion-list-header class="gotham font-16 font-weight-500 text-align-start">
+            {{transService.getTranslatedData('Job end time')}}</ion-list-header>
+          <ion-item>
+            <ion-datetime placeholder="{{transService.getTranslatedData('HH:mm')}}" class="gotham padding-left-0"
+              display-format="HH:mm" picker-format="HH:mm" [(ngModel)]="ticketData.jobEndTime"
+              [doneText]="transService.getTranslatedData('Done')"
+              [cancelText]="transService.getTranslatedData('Cancel')"></ion-datetime>
+            <ion-icon class="float-right" name="arrow-dropdown"></ion-icon>
+          </ion-item>
+        </ion-list>
+      </ion-col>
+    </ion-row> -->
+    <ion-list>
+      <ion-list-header class="gotham font-16 font-weight-500">
+        {{transService.getTranslatedData('Checklist')}}</ion-list-header>
+      <ion-item (click)="openModal('checklist')" class="ion-padding-start-0">
+        <ion-label class="gotham margin-left-16" [ngClass]="{'txt-slate-grey': !ticketData.checklist.name}">
+          {{ticketData.checklist.name ? ticketData.checklist.name : transService.getTranslatedData('Click here to select a checklist')}}
+        </ion-label>
+        <!-- <ion-input inputmode="text" [(ngModel)]="ticketData.checklist.name" class="gotham  margin-left-10"
+          placeholder="{{transService.getTranslatedData('Click here to select a checklist')}}" (click)="openModal('checklist')" readonly>
+        </ion-input> -->
+        <ion-icon class="float-right" name="arrow-dropdown"></ion-icon>
+      </ion-item>
+    </ion-list>
+    <ion-list>
+      <ion-list-header class="gotham font-16 font-weight-500">{{transService.getTranslatedData('Assets')}}
+      </ion-list-header>
+      <ion-item  (click)="openModal('assets')" class="ion-padding-start-0">
+        <ion-label class="gotham margin-left-16" [ngClass]="{'txt-slate-grey': !assetsCount}">
+          {{assetsCount ? assetsCount : transService.getTranslatedData('Assets')}}
+        </ion-label>
+        <!-- <ion-input inputmode="text" class="gotham  margin-left-10"  [(ngModel)]="assetsCount"
+          placeholder="{{transService.getTranslatedData('Assets')}}" (click)="openModal('assets')"
+          readonly>
+        </ion-input> -->
+        <ion-icon class="float-right" name="arrow-dropdown"></ion-icon>
+      </ion-item>
+    </ion-list>
+    <ion-row class="width-80-percent justify-center margin-10 margin-bottom-20">
+      <ion-col class="padding-0">
+        <ion-item lines="none" class="ion-item">
+          <ion-card class="full-width margin-1" (click)="presentActionSheet()">
+            <ion-item lines="none" class="ion-item">
+              <ion-icon slot="start" class="margin-left-10 margin-right-10 icon-20 gotham" name="camera"></ion-icon>
+              <ion-label>{{transService.getTranslatedData('Click here to add a picture')}}</ion-label>
+            </ion-item>
+          </ion-card>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+    <ion-row class="width-80-percent margin-10 justify-center margin-10 margin-bottom-20">
+      <div>
+        <ion-item *ngFor="let url of images ; index as i" lines='none' class="ion-image-item ion-margin-bottom">
+          <ion-thumbnail class="margin-0 icon-90 image"
+            (click)="openImage(url.aws_original_url?url.aws_original_url:webview.convertFileSrc(url))">
+            <ion-icon class="img-icon" (click)="removeImage(i)" color="danger" name="close-circle">
+            </ion-icon>
+            <ion-img src="{{url.aws_original_url?url.aws_original_url:webview.convertFileSrc(url)}}">
+            </ion-img>
+          </ion-thumbnail>
+        </ion-item>
+      </div>
+    </ion-row>
+  </div>
+
+</ion-content>
+<ion-button [disabled]="!ticketData.ticketBelongsToRefId || !ticketData.ticketCategory || !ticketData.notes"
+  [hidden]="flow == 'editTicket'" size="large" (click)="raiseTicket()" color="danger">
+  {{transService.getTranslatedData('Submit')}}</ion-button>
+<ion-button [disabled]="!ticketData.ticketBelongsToRefId || !ticketData.ticketCategory " [hidden]="flow == 'createTicket'"
+  size="large" (click)="updateTicket()" color="danger">
+  {{transService.getTranslatedData('Submit')}}</ion-button>

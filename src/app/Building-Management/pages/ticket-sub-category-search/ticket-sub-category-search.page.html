@@ -1,0 +1,27 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="end">
+      <ion-button (click)="closeModal(false)">
+        <ion-icon name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>{{transService.getTranslatedData('ticket-sub-category.title')}}</ion-title>
+  </ion-toolbar>
+  <!-- <ion-searchbar></ion-searchbar> -->
+</ion-header>
+
+<ion-content>
+  <!-- <div class="center-text margin-top-10" [hidden]="!loading">
+        <ion-spinner></ion-spinner>
+      </div> -->
+  <p class="gotham center-text" *ngIf="subCategories.length==0">
+    {{transService.getTranslatedData('ticket-sub-category.empty-array')}}</p>
+  <ion-list>
+    <ion-radio-group [(ngModel)]="selectedSubCategory.ticketSubCategory">
+      <ion-item *ngFor="let category of subCategories">
+        <ion-label>{{category.name}}</ion-label>
+        <ion-radio value="{{category._id}}" slot="end" (click)="selectSubCategory(category)"></ion-radio>
+      </ion-item>
+    </ion-radio-group>
+  </ion-list>
+</ion-content>

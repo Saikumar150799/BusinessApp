@@ -1,0 +1,24 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>{{transService.getTranslatedData('Projects')}}</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="closeButtonClick()">
+        <ion-icon slot="icon-only" name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+  <ion-list>
+
+    <ion-item *ngFor="let data of projectList">
+      <!-- <img src="assets/icon/my-home.png" class="margin-top-12 margin-bottom-12 margin-right-12 margin-left-0"> -->
+      <!-- <ion-icon src="assets/icon/my-home.png" class="margin-top-12 margin-bottom-12 margin-right-12 margin-left-0"
+        slot="start"></ion-icon> -->
+      <ion-label>
+        <h2 class="white-space-initial">{{data.name}} {{data.locality?'- '+data.locality:''}}</h2>
+      </ion-label>
+    </ion-item>
+
+  </ion-list>
+</ion-content>

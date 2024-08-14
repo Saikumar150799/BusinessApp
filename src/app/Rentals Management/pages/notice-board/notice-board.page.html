@@ -1,0 +1,110 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="{{transService.getCurrentDirection()==='rtl'? 'end':'start'}}">
+      <ion-back-button defaultHref="rentals-home"></ion-back-button>
+    </ion-buttons>
+    <ion-title [ngClass]="{'padding-0': transService.getCurrentDirection()==='ltr'}">
+      {{transService.getTranslatedData('Notice Board')}}</ion-title>
+  </ion-toolbar>
+</ion-header>
+<ion-content class="">
+
+  <div>
+
+    <p class="center-text gotham" *ngIf="notices.length==0&& displayEmptyString">
+      {{transService.getTranslatedData('No Notices Available!')}}</p>
+    <ion-card class="ticket-details-list padding-10" [routerLink]="['/rentals-notice-details']"
+      [queryParams]="{noticeId: notice._id}" *ngFor="let notice of notices">
+
+      <ion-row class="padding-top-5">
+        <ion-col size="2" class="padding-top-0">
+          <ngx-avatar initialsSize="2" name="{{notice.createdBy?.firstName}} {{notice.createdBy?.lastName}}">
+          </ngx-avatar>
+        </ion-col>
+        <ion-col size="6" class="margin-right-8 margin-left-8">
+          <p class="gotham-medium font-14 dark-grey margin-padding-zero">{{notice.createdBy?.firstName}}
+            {{notice.createdBy?.lastName}}</p>
+          <p class="txt-warm-grey font-14 Gotham-medium margin-bottom-0 margin-top-5 font-weight-500 txt-nowrap">
+            <!-- {{notice.listing?.block}} {{notice.listing?.door}} {{notice.listing?.block?notice.listing?.door?'-':'-':''}} -->
+            {{notice.createdBy?.roleName}}
+          </p>
+          <p *ngIf="notice.selectedProjects.length>0"
+            class="txt-warm-grey font-14 Gotham-medium margin-bottom-0 margin-top-5 font-weight-500 display-flex align-items-center flex-wrap-wrap">
+            {{transService.getTranslatedData('for')}}
+            {{notice.propertyName}}<ion-badge color="light" *ngIf="notice.selectedProjects.length>1"
+              class="ion-badge-style">+
+              {{notice.selectedProjects.length - 1}}
+              {{transService.getTranslatedData('more')}}</ion-badge>
+          </p>
+        </ion-col>
+        <ion-col class="text-align-end">
+          <ion-badge color="warning" *ngIf="notice.discussionType" class="border-radius-10">
+            {{transService.getTranslatedData(notice.discussionType)}}
+          </ion-badge>
+          <p class="txt-warm-grey font-11 Gotham-medium margin-bottom-0 margin-padding-zero font-weight-500 txt-nowrap">
+            {{notice.createdAt |agoFilter}}
+          </p>
+        </ion-col>
+      </ion-row>
+      <div class="padding-5">
+        <p class="Gotham-medium font-14 font-weight-500 margin-bottom-5 dark-grey margin-top-5">
+          {{notice.title}}
+        </p>
+        <p class="margin-bottom-0 margin-top-5 font-weight-500  txt-warm-grey font-14 Gotham-medium"
+          [innerHTML]="notice.body">
+        </p>
+      </div>
+
+      <ion-row class="center-text" *ngIf="notice.files.length > 0">
+        <br>
+        <ion-col class="display-flex justify-center">
+          <img src="{{notice.files[0].aws_original_url}}"
+            style="max-width:100%; max-height:250px !important; width:auto; height:auto;">
+        </ion-col>
+        <br><br>
+      </ion-row>
+
+      <ion-grid (click)="stopEvent($event)">
+        <ion-row>
+          <ion-col>
+            <span [ngClass]="{'padding-right-20': transService.getCurrentDirection()==='ltr'}">
+              <ion-icon *ngIf="!notice.hasLiked" (click)="likeDiscussion(notice._id)"
+                class="icon font-25 gotham margin-right-5" name="heart-empty"></ion-icon>
+              <ion-icon *ngIf="notice.hasLiked" (click)="likeDiscussion(notice._id)" color="danger"
+                class="icon font-25 gotham margin-right-5" name="heart-empty"></ion-icon>
+              <span class="text font-20">{{notice.likesCount}}</span>
+            </span>
+            <span class="padding-right-20" (click)="presentSeenUserModal(notice._id)">
+              <ion-icon class="icon font-25 gotham margin-right-5" name="eye"></ion-icon>
+              <span class="text font-20">{{notice.seenByCount}}</span>
+            </span>
+            <span class="padding-right-20" [routerLink]="['/rentals-notice-details']"
+              [queryParams]="{noticeId: notice._id}">
+              <ion-icon class="icon font-25 gotham margin-right-5" name="chatboxes"></ion-icon>
+              <span class="text font-20">{{notice.commentCount}}</span>
+            </span>
+          </ion-col>
+          <!-- <ion-col size="4">
+            <span class="font-25 Gotham float-right">
+              <ion-icon name="trash"></ion-icon>
+            </span>
+          </ion-col> -->
+        </ion-row>
+      </ion-grid>
+    </ion-card>
+
+    <ion-infinite-scroll [hidden]="disableInfiniteScroll" threshold="5px" (ionInfinite)="getNoices($event)">
+      <ion-infinite-scroll-content loadingSpinner="bubbles"
+        loadingText="{{transService.getTranslatedData('Loading more data...')}}">
+      </ion-infinite-scroll-content>
+    </ion-infinite-scroll>
+
+  </div>
+
+  <ion-fab [hidden]="!moduleAccess.noticeBoard.create" (click)="openCreateNoticeModal()" vertical="bottom"
+    horizontal="end" slot="fixed">
+    <ion-fab-button color="primary">
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+</ion-content>

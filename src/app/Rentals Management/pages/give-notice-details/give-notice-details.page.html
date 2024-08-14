@@ -1,0 +1,152 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="{{transService.getCurrentDirection()==='rtl'? 'end':'start'}}">
+      <ion-back-button defaultHref="rentals-check-out"></ion-back-button>
+    </ion-buttons>
+    <ion-title class="{{transService.getCurrentDirection()==='rtl'?'':'padding-left-0'}}">
+      {{transService.getTranslatedData('Contract details')}}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="unit-details-card" *ngIf="unitData">
+    <ion-row class="margin-bottom-10">
+      <ion-col >
+        <p class="txt-slate-grey margin-padding-zero font-16 gotham-medium margin-bottom-3">
+          {{transService.getTranslatedData('Unit no:')}} <span class="dark-grey ">{{unitData?.listing?.block}} {{unitData?.listing?.door}}</span></p>
+      </ion-col>
+      <ion-col class="display-flex justify-flex-end">
+        <ion-badge class="{{OcuupancyStatusColor[unitData.occupancyStatus]}}">
+          {{statusList[unitData.occupancyStatus]}}</ion-badge>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col>
+        <p class="txt-slate-grey margin-padding-zero font-14 gotham-medium margin-bottom-3">
+          {{transService.getTranslatedData('Contract start date')}}</p>
+        <p *ngIf="unitData?.tenancyTerms?.contractPeriodStartDate else empty"
+          class="gotham-medium margin-top-10 font-14 margin-bottom-5 dark-grey direction-ltr {{transService.getCurrentDirection()==='rtl'?'text-align-end':'text-align-start'}}">
+          {{unitData?.tenancyTerms?.contractPeriodStartDate | date:'dd MMM yyyy'}}</p>
+      </ion-col>
+      <ion-col>
+        <p class="txt-slate-grey margin-padding-zero font-14 gotham-medium margin-bottom-3">
+          {{transService.getTranslatedData('Contract end date')}}</p>
+        <p *ngIf="unitData?.tenancyTerms?.contractPeriodEndDate else empty"
+          class="gotham-medium margin-top-10 font-14 margin-bottom-5 dark-grey direction-ltr {{transService.getCurrentDirection()==='rtl'?'text-align-end':'text-align-start'}}">
+          {{unitData?.listing?.tenancyTerms?.contractPeriodEndDate | date:'dd MMM yyyy' }}</p>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col>
+        <p class="txt-slate-grey margin-padding-zero font-14 gotham-medium margin-bottom-3">
+          {{transService.getTranslatedData('Move-in date')}}</p>
+        <p *ngIf="unitData?.listing?.dateOfMoveIn else empty"
+          class="gotham-medium margin-top-10 font-14 margin-bottom-5 dark-grey direction-ltr {{transService.getCurrentDirection()==='rtl'?'text-align-end':'text-align-start'}}">
+          {{unitData?.listing?.dateOfMoveIn | date:'dd MMM yyyy' }}</p>
+      </ion-col>
+      <ion-col>
+        <p class="txt-slate-grey margin-padding-zero font-14 gotham-medium margin-bottom-3">
+          {{transService.getTranslatedData('Move-out date')}}</p>
+        <p *ngIf="unitData?.listing?.moveOut?.date else empty"
+          class="gotham-medium margin-top-10 font-14 margin-bottom-5 dark-grey direction-ltr {{transService.getCurrentDirection()==='rtl'?'text-align-end':'text-align-start'}}">
+          {{unitData?.listing?.moveOut?.date | date:'dd MMM yyyy' }}</p>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col>
+        <p class="txt-slate-grey margin-padding-zero font-14 gotham-medium margin-bottom-3">
+          {{transService.getTranslatedData('Notice period')}}</p>
+        <p
+          class="gotham-medium margin-top-10 font-14 margin-bottom-5 dark-grey direction-ltr {{transService.getCurrentDirection()==='rtl'?'text-align-end':'text-align-start'}}">
+          {{unitData?.listing?.tenancyTerms?.noticePeriod || transService.getTranslatedData('N/A') }}</p>
+      </ion-col>
+      <ion-col>
+        <p class="txt-slate-grey margin-padding-zero font-14 gotham-medium margin-bottom-3">
+          {{transService.getTranslatedData('Lock-in period end')}}</p>
+        <p *ngIf="unitData?.listing?.tenancyTerms?.lockInPeriodEndDate else empty"
+          class="gotham-medium margin-top-10 font-14 margin-bottom-5 dark-grey direction-ltr {{transService.getCurrentDirection()==='rtl'?'text-align-end':'text-align-start'}}">
+          {{unitData?.listing?.tenancyTerms?.lockInPeriodEndDate | date:'dd MMM yyyy'}}</p>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col>
+        <p class="txt-slate-grey margin-padding-zero font-14 gotham-medium margin-bottom-3">
+          {{transService.getTranslatedData('Current rent')}}</p>
+        <p
+          class="gotham-medium margin-top-10 font-14 margin-bottom-5 dark-grey direction-ltr {{transService.getCurrentDirection()==='rtl'?'text-align-end':'text-align-start'}}">
+          {{unitData?.listing?.tenancyTerms?.rentFromTenant || transService.getTranslatedData('N/A') }}</p>
+      </ion-col>
+      <ion-col>
+        <p class="txt-slate-grey margin-padding-zero font-14 gotham-medium margin-bottom-3">
+          {{transService.getTranslatedData('Deposit')}}</p>
+        <p
+          class="gotham-medium margin-top-10 font-14 margin-bottom-5 dark-grey direction-ltr {{transService.getCurrentDirection()==='rtl'?'text-align-end':'text-align-start'}}">
+          {{unitData?.listing?.tenancyTerms?.depositToOwner || transService.getTranslatedData('N/A') }}</p>
+      </ion-col>
+      <ng-template #empty><p class="padding-0 margin-top-10 margin-bottom-5">{{ transService.getTranslatedData('N/A')}}</p></ng-template>
+    </ion-row>
+  </div>
+
+  <div class="unit-details-card">
+    <ion-list>
+      <p class="gotham font-15 font-weight-500 margin-0 text-align-start">
+        {{transService.getTranslatedData('Add checkout date')}}</p>
+        <ion-item class="ion-item" lines="none">
+        <ion-row >
+          <ion-datetime displayFormat="DD-MMMM-YYYY" placeholder="DD-MMM-YYYY" picker-format="DD-MMM-YYYY" class="padding-0"
+            [(ngModel)]="underNoticePayload.dateOfMoveOut"
+            [doneText]="'Done'"
+            [cancelText]="'Cancel'"> 
+          </ion-datetime>
+        </ion-row>
+        <ion-icon slot="end" name="arrow-dropdown"></ion-icon>
+      </ion-item>
+    </ion-list>
+  </div>
+  <div class="bg-white">
+    <p class="gotham-medium margin-0 font-16 dark-grey padding-left-15 padding-top-20 padding-bottom-10 padding-right-15">{{transService.getTranslatedData('Select the Tenant(s) to Send Notice')}}</p> 
+    <div *ngIf="tenants.length > 0">
+      <ion-list class="padding-0">
+        <ion-item class="ion-item" lines="full" *ngFor="let tenant of tenants;let i = index">
+          <ion-grid fixed class="padding-left-10 padding-right-10 padding-top-10 padding-bottom-0">
+            <ion-row>
+              <ion-col size="1.5" class="margin-0 padding-0">
+                <ngx-avatar initialsSize="2" textSizeRatio="2" [size]="40" name="{{tenant?.firstName}}"></ngx-avatar>
+              </ion-col>
+              <ion-col class="align-self-center">
+                <p class="gotham margin-padding-zero">
+                  {{tenant.firstName}} {{tenant.lastName}}</p>
+              </ion-col>
+              <!-- <ion-col class="text-align-end" size="2">
+                <ion-icon class=" icon-25 svg-color-primary" src="/assets/svg-icons/contact-us.svg"
+                (click)="call(ticket.raisedBy.phoneNumber)"></ion-icon>
+              </ion-col> -->
+          </ion-row>
+        <ion-row>
+          <ion-item class="ion-item" lines="none">
+            <p class="gotham margin-0 txt-grey font-14">{{transService.getTranslatedData('Add checkout date:')}}</p>
+            <ion-datetime (ionChange)="dateChange(tenant)" placeholder="{{transService.getTranslatedData('DD-MMM-YYYY')}}" [(ngModel)]="tenant.checkOutDate"
+            class="gotham padding-left-0 margin-left-7 margin-bottom-2 font-14 align-self-flex-end" display-format="DD-MMM-YYYY" picker-format="DD-MMM-YYYY"></ion-datetime>
+            <ion-icon class="float-right" name="arrow-dropdown"></ion-icon>
+          </ion-item>
+        </ion-row>
+      </ion-grid>
+        </ion-item>
+      </ion-list>
+    </div>
+    <div *ngIf="tenants.length === 0 && emptyTenants === true">
+      <ion-label>{{transService.getTranslatedData('No tenants found')}}</ion-label>
+    </div>
+  </div>
+</ion-content>
+
+<ion-footer class="margin-0 padding-0">
+  <ion-toolbar>
+    <div class="display-flex justify-center">
+      <ion-button (click)="underNotice()" [disabled]="!underNoticePayload.dateOfMoveOut || underNoticePayload.tenantObj.length === 0"
+      class="height-50 font-16 gotham-medium width-95-percent ion-item-shadow-none text-transform-capitalize margin-top-15 margin-bottom-20"
+      expand="block" color="primary">
+      {{transService.getTranslatedData("Under Notice")}}</ion-button>
+    </div>
+  </ion-toolbar>
+</ion-footer>

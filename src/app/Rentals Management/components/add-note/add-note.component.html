@@ -1,0 +1,64 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="{{transService.getCurrentDirection()==='rtl'? 'end':'start'}}">
+      <ion-button (click)="closeModal()"><ion-icon class="icon-25" name="arrow-back"></ion-icon></ion-button>
+    </ion-buttons>
+    <ion-title class="{{transService.getCurrentDirection()==='rtl'?'':'padding-left-0'}}">
+      {{transService.getTranslatedData('Note')}}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div>
+    <ion-list>
+      <p class="gotham margin-left-16">{{transService.getTranslatedData('Item Name')}}</p>
+      <ion-item lines="full">
+        <p class="gotham">{{item?.name}}</p>
+      </ion-item>
+    </ion-list>
+    <ion-list>
+      <p class="gotham margin-left-16">{{transService.getTranslatedData('Description')}}<span class="asterisk">*</span></p>
+      <ion-item  lines="full">
+        <ion-input class="gotham" [(ngModel)]="item.handover.comment" placeholder="{{transService.getTranslatedData('Write a detail description here')}}"></ion-input>
+      </ion-item>
+    </ion-list>
+  </div>
+
+  <div class="margin-top-10 bg-white padding-10">
+    <ion-row class="width-80-percent justify-center margin-auto">
+      <ion-col class="padding-0">
+        <ion-item lines="none" class="ion-item">
+          <ion-card class="full-width margin-1" (click)="presentActionSheet()">
+            <ion-item lines="none" class="ion-item">
+              <ion-icon slot="start" class="margin-left-10 margin-right-10 icon-20 gotham" name="camera"></ion-icon>
+              <ion-label>{{transService.getTranslatedData('Click here to add a picture')}}</ion-label>
+            </ion-item>
+          </ion-card>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+  </div>
+
+  <div class="margin-top-10 bg-white padding-10"  *ngIf="images.length > 0">
+    <p class="gotham txt-slate-grey padding-left-10 ">{{transService.getTranslatedData('Photos')}}</p>
+    <div class="display-flex ">
+      <ion-item *ngFor="let url of images; let i = index" lines='none' class="ion-image-item">
+        <ion-thumbnail class="margin-0 icon-90 image">
+          <ion-icon class="img-icon" (click)="removeImage(i)" color="danger" name="close-circle">
+          </ion-icon>
+          <ion-img src="{{url.aws_original_url?url.aws_original_url:webView.convertFileSrc(url)}}"></ion-img>
+        </ion-thumbnail>
+      </ion-item>
+    </div>
+  </div>
+</ion-content>
+
+<ion-footer>
+  <ion-toolbar>
+    <ion-row class="justify-center margin-top-20">
+      <ion-button class="full-width text-transform-math-auto height-50 font-16  margin-bottom-20" [disabled]="!item.handover.comment || !images.length" (click)="submit()">
+        {{transService.getTranslatedData('submit')}}
+      </ion-button>
+    </ion-row>
+  </ion-toolbar>
+</ion-footer>

@@ -1,0 +1,537 @@
+<ion-header no-border>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+    <ion-buttons slot="end">
+      <ion-button [routerLink]="['/building-management-create-ticket']" [queryParams]="{ticketId: ticket._id}">
+        {{transService.getTranslatedData('ticket-details.edit')}}
+      </ion-button>
+    </ion-buttons>
+    <ion-title class="center-text">
+      {{transService.getTranslatedData('ticket-details.title')}} #{{ticket.uid}}
+    </ion-title>
+  </ion-toolbar>
+  <div>
+    <ion-segment scrollable class=" shadow margin-padding-zero " [(ngModel)]="selectedTab">
+      <ion-segment-button class="margin-padding-zero font-12" value="SUMMARY">
+        <ion-label class="margin-padding-zero">{{transService.getTranslatedData('ticket-details.summery')}}</ion-label>
+      </ion-segment-button>
+      <ion-segment-button class="font-12 " value="ASSETS">
+        <ion-label class="margin-padding-zero">{{transService.getTranslatedData('ticket-details.assets')}}</ion-label>
+      </ion-segment-button>
+      <ion-segment-button class="font-12" value="COMMENTS" (click)="getTicketComments()">
+        <ion-label>{{transService.getTranslatedData('ticket-details.comments')}}</ion-label>
+      </ion-segment-button>
+      <ion-segment-button class="margin-padding-zero font-12" value="CHECKLIST">
+        <ion-label>{{transService.getTranslatedData('ticket-details.checklist')}}</ion-label>
+      </ion-segment-button>
+      <ion-segment-button class="font-12" value="QUOTATIONS">
+        <ion-label>{{transService.getTranslatedData('ticket-details.quotations')}}</ion-label>
+      </ion-segment-button>
+      <ion-segment-button class="font-12" value="MATERIALS">
+        <ion-label>{{transService.getTranslatedData('ticket-details.materials')}}</ion-label>
+      </ion-segment-button>
+    </ion-segment>
+  </div>
+</ion-header>
+
+<ion-content>
+
+  <div [ngSwitch]="selectedTab">
+
+    <div *ngSwitchCase="'SUMMARY'">
+      <div class="ticket-details-card">
+        <ion-row>
+          <ion-col>
+            <p class="txt-slate-grey margin-padding-zero font-14 gotham-medium margin-bottom-3">
+              {{transService.getTranslatedData('ticket-details.category')}}</p>
+            <P class="gotham-medium margin-top-10 font-14 dark-grey">{{ticket.ticketCategory}}</P>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col>
+            <p class="txt-slate-grey margin-padding-zero gotham-medium font-14 margin-bottom-3">
+              {{transService.getTranslatedData('ticket-details.sub-category')}}</p>
+            <P class="gotham-medium margin-top-10 font-14 dark-grey">{{ticket.ticketSubCategory}}</P>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col>
+            <p class="txt-slate-grey margin-padding-zero font-14 gotham-medium margin-bottom-3">
+              {{transService.getTranslatedData('ticket-details.created-on')}}</p>
+            <p class="gotham-medium margin-top-10 font-14 dark-grey">
+              {{ticket.createdAt | date:'dd MMM yyyy' }}</p>
+          </ion-col>
+          <ion-col>
+            <p class="txt-slate-grey margin-padding-zero font-14 gotham-medium margin-bottom-3">
+              {{transService.getTranslatedData('ticket-details.due-date')}}</p>
+            <p class="gotham-medium margin-top-10 font-14 dark-grey">
+              {{ticket.deadlineDate | date:'dd MMM yyyy'}}</p>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col>
+            <p class="txt-slate-grey margin-padding-zero font-14 gotham-medium margin-bottom-3">
+              {{transService.getTranslatedData('ticket-details.description')}}</p>
+            <p class="gotham-medium margin-top-10 font-14 dark-grey">
+              {{ticket.notes}}</p>
+            <p class="gotham-medium margin-top-10 font-14 dark-grey" [hidden]="ticket.notes">
+              {{transService.getTranslatedData('ticket-details.no-description')}}</p>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <!-- <ion-col>
+              <p class="txt-slate-grey margin-padding-zero font-14 gotham-medium margin-bottom-3">LOCATION</p>
+              <p class="gotham-medium margin-top-10 font-14 dark-grey">
+                <span class="gotham-medium ">{{address.block}}</span>
+                <span class=" gotham-medium ">{{address.door}}</span>
+                {{address.name}}
+              </p>
+            </ion-col> -->
+          <ion-col>
+            <p class="txt-slate-grey font-14 margin-padding-zero gotham-medium margin-bottom-3">
+              {{transService.getTranslatedData('ticket-details.priority')}}</p>
+            <p class="gotham-medium margin-top-10 font-14 dark-grey">{{ticket.priority}}</p>
+          </ion-col>
+        </ion-row>
+      </div>
+
+      <div class="ticket-details-card dark-grey">
+        <ion-row>
+          <ion-col>
+            <p class="txt-slate-grey font-14 gotham-medium">{{transService.getTranslatedData('ticket-details.people')}}
+            </p>
+          </ion-col>
+        </ion-row>
+
+        <ion-row class="margin-bottom-10">
+          <ion-col size="2">
+            <ngx-avatar initialsSize="2" textSizeRatio="2" name="{{ticket.raisedBy?.firstName}}"></ngx-avatar>
+          </ion-col>
+          <ion-col size="8">
+            <p class="gotham-medium font-14 dark-grey margin-padding-zero">
+              {{transService.getTranslatedData('ticket-details.raised-by')}}</p>
+            <p *ngIf="ticket.raisedBy"
+              class="txt-warm-grey font-14 gotham-medium font-weight-500 margin-top-8 txt-nowrap white-space-initial">
+              {{ticket.raisedBy.firstName}} {{ticket.raisedBy.lastName}}
+            </p>
+            <!-- <p class="txt-warm-grey font-14 gotham-medium font-weight-500 margin-padding-zero">Click here to add</p> -->
+          </ion-col>
+          <ion-col class="center-text " size="2">
+            <ion-icon class="float-right icon-25 svg-color-primary" (click)="call(ticket.raisedBy.phoneNumber)"
+              src="/assets/svg-icons/contact-us.svg"></ion-icon>
+          </ion-col>
+        </ion-row>
+
+        <ion-row class=" margin-bottom-10">
+          <ion-col size="2">
+            <ngx-avatar textSizeRatio="2" initialsSize="2" name="{{ticket.contactPoint?.firstName}}"></ngx-avatar>
+          </ion-col>
+          <ion-col size="8">
+            <p class="gotham-medium font-14 dark-grey margin-padding-zero">
+              {{transService.getTranslatedData('ticket-details.poc')}}</p>
+            <p *ngIf="ticket.contactPoint"
+              class="txt-warm-grey font-14 gotham-medium font-weight-500 margin-top-8 txt-nowrap white-space-initial">
+              {{ticket.contactPoint.firstName}} {{ticket.contactPoint.lastName}}
+
+            </p>
+            <p *ngIf="!ticket.contactPoint"
+              class="txt-warm-grey gotham-medium font-14 font-weight-500 margin-top-8 txt-nowrap">
+              {{transService.getTranslatedData('ticket-details.not-added')}}
+            </p>
+          </ion-col>
+          <ion-col size="2" class="display-flex">
+            <span *ngIf="ticket.contactPoint"
+              class="float-right font-14 txt-warm-grey gotham-medium font-weight-500 align-self-center"
+              (click)="openUserSearchModal('poc')">{{transService.getTranslatedData('ticket-details.change')}}</span>
+            <span *ngIf="!ticket.contactPoint"
+              class="float-right font-14 txt-warm-grey gotham-medium font-weight-500 align-self-center"
+              (click)="openUserSearchModal('poc')">{{transService.getTranslatedData('ticket-details.add')}}</span>
+          </ion-col>
+        </ion-row>
+
+        <ion-row class=" margin-bottom-10">
+          <ion-col size="2" class="padding-right-20">
+            <ngx-avatar initialsSize="2" textSizeRatio="2" class="margin-padding-zero font-14"
+              name="{{ticket.agent?.firstName}}">
+              <div class="margin-padding-zero"></div>
+            </ngx-avatar>
+          </ion-col>
+          <ion-col size="8">
+            <p class="gotham-medium font-14 dark-grey margin-padding-zero">
+              {{transService.getTranslatedData('ticket-details.technician')}}</p>
+            <p *ngIf="ticket.agent"
+              class="txt-warm-grey font-14 gotham-medium font-weight-500 margin-top-8 txt-nowrap white-space-initial">
+              {{ticket.agent.firstName}} {{ticket.agent.lastName}}
+
+            </p>
+            <p *ngIf="!ticket.agent"
+              class="txt-warm-grey font-14 gotham-medium font-weight-500 margin-top-8 txt-nowrap">
+              Not added
+
+            </p>
+          </ion-col>
+          <ion-col size="2">
+            <span *ngIf="!ticket.agent" class="float-right font-14 txt-warm-grey gotham-medium font-weight-500"
+              (click)="openUserSearchModal('agent')">{{transService.getTranslatedData('ticket-details.add')}}</span>
+            <span *ngIf="ticket.agent" class="float-right font-14 txt-warm-grey gotham-medium font-weight-500"
+              (click)="openUserSearchModal('agent')">{{transService.getTranslatedData('ticket-details.change')}}</span>
+          </ion-col>
+        </ion-row>
+      </div>
+
+      <div class="ticket-details-card">
+        <ion-row>
+          <ion-col>
+            <p class="txt-slate-grey font-14 gotham-medium margin-bottom-3">
+              {{transService.getTranslatedData('ticket-details.photos')}}</p>
+          </ion-col>
+        </ion-row>
+        <ion-row style="flex-wrap: wrap;" *ngIf="ticket.files">
+
+          <ion-col size="3" style="position: relative;" *ngFor="let file of ticket.files">
+            <!-- <img src="assets/icon/delete.png"
+              style="height: 25px; width: 25px; position: absolute; right: 6px; top: 6px;"
+              (click)="removeImage(file._id)"> -->
+            <img src="{{file.aws_original_url}}" (click)="openImage(file.aws_original_url)"
+              class="img-responsive height-70 border-radius-10 " />
+          </ion-col>
+
+          <ion-col size="3" class="center-text" (click)="presentActionSheet()">
+            <img src="assets/icon/add-green.png" class="height-30 width-30 border-radius-10 " />
+            <p class="txt-slate-grey gotham-medium margin-top-10 font-weight-500 font-14">
+              {{transService.getTranslatedData('ticket-details.add-photo')}}</p>
+          </ion-col>
+
+        </ion-row>
+        <div class="font-14 txt-brown center-text" *ngIf="ticket.files?.length == 0||images.length!>1">
+          {{transService.getTranslatedData('ticket-details.no-picture')}}</div>
+      </div>
+
+      <div class="ticket-details-card">
+        <ion-row>
+          <ion-col>
+            <p class="txt-slate-grey gotham-medium font-14 margin-bottom-10  ">
+              {{transService.getTranslatedData('ticket-details.job-details')}}</p>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col>
+            <p class="txt-slate-grey font-14 gotham-medium margin-padding-zero">
+              {{transService.getTranslatedData('ticket-details.start-date')}}</p>
+            <p *ngIf="ticket.jobDate" class="gotham-medium dark-grey font-14 margin-top-10 margin-bottom-3">
+              {{ticket.jobDate | date:'dd MMM yyyy'}}</p>
+            <span *ngIf="!ticket.jobDate"
+              class="txt-warm-grey font-14 gotham-medium font-weight-500">{{transService.getTranslatedData('ticket-details.add')}}</span>
+          </ion-col>
+          <ion-col>
+            <p class="txt-slate-grey gotham-medium font-14 margin-padding-zero">
+              {{transService.getTranslatedData('ticket-details.time')}}</p>
+            <p *ngIf="ticket.jobStartTime" class="gotham-medium dark-grey margin-top-10 font-14 margin-bottom-3">
+              {{ticket.jobStartTime | date:'hh:mm a'}}</p>
+            <span *ngIf="!ticket.jobStartTime"
+              class="txt-warm-grey gotham-medium font-14 font-weight-500">{{transService.getTranslatedData('ticket-details.add')}}</span>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col>
+            <p class="txt-slate-grey gotham-medium font-14 margin-padding-zero">
+              {{transService.getTranslatedData('ticket-details.end-date')}}</p>
+            <p *ngIf="ticket.jobEndDate" class="gotham-medium dark-grey margin-top-10 font-14 margin-bottom-3">
+              {{ticket.jobEndDate | date:'dd MMM yyyy'}}</p>
+            <span *ngIf="!ticket.jobEndDate"
+              class="txt-warm-grey font-14 gotham-medium font-weight-500">{{transService.getTranslatedData('ticket-details.add')}}</span>
+          </ion-col>
+          <ion-col>
+            <p class="txt-slate-grey gotham-medium margin-padding-zero font-14">
+              {{transService.getTranslatedData('ticket-details.time')}}</p>
+            <p *ngIf="ticket.jobEndTime" class="gotham-medium dark-grey margin-top-10 margin-bottom-3 font-14">
+              {{ticket.jobEndTime | date:'hh:mm a'}}</p>
+            <span *ngIf="!ticket.jobEndTime"
+              class="txt-warm-grey gotham-medium font-14 font-weight-500">{{transService.getTranslatedData('ticket-details.add')}}</span>
+          </ion-col>
+        </ion-row>
+      </div>
+    </div>
+
+    <div *ngSwitchCase="'ASSETS'" class="full-width max-available-height margin-top-5">
+      <div class="ticket-assets-card" *ngFor="let asset of ticket.assets">
+        <ion-row>
+          <ion-col>
+            <p class="txt-slate-grey font-14 gotham-medium margin-bottom-0">
+              {{transService.getTranslatedData('ticket-details.asset-id')}}</p>
+            <p class="margin-top-10 font-14 margin-bottom-10 gotham-medium dark-grey">{{asset.assetId}}</p>
+          </ion-col>
+          <ion-col>
+            <p class="txt-slate-grey font-14 gotham-medium margin-bottom-0">
+              {{transService.getTranslatedData('ticket-details.asset-name')}}</p>
+            <p class="margin-bottom-10 font-14 margin-top-10 gotham-medium dark-grey">{{asset.name}}</p>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col>
+            <p class="txt-slate-grey font-14 gotham-medium margin-padding-zero">
+              {{transService.getTranslatedData('ticket-details.location')}}</p>
+            <p class="margin-bottom-10 margin-top-10 font-14 gotham-medium dark-grey ">
+              {{asset.location || transService.getTranslatedData('ticket-details.not-available')}}</p>
+          </ion-col>
+          <ion-col>
+            <p class="txt-slate-grey font-14 gotham-medium margin-padding-zero">
+              {{transService.getTranslatedData('ticket-details.floor')}}</p>
+            <p class="margin-bottom-0 margin-top-10 font-14 gotham-medium dark-grey">
+              {{asset.floor || transService.getTranslatedData('ticket-details.not-available')}}
+            </p>
+          </ion-col>
+        </ion-row>
+
+        <ion-row>
+          <ion-col>
+            <p class="txt-slate-grey font-14 gotham-medium margin-padding-zero">
+              {{transService.getTranslatedData('ticket-details.description')}}</p>
+            <p class=" font-14 margin-bottom-0 margin-top-10 gotham-medium dark-grey">
+              {{asset.description || transService.getTranslatedData('ticket-details.not-available')}}</p>
+          </ion-col>
+        </ion-row>
+      </div>
+      <br>
+      <ion-row [hidden]="ticket.assets?.length > 0"
+        class="txt-small txt-brown gotham-medium font-14 center-text margin-top-15">
+        <ion-col>{{transService.getTranslatedData('ticket-details.no-asset')}}</ion-col>
+      </ion-row>
+
+    </div>
+
+    <div *ngSwitchCase="'COMMENTS'" class="full-width max-available-height">
+      <ion-row class="padding-10 ">
+        <ion-col>
+          <textarea rows="7" class="border-grey-1 font-14 full-width "
+            placeholder="{{transService.getTranslatedData('ticket-details.comment-placeholder')}}"
+            [(ngModel)]="ticket.commentText">
+            </textarea>
+          <ion-button class="float-right" style="margin: 5px; padding: 0" (click)="createComment()">
+            <p class="gotham font-14 margin-padding-zero">
+              {{transService.getTranslatedData('ticket-details.comment')}}</p>
+          </ion-button>
+        </ion-col>
+      </ion-row>
+      <!-- Tickets comments section -->
+
+      <ion-row [hidden]="comments?.length > 0"
+        class="txt-small txt-brown gotham-medium center-text font-14 center margin-top-15">
+        <ion-col>{{transService.getTranslatedData('ticket-details.no-comment')}}</ion-col>
+      </ion-row>
+
+      <!-- <ion-row *ngFor="let comment of comments" class="discussion-comment padding-5"
+          style="margin-bottom:5px !important;">
+          <ion-col size="2" class="padding-10">
+            <ion-row>
+              <ngx-avatar class="gotham-medium" name="{{comment.createdBy.firstName}}"></ngx-avatar>
+            </ion-row>
+          </ion-col>
+          <ion-col size="9" class="padding-10">
+            <ion-row>
+              <ion-col class="  margin-bottom-0 padding-bottom-0">
+                <ion-row class=" font-14 dark-grey gotham-medium">
+                  {{comment.createdBy.firstName}} {{comment.createdBy.lastName}}
+                </ion-row>
+                <ion-row>
+                  <p
+                    class="font-14 txt-align-right gotham-medium txt-warm-grey font-14 margin-bottom-0 padding-bottom-0 margin-top-8">
+                    {{comment.text}}</p>
+                </ion-row>
+              </ion-col>
+              <ion-row
+                class="font-14 txt-align-right gotham-medium txt-warm-grey font-14 margin-bottom-0 padding-bottom-0">
+                {{comment.createdAt|agoFilter}}
+              </ion-row>
+            </ion-row>
+          </ion-col>
+          <br />
+          <br />
+          <br />
+        </ion-row> -->
+
+      <ion-item *ngFor="let comment of comments" class="discussion-comment padding-0"
+        style="margin-bottom:5px !important;" lines="full">
+        <ngx-avatar class="gotham-medium" name="{{comment.createdBy.firstName}}"></ngx-avatar>
+        <ion-label class="margin-left-10">
+          <p>
+            <span class=" font-14 dark-grey gotham-medium"> {{comment.createdBy.firstName}}
+              {{comment.createdBy.lastName}} </span>
+            <span class="font-14 float-right gotham-medium txt-warm-grey font-14 margin-bottom-0 padding-bottom-0 ">
+              {{comment.createdAt|agoFilter}}
+            </span>
+          </p>
+
+          <span
+            class="font-14 txt-align-right white-space-initial gotham-medium txt-warm-grey font-14 margin-bottom-0 padding-bottom-0 margin-top-8">
+            {{comment.text}}
+          </span>
+        </ion-label>
+      </ion-item>
+    </div>
+
+    <div *ngSwitchCase="'CHECKLIST'" class="full-width max-available-height margin-top-5">
+      <div class="ticket-details-list" *ngIf="ticket.checklist?.length > 0">
+        <ion-list class="padding-bottom-0">
+
+          <ion-item *ngFor="let data of ticket.checklist; let i = index">
+            <ion-checkbox class="txt-warm-grey" [(ngModel)]="data.completed"
+              (ionChange)="updateCheckList(data.completed, i)"></ion-checkbox>
+            <ion-label class="margin-left-20 font-14  gotham item-text-wrap">
+              {{data.name}}
+            </ion-label>
+          </ion-item>
+
+        </ion-list>
+
+      </div>
+      <br>
+      <ion-row *ngIf="ticket.checklist?.length == 0|| !ticket.checklist"
+        class="txt-small txt-brown gotham-medium font-14 center-text margin-top-15">
+        <ion-col>{{transService.getTranslatedData('ticket-details.no-checklist')}}</ion-col>
+      </ion-row>
+    </div>
+
+    <div *ngSwitchCase="'QUOTATIONS'" class="full-width max-available-height margin-top-5">
+      <div class="ticket-details-list" *ngIf="ticket.estimates.length > 0">
+        <ion-list class="padding-0" *ngFor="let estimate of ticket.estimates">
+          <ion-item detail="true" [routerLink]="['/building-management-estimate']"
+            [queryParams]="{estimateId: estimate._id}">
+            <ion-label>
+              <ion-row>
+                <ion-col>
+                  <p class="gotham-medium font-14 dark-grey ">
+                    {{transService.getTranslatedData('ticket-details.quotation')}} #{{estimate.referenceNumber}}</p>
+                  <p class="gotham font-14 font-weight-600 txt-warm-grey ">
+                    {{estimate.createdAt | date:'dd MMM yyyy'}}
+                  </p>
+                </ion-col>
+                <ion-col class="padding-top-0">
+                  <p class="gotham font-14 font-weight-600 float-right padding-right-10 txt-warm-grey">
+                    {{estimate.totalAmount | currency:'INR'}}</p>
+                </ion-col>
+              </ion-row>
+            </ion-label>
+          </ion-item>
+        </ion-list>
+      </div>
+      <br>
+      <ion-row *ngIf="ticket.estimates?.length == 0"
+        class="txt-small txt-brown gotham-medium font-14 center-text margin-top-15">
+        <ion-col>
+          {{transService.getTranslatedData('ticket-details.no-estimate')}}
+        </ion-col>
+      </ion-row>
+    </div>
+
+    <div *ngSwitchCase="'MATERIALS'" class="full-width max-available-height margin-top-5">
+      <div *ngIf="activeMaterialSection == 'description'" class="ticket-details-list full-width">
+        <ion-row class="margin-0 padding-top-5 border-bottom-grey-1"
+          *ngFor="let item of ticket.itemDetails let i = index">
+          <ion-col size="1" class="margin-left-8">
+            <p class="gotham-medium font-14 dark-grey margin-padding-zero">{{i+1}}</p>
+          </ion-col>
+          <ion-col size="8" class="margin-left-10">
+            <p class="gotham-medium font-14 dark-grey margin-padding-zero">{{item.product.name}}</p>
+            <p *ngIf="item.borneByEndUser"
+              class="txt-warm-grey font-14 gotham-medium margin-bottom-0 font-weight-500 margin-top-8 txt-nowrap">
+              {{transService.getTranslatedData('ticket-details.born-by-customer')}}
+            </p>
+            <p class="txt-warm-grey font-14 gotham-medium margin-top-8  font-weight-500txt-nowrap">
+              {{transService.getTranslatedData('ticket-details.quantity')}}{{item.quantity}}
+            </p>
+          </ion-col>
+          <ion-col class="margin-right-10 margin-top-3 padding-top-0">
+            <img class="icon-25 float-right" src="assets/icon/delete.png" (click)="removeMaterial(item._id)">
+          </ion-col>
+        </ion-row>
+      </div>
+
+      <div *ngIf="activeMaterialSection == 'materialForm'">
+        <div class="padding-25">
+          <ion-list>
+            <ion-list-header class="gotham font-16 font-weight-500">
+              {{transService.getTranslatedData('ticket-details.material')}}</ion-list-header>
+            <ion-item>
+              <ion-input inputmode="text" [(ngModel)]="materialData.name" class="gotham"
+                placeholder="{{transService.getTranslatedData('ticket-details.material-placeholder')}}"
+                (click)="openMaterialSearchModal()">
+              </ion-input>
+              <ion-icon class="float-right" name="arrow-dropdown"></ion-icon>
+            </ion-item>
+          </ion-list>
+          <ion-list>
+            <ion-list-header class="gotham font-16 font-weight-500">
+              {{transService.getTranslatedData('ticket-details.quantity')}}</ion-list-header>
+            <ion-item>
+              <ion-input inputmode="number" [(ngModel)]="materialData.quantity" class="gotham"
+                placeholder="{{transService.getTranslatedData('ticket-details.quantity-placeholder')}}">
+              </ion-input>
+            </ion-item>
+          </ion-list>
+          <!-- <ion-list no-lines> -->
+          <ion-item lines="none">
+            <ion-label>{{transService.getTranslatedData('ticket-details.born-by-customer-input')}}</ion-label>
+            <ion-checkbox slot="start" [(ngModel)]="materialData.borneByEndUser"></ion-checkbox>
+          </ion-item>
+          <!-- </ion-list> -->
+
+          <ion-row class="center-text">
+            <ion-col>
+              <ion-button (click)="hideMaterialForm()" color="danger" class="full-width">
+                {{transService.getTranslatedData('ticket-details.cancel')}}</ion-button>
+            </ion-col>
+            <ion-col>
+              <ion-button color="success" class="full-width" (click)="tagMaterial()">
+                {{transService.getTranslatedData('ticket-details.add')}}</ion-button>
+            </ion-col>
+          </ion-row>
+
+        </div>
+      </div>
+
+      <br>
+      <ion-row *ngIf="ticket.itemDetails?.length == 0"
+        class="txt-small center-text txt-brown gotham-medium font-14 margin-top-15">
+        <ion-col>{{transService.getTranslatedData('ticket-details.no-material')}}</ion-col>
+      </ion-row>
+
+      <ion-row class=" float-right margin-top-15" (click)="showMaterialForm()"
+        *ngIf="activeMaterialSection == 'description'">
+        <img src="assets/icon/add-green.png" class="height-30 width-30 border-radius-10 " />
+        <p class="gotham-medium dark-grey margin-top-8 margin-left-5 margin-right-10 font-17 ">
+          {{transService.getTranslatedData('ticket-details.add-new')}}
+        </p>
+      </ion-row>
+    </div>
+
+  </div>
+</ion-content>
+<ion-footer class="display-flex justify-center">
+  <ion-row class="width-80-percent margint-top-10 center-text justify-center">
+    <ion-col size="3">
+      <ion-icon name="checkmark-circle" class="icon-40 " color="active-status"></ion-icon>
+      <p class="font-12 margin-0">{{transService.getTranslatedData('ticket-details.open')}}</p>
+    </ion-col>
+    <ion-col (click)="updatStatus('in-progress')" size="3">
+      <ion-icon name="checkmark-circle" class="icon-40"
+        [color]="ticket.status=='in-progress'||ticket.status=='resolved'||ticket.status=='rejected'?'active-status':'medium'">
+      </ion-icon>
+      <p class="font-12 margin-0">{{transService.getTranslatedData('ticket-details.in-progress')}}</p>
+    </ion-col>
+    <ion-col *ngIf="ticket.status!='rejected'" (click)="updatStatus('resolved')" size="3">
+      <ion-icon name="checkmark-circle" class="icon-40" [color]="ticket.status=='resolved'?'active-status':'medium'">
+      </ion-icon>
+      <p class="font-12 margin-0">{{transService.getTranslatedData('ticket-details.resolved')}}</p>
+    </ion-col>
+    <ion-col *ngIf="ticket.status!='resolved'" (click)="updatStatus('rejected')" size="3">
+      <ion-icon name="close-circle" class="icon-40"
+        [color]="ticket.status=='rejected'?'rejected-active-status':'medium'">
+      </ion-icon>
+      <p class="font-12 margin-0">{{transService.getTranslatedData('ticket-details.rejected')}}</p>
+    </ion-col>
+
+  </ion-row>
+</ion-footer>

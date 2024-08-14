@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "475945301461",
+    "firebase_url": "https://thehousemonk-business.firebaseio.com",
+    "project_id": "thehousemonk-business",
+    "storage_bucket": "thehousemonk-business.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:475945301461:android:19716f0341024249",
+        "android_client_info": {
+          "package_name": "com.thehousemonk.business"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "475945301461-33jujlon7imf005v20sroer83i5dadak.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBCmOyzVmR9HxsdMlpZiKu7JyJoJqBjY7w"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "475945301461-33jujlon7imf005v20sroer83i5dadak.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "475945301461-1qoqi0rniipagvjqcatsqc7cc9c7ipf6.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.thehousemonk.business",
+                "app_store_id": "1260958211"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

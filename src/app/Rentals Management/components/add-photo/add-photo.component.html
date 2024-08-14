@@ -1,0 +1,45 @@
+<ion-content class="ion-padding-bottom">
+  <div class="padding-16 max-available-height">
+    <ion-label class="gotham-medium">{{transService.getTranslatedData('Add Photo')}}</ion-label>
+    <p class="gotham txt-slate-grey font-14 line-height-18 margin-bottom-0">{{transService.getTranslatedData('Take a Picture of this Inventory or fixture')}}</p>
+
+    <div class="margin-top-10 bg-white"  *ngIf="images.length > 0">
+      <p class="gotham txt-slate-grey ">{{transService.getTranslatedData('Photos')}}</p>
+      <div class="display-flex scroll ">
+        <ion-item *ngFor="let url of images; let i = index" lines='none' class="ion-image-item margin-right-10">
+          <ion-thumbnail class="margin-0 icon-90 image">
+            <ion-icon class="img-icon" (click)="removeImage(i)" color="danger" name="close-circle">
+            </ion-icon>
+            <ion-img src="{{webView.convertFileSrc(url)}}"></ion-img>
+          </ion-thumbnail>
+        </ion-item>
+      </div>
+    </div>
+   
+
+    <ion-card class="width-75-percent margin-auto card-content" (click)="presentActionSheet()">
+      <ion-card class="full-width margin-1" >
+        <ion-item lines="none" class="ion-item">
+          <ion-icon slot="start" class="margin-left-10 margin-right-10 icon-20 gotham" name="camera"></ion-icon>
+          <ion-label>{{transService.getTranslatedData('Click here to add a picture')}}</ion-label>
+        </ion-item>
+      </ion-card>
+    </ion-card>
+ 
+  </div>
+</ion-content>
+
+<ion-footer>
+  <ion-toolbar>
+    <ion-row class="justify-center margin-top-20">
+      <ion-button class="full-width text-transform-math-auto height-50 font-16  margin-bottom-10" (click)="save()" >
+        {{transService.getTranslatedData('Save')}}
+      </ion-button>
+    </ion-row>
+    <ion-row class="justify-center">
+      <ion-button fill="outline" class="full-width text-transform-math-auto height-50 font-16  margin-bottom-20" (click)="close()">
+        {{transService.getTranslatedData('Cancel')}}
+      </ion-button>
+    </ion-row>
+  </ion-toolbar>
+</ion-footer>

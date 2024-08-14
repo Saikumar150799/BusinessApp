@@ -1,0 +1,276 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="rentals-home"></ion-back-button>
+    </ion-buttons>
+    <ion-buttons slot="end">
+      <div [ngSwitch]="selectedTab" (click)="openSortFilterModal()" >
+        <ion-buttons   *ngSwitchCase="'bookingHistory'" >
+        <img src="../../../../assets/Vector.png" alt="SortIcon"  width="18px">
+      </ion-buttons>
+      </div>
+      <ion-button (click)="openFilterModal()">
+        <ion-icon name="funnel" mode="ios"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title class="padding-0"> Facility Booking</ion-title>
+  </ion-toolbar>
+
+  <ion-segment [(ngModel)]="selectedTab" (ionChange)="onTabChange()">
+    <ion-segment-button value="facilities">
+      <ion-label>Facilities</ion-label>
+    </ion-segment-button>
+
+    <ion-segment-button value="bookingHistory">
+      <ion-label>Booking History</ion-label>
+    </ion-segment-button>
+  </ion-segment>
+  <div [ngSwitch]="selectedTab">
+    <ion-searchbar *ngSwitchCase="'facilities'" [(ngModel)]="filterData.searchTextFacility" placeholder="Search"
+      (ngModelChange)="viewFacilities('', 'search')"></ion-searchbar>
+      <div *ngIf="filterData.searchBy!='Facility'">
+        <ion-searchbar *ngSwitchCase="'bookingHistory'" [(ngModel)]="filterData.searchTextBooking" (keypress)="numberOnly($event)" placeholder="Search"
+        (ngModelChange)="viewBookingHistory('', 'search')"></ion-searchbar>
+      </div>
+      <!-- <div *ngIf="filterData.searchBy=='Facility'" >
+        <ion-searchbar *ngSwitchCase="'bookingHistory'" [(ngModel)]="filterData.searchTextBooking" (keypress)="numberOnly($event)" placeholder="Search"
+        (ngModelChange)="viewBookingHistory('', 'search')"></ion-searchbar>
+      </div> -->
+  </div>
+</ion-header>
+
+<ion-content [ngSwitch]="selectedTab ">
+  <div *ngSwitchCase="'facilities'">
+    <p class="gotham center-text" *ngIf="(noFacility&&items.length===0) ">
+      No Items To Show
+    </p>
+    <div class="center-text margin-top-10" *ngIf="loader">
+      <ion-spinner></ion-spinner>
+    </div>
+    <ion-list class="padding-bottom-0">
+      <ion-item *ngFor="let item of items" [routerLink]="['/rentals-facility-details']" detail
+        [queryParams]="{facilityId: item._id}" lines="none" class="margin-top-10">
+        <ion-label class="margin-0">
+          <p class="gotham-medium margin-bottom-8 truncateFacility">
+            #{{item.facilityId}} - {{item.name}}
+          </p>
+          <p class="gotham font-weight-600 txt-grey margin-bottom-8 white-space-initial">
+            {{item.project.name}}
+          </p>
+
+          <ion-grid class="padding-0">
+            <ion-row class="padding-0 align-items-center margin-bottom-10">
+              <ion-col class="padding-0" size="auto">
+                <ion-badge *ngIf="item.bookingInfo.availabilityOptions"
+                  class="gotham font-weight-600 padding-top-7 padding-bottom-7 date-bedge-color" mode="ios">
+                  {{item.bookingInfo.availabilityOptions}}
+                </ion-badge>
+              </ion-col>
+              <ion-col class="padding-0" size="auto">
+                <ion-badge *ngIf="item.bookingInfo?.rate || item.bookingInfo?.rate !== 0"
+                  class="gotham font-weight-600 padding-top-6 margin-left-10 padding-bottom-7" color="warning"
+                  mode="ios">
+                  {{(item.bookingInfo.rate| currency:'INR':'symbol') + '/' + item.bookingInfo.unit }}
+                </ion-badge>
+              </ion-col>
+            </ion-row>
+          </ion-grid>
+        </ion-label>
+      </ion-item>
+    </ion-list>
+    <ion-infinite-scroll threshold="5px" (ionInfinite)="viewFacilities($event,'')">
+      <ion-infinite-scroll-content loadingSpinner="bubbles" loadingText="loading...">
+      </ion-infinite-scroll-content>
+    </ion-infinite-scroll>
+  </div>
+  <div *ngSwitchCase="'bookingHistory'">
+    <p class="gotham center-text" *ngIf=" (noBooking&&bookingArray.length===0)">
+      No Items To Show
+    </p>
+    <div class="center-text margin-top-10" *ngIf="loader">
+      <ion-spinner></ion-spinner>
+    </div>
+
+    <ion-list class="padding-bottom-0">
+      <ion-item *ngFor="let item of bookingArray" class="margin-top-10 margin-bottom-10" lines="none">
+        <ion-label class="margin-0 margin-bottom-10">
+
+          <p class="gotham-medium" text-wrap>
+            <ion-grid class="padding-0">
+              <ion-row class="padding-0">
+                <ion-col class="padding-0" class="padding-0" size="7" class="display">
+                  <span class="">{{"#" + item.uid + " - "}}</span>
+                  <span class="margin-left-5 truncateBooking"> {{item.facility.name}}</span>
+                </ion-col>
+              </ion-row>
+            </ion-grid>
+          </p>
+
+          <ion-row class="padding-0 padding-top-7">
+            <ion-col class="padding-0">
+              <p class="gotham txt-grey padding-0">
+                {{"Booked by:"}}
+              </p>
+              <p class="gotham-medium txt-grey padding-0">
+                {{((item.user?.firstName || '') + (item.user?.firstName ? ' ' : '') + (item.user?.lastName || '')) || "N/A"}}
+              </p>
+            </ion-col>
+          </ion-row>
+
+          <ion-row *ngIf="item.participants?.length > 0" class="padding-0 padding-top-7">
+            <ion-col class="padding-0">
+              <p class="gotham txt-grey padding-0">
+                {{"Other invitees:"}}
+              </p>
+              <div class="display-flex flex-direction-row">
+                <div class="padding-0 truncateFacility">
+                  <span class="gotham-medium txt-grey font-14" *ngFor="let user of item.participants.slice(0, 2); let i = index">
+                    {{user.firstName || '' + (user.firstName ? ' ' : '') + user.lastName || ''}}{{(i != 1 && item.participants.length > 1) ? ', ' : ''}}
+                  </span>
+                  <span *ngIf="item.participants.length > 2">
+                    {{"..."}}
+                  </span>
+                </div>
+               <div class="margin-left-5">
+                <span class="cursor-pointer gotham-medium font-14 underline-text light-red-txt" (click)="showMoreInviteesDailog($event, item.participants)" *ngIf="item.participants?.length > 2"> + {{item.participants?.length - 2}} more</span>
+               </div>
+              </div>
+            </ion-col>
+          </ion-row>
+
+          <ion-row class="padding-0 padding-top-7">
+            <ion-col class="padding-0">
+              <p class="gotham txt-grey padding-0">
+                {{"Unit:"}}
+              </p>
+              <p class="gotham-medium txt-grey padding-0 truncateFacility">
+                {{(item.listing&&item.listing.block)?item.listing.block+' - ':''}}{{(item.listing&&item.listing.door) ?
+                  item.listing.door : ''}} {{item.project.name}}-{{item.project.locality}}
+              </p>
+            </ion-col>
+          </ion-row>
+
+          <ion-row class="padding-0 padding-top-7">
+            <ion-col class="padding-0">
+              <p class="gotham txt-grey padding-0">
+                {{"Booking schedule:"}}
+              </p>
+              <p class="gotham font-weight-600 txt-grey margin-bottom-4 font-12" size="auto" mode="md">
+                {{item.startDate | date:'d-MMM y h:mm a'}} to {{item.endDate |
+                date:'d-MMM y h:mm a'}}
+              </p>
+            </ion-col>
+          </ion-row>
+
+          <ion-row class="padding-0 padding-top-7 display-flex flex-direction-row align-items-center">
+            <ion-col *ngIf="item.facility?.modeOfPayment === 'both'" class="padding-0">
+                <div class="display-flex flex-direction-row gotham font-weight-600 txt-grey margin-bottom-4 font-12">
+                  <div>
+                    {{alertService.getNumberFormat(item.rate)}}
+                  </div>
+                  <div>
+                    {{" /"}}
+                  </div>
+                  <div class="display-flex flex-direction-row align-items-center">
+                    <img src="../../../../assets/svg-icons/coin.svg" class="outline-none" height="15" width="20">
+                    {{(item.rate || 1)/(item.facilty?.creditValue  || 1)}}
+                  </div>
+                </div>
+            </ion-col>
+            <ion-col *ngIf="item.facility?.modeOfPayment === 'credit'" class="padding-0">
+              <div class="display-flex flex-direction-row gotham font-weight-600 txt-grey margin-bottom-4 font-12">
+                <div class="display-flex flex-direction-row align-items-center">
+                  <img src="../../../../assets/svg-icons/coin.svg" class="outline-none" height="15" width="20">
+                  {{(item.rate || 1)/(item.facilty?.creditValue  || 1)}}
+                </div>
+              </div>
+            </ion-col>
+            <ion-col *ngIf="item.facility?.modeOfPayment === 'cash'" class="padding-0">
+              <div class="display-flex flex-direction-row gotham font-weight-600 txt-grey margin-bottom-4 font-12">
+                <div>
+                  {{alertService.getNumberFormat(item.rate)}}
+                </div>
+              </div>
+            </ion-col>
+            <ion-col *ngIf="item.facility?.modeOfPayment === 'none'" class="padding-0">
+              <div class="display-flex flex-direction-row gotham font-weight-600 txt-grey margin-bottom-4 font-12">
+                <div>
+                  {{"Free"}}
+                </div>
+              </div>
+            </ion-col>
+            <ion-col class="padding-0">
+              <ion-chip float-right class="gotham font-weight-600" size="small"
+                [color]="item.transactionStatus=='pending'?'warning':item.transactionStatus=='due'?'danger':'success'">
+                {{item.transactionStatus|titlecase}}
+              </ion-chip>
+            </ion-col>
+          </ion-row>
+
+          <ion-row *ngIf="item.status ==='pending' && item.facility.bookingInfo?.approvalRequired === true" class="padding-0 padding-top-7">
+            <ion-col class="margin-right-8 padding-0">
+              <div class="padding-16 cursor-pointer border-radius-5 display-flex flex-direction-row justify-center align-items-center  approve-div" (click)="changeStatus(item, {status: 'approved'})">
+                <ion-icon class="font-20 success" name="checkmark"></ion-icon>
+                <span class="margin-left-7">
+                  {{'Approve'}}
+                </span>
+              </div>
+            </ion-col>
+            <ion-col class="margin-left-8 padding-0">
+              <div class="padding-16 cursor-pointer border-radius-5 display-flex flex-direction-row justify-center align-items-center reject-div" (click)="changeStatus(item, {status: 'rejected'})">
+                <ion-icon class="font-20 danger"  name="close"></ion-icon>
+                <span class="margin-left-7">
+                  {{'Reject'}}
+                </span>
+              </div>
+            </ion-col>
+          </ion-row>
+
+          <ion-row  *ngIf="item.status !=='pending' && item.facility.bookingInfo?.approvalRequired === true && !(item.statusChangeVisible)" class="padding-0 padding-top-7">
+            <ion-col class="padding-0 display-flex flex-direction-row align-items-center">
+              <ion-chip class="margin-0 gotham font-weight-600" size="small"
+                [color]="item.status=='rejected' ?'danger':'success'">
+                {{item.status|titlecase}}
+              </ion-chip>
+              <span (click)="showStatusChange(item)" class="margin-top-5 margin-left-7 cursor-pointer">
+                <img class="icon-20" src="../../../../assets/svg-icons/edit.svg" alt="">
+              </span>
+            </ion-col>
+          </ion-row>
+
+          <ion-row *ngIf="item.statusChangeVisible"  class="padding-0 padding-top-7">
+            <ion-col class="margin-right-8 padding-0">
+              <div class="padding-16 cursor-pointer border-radius-5 display-flex flex-direction-row justify-center align-items-center  approve-div" (click)="changeStatus(item, {status: 'approved'})">
+                <ion-icon class="font-20 success" name="checkmark"></ion-icon>
+                <span class="margin-left-7">
+                  {{'Approve'}}
+                </span>
+              </div>
+            </ion-col>
+            <ion-col class="margin-left-8 margin-right-8 padding-0">
+              <div class="padding-16 cursor-pointer border-radius-5 display-flex flex-direction-row justify-center align-items-center reject-div" (click)="changeStatus(item, {status: 'rejected'})">
+                <ion-icon class="font-20 danger"  name="close"></ion-icon>
+                <span class="margin-left-7">
+                  {{'Reject'}}
+                </span>
+              </div>
+            </ion-col>
+            <ion-col class="margin-left-8 padding-0">
+              <div class="padding-16 cursor-pointer border-radius-5 display-flex flex-direction-row justify-center align-items-center cancel-div" (click)="showStatusChange(item)">
+                <span class="margin-left-7">
+                  {{'Cancel'}}
+                </span>
+              </div>
+            </ion-col>
+          </ion-row>          
+
+        </ion-label>
+      </ion-item>
+    </ion-list>
+
+    <ion-infinite-scroll threshold="5px" (ionInfinite)="viewBookingHistory($event,'')">
+      <ion-infinite-scroll-content loadingSpinner="bubbles" loadingText="loading...">
+      </ion-infinite-scroll-content>
+    </ion-infinite-scroll>
+  </div>
+</ion-content>

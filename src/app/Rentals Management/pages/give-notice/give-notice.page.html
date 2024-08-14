@@ -1,0 +1,55 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="{{transService.getCurrentDirection()==='rtl'? 'end':'start'}}">
+      <ion-back-button defaultHref="rentals-check-out"></ion-back-button>
+    </ion-buttons>
+    <ion-title class="{{transService.getCurrentDirection()==='rtl'?'':'padding-left-0'}}">
+      {{transService.getTranslatedData('Give Notice')}}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="margin-top-3">
+    <ion-searchbar [(ngModel)]="filterData.searchText" placeholder="Search" debounce="300"
+    (ngModelChange)="searchUnits('search')" class="padding-0"></ion-searchbar>
+  </div>
+
+  <div class="center-text margin-top-10" *ngIf="loader">
+    <ion-spinner name="lines"></ion-spinner>
+  </div>
+
+  <div *ngIf="units.length > 0" class="margin-top-1">
+    <ion-list class=" padding-bottom-0">
+      <ion-item *ngFor="let unit of units" [routerLink]="['/rentals-give-notice-details']" detail
+        [queryParams]="{unitId: unit._id}" lines="full">
+        <ion-label class="margin-5">
+          <p class="gotham-medium margin-bottom-8 " text-wrap>
+            <ion-grid class="padding-0">
+              <ion-row class="padding-0">
+                <ion-col class="padding-0" class="padding-0" size="7">
+                  <span
+                    [ngClass]="{'float-right': transService.getCurrentDirection()==='rtl','float-left':transService.getCurrentDirection()==='ltr'}" class="font-15">{{transService.getTranslatedData('Unit no: ')}} {{unit.block}} {{unit.door}}</span>
+                </ion-col>
+              </ion-row>
+            </ion-grid>
+          </p>
+          <p class="gotham display-flex align-items-centerfont-weight-600 txt-grey margin-bottom-8 white-space-initial" *ngIf="unit.tenants.length > 0">
+           {{transService.getTranslatedData("Tenant's name: ")}} {{unit.tenants[0].firstName}} {{unit.tenants[0].lastName}}
+           <!-- <ion-badge color="light" class="margin-left-10 gotham" *ngIf="unit.tenants.length > 1">+ {{unit.tenants.length - 1}} {{transService.getTranslatedData('more')}}</ion-badge> -->
+          </p>
+        </ion-label>
+      </ion-item>
+    </ion-list>
+  </div>
+
+  <div *ngIf="units.length === 0 && emptyScreen" class="margin-top-10 center-text">
+    <ion-label>{{transService.getTranslatedData('No units found')}}</ion-label>
+  </div>
+  <ion-infinite-scroll threshold="5px" (ionInfinite)="getUnits($event)">
+    <ion-infinite-scroll-content loadingSpinner="bubbles"
+      loadingText="{{transService.getTranslatedData('Loading more data...')}}">
+    </ion-infinite-scroll-content>
+  </ion-infinite-scroll>
+  
+</ion-content>
+

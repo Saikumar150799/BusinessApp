@@ -1,0 +1,74 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>{{transService.getTranslatedData('Create Notice')}}</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="dismiss()">
+        <ion-icon slot="icon-only" name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+
+  <div class="full-width max-available-height webkit-center">
+    <ion-list>
+      <!-- <ion-item>
+        <ion-label class="gotham " style="color: #808080 !important;">
+          {{transService.getTranslatedData('Notice Belongs To')}}</ion-label>
+        <ion-select interface="popover" class="gotham " [(ngModel)]="notice.discussionBelongsTo">
+          <ion-select-option value="All Projects">{{transService.getTranslatedData('All Projects')}}</ion-select-option>
+          <ion-select-option value="Project" checked>{{transService.getTranslatedData('Single Project')}}
+          </ion-select-option>
+        </ion-select>
+      </ion-item> -->
+      <ion-item (click)="openProjectSearchModal()" lines="full">
+        <ion-icon class="icon-18 margin-bottom-5" name="home"></ion-icon>
+        <ion-label class="gotham margin-right-10  margin-left-10" [ngClass]="{'txt-slate-grey': !notice.noticeBelongsToName}">
+          {{notice.noticeBelongsToName ? notice.noticeBelongsToName : transService.getTranslatedData('Click here to select project')}}
+        </ion-label>
+        <ion-icon class="float-right" name="arrow-dropdown"></ion-icon>
+      </ion-item>
+
+      <ion-item>
+        <!-- <ion-label>Default Label</ion-label> -->
+        <ion-input [(ngModel)]="notice.title" inputmode="text" class="gotham "
+          placeholder="{{transService.getTranslatedData('Topic')}}"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-textarea [(ngModel)]="notice.body" rows='7' class="gotham "
+          placeholder="{{transService.getTranslatedData('Message')}}"></ion-textarea>
+      </ion-item>
+
+      <ion-item-divider class="grey-back">
+        <ion-label>
+          {{transService.getTranslatedData('Select file')}}
+        </ion-label>
+      </ion-item-divider>
+
+      <!-- <ion-header no-border class="grey-back padding-top-bottom">
+        <ion-title class="center-text gotham-bold ">Upload file</ion-title>
+      </ion-header> -->
+
+      <div *ngIf="images.length == 0" class="ticket-details-list  center-text">
+        <ion-icon class="font-70 " name="cloud-upload"></ion-icon><br>
+        <ion-button no-border color="light" class="max-width-80-percent white-space-initial" (click)="presentActionSheet()" style="color:black;">
+          {{transService.getTranslatedData('Click here to add picture')}}</ion-button>
+      </div>
+
+      <ion-row class="width-80-percent margin-10">
+        <div *ngIf="images.length > 0">
+          <ion-item *ngFor="let url of images" lines='none' class="ion-image-item">
+            <ion-thumbnail class="margin-0 icon-90 image" (click)="openImage(webView.convertFileSrc(url))">
+              <ion-icon class="img-icon" (click)="removeImage()" color="danger" name="close-circle">
+              </ion-icon>
+              <ion-img src="{{webView.convertFileSrc(url)}}"></ion-img>
+            </ion-thumbnail>
+          </ion-item>
+        </div>
+      </ion-row>
+    </ion-list>
+
+  </div>
+</ion-content>
+<ion-button [disabled]=" !notice.title || !notice.body" size="large" (click)="createNotice()" color="danger">
+  {{transService.getTranslatedData('Submit')}}</ion-button>

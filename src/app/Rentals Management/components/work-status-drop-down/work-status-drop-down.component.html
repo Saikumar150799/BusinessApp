@@ -1,0 +1,17 @@
+<div class="padding-left-16 padding-right-16 padding-top-16 dropdown-component">
+  <div class="display-flex flex-direction-row justify-flex-end">
+    <div (click)="onCancel()" class="txt-color-submit font-18">
+      {{"CANCEL"}}
+    </div>
+    <div (click)="onDone()" class="txt-color-submit font-18 margin-left-20">
+      {{"DONE"}}
+    </div>
+  </div>
+  <ion-radio-group [(ngModel)]="selectedWorkStatus">
+    <ion-item *ngFor="let option of workStatusOptions" lines="none" (click)="selectOption()">
+      <ion-label class="gotham {{transService.getCurrentDirection()}}">{{option.display}}
+      </ion-label>
+      <ion-radio mode="ios" slot="end" [value]="option.value"></ion-radio>
+    </ion-item>
+  </ion-radio-group>
+</div>

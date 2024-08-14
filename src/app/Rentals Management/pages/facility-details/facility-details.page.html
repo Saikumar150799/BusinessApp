@@ -1,0 +1,326 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="rentals-facility-booking"></ion-back-button>
+    </ion-buttons>
+    <ion-buttons slot="end" *ngIf="selectedSegment==='BOOKING'">
+      <ion-button (click)="openFilterModal1()">
+        <ion-icon name="funnel" mode="ios"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title class="margin-left-neg center-text"> Facility #{{FacilityData.facilityId}}</ion-title>
+  </ion-toolbar>
+  <div>
+    <ion-segment scrollable [(ngModel)]="selectedSegment" (ionChange)="onTabChange()">
+      <ion-segment-button value="FACILITY">
+        <ion-label class="margin-padding-zero">FACILITY DETAILS</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="BOOKING">
+
+        <ion-label class="margin-padding-zero">BOOKINGS</ion-label>
+      </ion-segment-button>
+    </ion-segment>
+  </div>
+</ion-header>
+
+
+
+<ion-content>
+
+  <div *ngIf="selectedSegment=='FACILITY'">
+    <div class="facilty-details-card" class="bgColor">
+
+      <ion-row class="margin">
+        <ion-col class="margin-top-8">
+          <p class="txt-slate-grey margin-padding-zero font-14 gotham-medium  margin-bottom-3">
+            NAME
+          </p>
+          <P class="gotham-medium margin-top-8 font-14 dark-grey">{{FacilityData.name}}</P>
+        </ion-col>
+      </ion-row>
+
+      <ion-row class="margin">
+        <ion-col>
+          <p class="txt-slate-grey margin-padding-zero font-14 gotham-medium margin-bottom-3">
+            PROPERTY
+          </p>
+          <P class="gotham-medium margin-top-8 font-14 dark-grey">{{ProjectData.name}}</P>
+        </ion-col>
+        <ion-col class="margin-right-6">
+          <p class="txt-slate-grey margin-padding-zero font-14 gotham-medium margin-bottom-3 ">
+            CREATED ON
+          </p>
+          <P class="gotham-medium margin-top-8 font-14 dark-grey">{{FacilityData.createdAt | date:'dd MMM yyyy'}}</P>
+        </ion-col>
+      </ion-row>
+
+      <ion-row class="margin">
+        <ion-col>
+          <p class="txt-slate-grey margin-padding-zero font-14 gotham-medium margin-bottom-3">
+            AVAILABILITY-{{FacilityData.bookingInfo?.availabilityOptions| titlecase}}
+          </p>
+
+          <div *ngIf="FacilityData.bookingInfo?.availabilityOptions=='custom'">
+            <P class="gotham-medium margin-top-8 font-14 dark-grey"
+              *ngFor="let data of FacilityData.bookingInfo.availableDates">On {{data.date|date:'d-MMM-y' }}
+              <span *ngIf="data?.workHourStartTime">Available from {{data.workHourStartTime|date:'hh:mm a'}}
+                to {{data.workHourEndTime|date:'hh:mm a'}}</span>
+              <span *ngIf="!data?.workHourStartTime">Available for 24 hours</span>
+            </P>
+          </div>
+
+          <div *ngIf="FacilityData.bookingInfo?.availabilityOptions=='weekly'">
+            <p class="gotham-medium margin-top-8 font-14 dark-grey" *ngFor="let data of propertyNames">
+              <span *ngIf="data[1].available==true">
+                On {{data[0]}} <span *ngIf="data[1]?.workHourStartTime">Available from
+                  {{data[1]?.workHourStartTime|date:'hh:mm a'}}
+                  to {{data[1]?.workHourEndTime|date:'hh:mm a'}}
+                </span>
+                <span *ngIf="!data[1]?.workHourStartTime"> Available for 24 hours
+                </span>
+              </span>
+            </p>
+          </div>
+
+
+          <p *ngIf="FacilityData.bookingInfo?.availabilityOptions=='daily'"
+            class="gotham-medium margin-top-8 font-14 dark-grey"><span
+              *ngIf="FacilityData.bookingInfo?.workHourStartTime">Available from
+              {{FacilityData.bookingInfo?.workHourStartTime|date:'hh:mm a'}}
+              to {{FacilityData.bookingInfo?.workHourEndTime|date:'hh:mm a'}}
+            </span>
+            <span *ngIf="!FacilityData.bookingInfo?.workHourStartTime">
+              Available for 24 hours
+            </span>
+          </p>
+
+
+        </ion-col>
+      </ion-row>
+
+
+      <ion-row class="margin" *ngIf="FacilityData.bookingInfo?.rate || FacilityData.bookingInfo?.rate !== 0">
+        <ion-col class="margin-bottom-7">
+          <p class="txt-slate-grey margin-padding-zero font-14 gotham-medium margin-bottom-1">
+            BOOKING RATE
+          </p>
+          <P class="gotham-medium margin-top-8 margin-bottom-7 font-14 dark-grey ">
+            {{FacilityData.bookingInfo?.rate | currency:currencyCode}}/{{FacilityData.bookingInfo?.unit}}</P>
+        </ion-col>
+      </ion-row>
+
+    </div>
+
+
+    <div class="facility-details-card dark-grey margin-top-15" class="bgColor">
+      <ion-row class="margin">
+        <ion-col>
+          <p class="txt-slate-grey font-14 gotham-medium">PEOPLE
+          </p>
+        </ion-col>
+      </ion-row>
+      <ion-row class="margin-bottom-10" class="margin">
+        <ion-col size="2" class="margin-bottom-20">
+          <!-- <ngx-avatar initialsSize="2" textSizeRatio="2" ></ngx-avatar>  -->
+          <ngx-avatar initialsSize="2" textSizeRatio="2" name="{{data?.firstName}}"></ngx-avatar>
+        </ion-col>
+        <ion-col size="8">
+          <p class="gotham-medium font-14 dark-grey margin-padding-zero">
+            Custodian</p>
+          <p class="txt-warm-grey font-14 gotham-medium font-weight-500 margin-top-7 txt-nowrap white-space-initial">
+            {{data.firstName}} {{data.lastName}}
+          </p>
+        </ion-col>
+
+        <ion-col class="text-align-end " size="2">
+          <a href="tel:data.phoneNumber">
+            <ion-icon class=" icon-25 svg-color-primary margin-right-25" src="/assets/svg-icons/contact-us.svg">
+            </ion-icon>
+          </a>
+        </ion-col>
+      </ion-row>
+    </div>
+  </div>
+
+  <div *ngIf="selectedSegment=='BOOKING'">
+    <p class="gotham center-text" *ngIf="BookingData.length==0">
+      No Booking Found</p>
+
+    <ion-list class=" padding-bottom-0">
+      <ion-item *ngFor="let item of BookingData" lines="none">
+        <ion-label class="margin-0">
+
+          <p class="gotham-medium  " text-wrap>
+            <ion-grid class="padding-0">
+                <ion-row class="padding-0">
+                  <ion-col class="padding-0" size="7">
+                    <span class="">{{"#" + item.uid + " - "}}</span>
+                    <span class="margin-left-5 truncateBooking"> {{item.facility.name}}</span>
+                  </ion-col>
+                </ion-row>
+            </ion-grid>
+          </p>
+
+          <ion-row class="padding-0 padding-top-7">
+            <ion-col class="padding-0">
+              <p class="gotham txt-grey padding-0">
+                {{"Booked by:"}}
+              </p>
+              <p class="gotham-medium txt-grey padding-0">
+                {{((item.user?.firstName || '') + (item.user?.firstName ? ' ' : '') + (item.user?.lastName || '')) || "N/A"}}
+              </p>
+            </ion-col>
+          </ion-row>
+
+          <ion-row *ngIf="item.participants?.length > 0" class="padding-0 padding-top-7">
+            <ion-col class="padding-0">
+              <p class="gotham txt-grey padding-0">
+                {{"Other invitees:"}}
+              </p>
+              <div class="display-flex flex-direction-row">
+                <div class="padding-0 truncateFacility">
+                  <span class="gotham-medium txt-grey font-14" *ngFor="let user of item.participants.slice(0, 2); let i = index">
+                    {{user.firstName || '' + (user.firstName ? ' ' : '') + user.lastName || ''}}{{(i != 1 && item.participants.length > 1) ? ', ' : ''}}
+                  </span>
+                  <span *ngIf="item.participants.length > 2">
+                    {{"..."}}
+                  </span>
+                </div>
+               <div class="margin-left-5">
+                <span class="cursor-pointer gotham-medium font-14 underline-text light-red-txt" (click)="showMoreInviteesDailog($event, item.participants)" *ngIf="item.participants?.length > 2"> + {{item.participants?.length - 2}} more</span>
+               </div>
+              </div>
+            </ion-col>
+          </ion-row>
+
+          <ion-row class="padding-0 padding-top-7">
+            <ion-col class="padding-0">
+              <p class="gotham txt-grey padding-0">
+                {{"Unit:"}}
+              </p>
+              <p class="gotham-medium txt-grey padding-0 truncateFacility">
+                {{(item.home?.listing&&item.home?.listing.block)?item.home?.listing.block+' - ':''}}{{(item.home?.listing&&item.home?.listing.door) ?
+                  item.home?.listing.door : ''}} {{item.project.name}}-{{item.project.locality}}
+              </p>
+            </ion-col>
+          </ion-row>
+
+          <ion-row class="padding-0 padding-top-7">
+            <ion-col class="padding-0">
+              <p class="gotham txt-grey padding-0">
+                {{"Booking schedule:"}}
+              </p>
+              <p class="gotham font-weight-600 txt-grey margin-bottom-4 font-12" size="auto" mode="md">
+                {{item.startDate | date:'d-MMM y h:mm a'}} to {{item.endDate |
+                date:'d-MMM y h:mm a'}}
+              </p>
+            </ion-col>
+          </ion-row>
+
+          <ion-row class="padding-0 padding-top-7 display-flex flex-direction-row align-items-center">
+            <ion-col *ngIf="item.facility?.modeOfPayment === 'both'" class="padding-0">
+              <div class="display-flex flex-direction-row gotham font-weight-600 txt-grey margin-bottom-4 font-12">
+                <div>
+                  {{alertService.getNumberFormat(item.rate)}}
+                </div>
+                <div>
+                  {{" /"}}
+                </div>
+                <div class="display-flex flex-direction-row align-items-center">
+                  <img src="../../../../assets/svg-icons/coin.svg" class="outline-none" height="15" width="20">
+                  {{(item.rate || 1)/(item.facilty?.creditValue || 1)}}
+                </div>
+              </div>
+            </ion-col>
+            <ion-col *ngIf="item.facility?.modeOfPayment === 'credit'" class="padding-0">
+              <div class="display-flex flex-direction-row gotham font-weight-600 txt-grey margin-bottom-4 font-12">
+                <div class="display-flex flex-direction-row align-items-center">
+                  <img src="../../../../assets/svg-icons/coin.svg" class="outline-none" height="15" width="20">
+                  {{(item.rate || 1)/(item.facilty?.creditValue || 1)}}
+                </div>
+              </div>
+            </ion-col>
+            <ion-col *ngIf="item.facility?.modeOfPayment === 'cash'" class="padding-0">
+              <div class="display-flex flex-direction-row gotham font-weight-600 txt-grey margin-bottom-4 font-12">
+                <div>
+                  {{alertService.getNumberFormat(item.rate)}}
+                </div>
+              </div>
+            </ion-col>
+            <ion-col *ngIf="item.facility?.modeOfPayment === 'none'" class="padding-0">
+              <div class="display-flex flex-direction-row gotham font-weight-600 txt-grey margin-bottom-4 font-12">
+                <div>
+                  {{"Free"}}
+                </div>
+              </div>
+            </ion-col>
+            <ion-col class="padding-0">
+              <ion-chip float-right class="gotham font-weight-600" size="small"
+                [color]="item.transactionStatus=='pending'?'warning':item.transactionStatus=='due'?'danger':'success'">
+                {{item.transactionStatus|titlecase}}
+              </ion-chip>
+            </ion-col>
+          </ion-row>
+
+          <ion-row *ngIf="item.status === 'pending' && item.facility.bookingInfo?.approvalRequired === true" class="padding-0 padding-top-7">
+            <ion-col class="margin-right-8 padding-0">
+              <div class="padding-16 cursor-pointer border-radius-5 display-flex flex-direction-row justify-center align-items-center  approve-div" (click)="changeStatus(item, {status: 'approved'})">
+                <ion-icon class="font-20 success" name="checkmark"></ion-icon>
+                <span class="margin-left-7">
+                  {{'Approve'}}
+                </span>
+              </div>
+            </ion-col>
+            <ion-col class="margin-left-8 padding-0">
+              <div class="padding-16 cursor-pointer border-radius-5 display-flex flex-direction-row justify-center align-items-center reject-div" (click)="changeStatus(item, {status: 'rejected'})">
+                <ion-icon class="font-20 danger"  name="close"></ion-icon>
+                <span class="margin-left-7">
+                  {{'Reject'}}
+                </span>
+              </div>
+            </ion-col>
+          </ion-row>
+
+          <ion-row  *ngIf="item.status !=='pending' && item.facility.bookingInfo?.approvalRequired === true && !(item.statusChangeVisible)" class="padding-0 padding-top-7">
+            <ion-col class="padding-0 display-flex flex-direction-row align-items-center">
+              <ion-chip class="margin-0 gotham font-weight-600" size="small"
+                [color]="item.status=='rejected' ?'danger':'success'">
+                {{item.status|titlecase}}
+              </ion-chip>
+              <span (click)="showStatusChange(item)" class="margin-top-5 margin-left-7 cursor-pointer">
+                <img class="icon-20" src="../../../../assets/svg-icons/edit.svg" alt="">
+              </span>
+            </ion-col>
+          </ion-row>
+
+          <ion-row *ngIf="item.statusChangeVisible"  class="padding-0 padding-top-7">
+            <ion-col class="margin-right-8 padding-0">
+              <div class="padding-16 cursor-pointer border-radius-5 display-flex flex-direction-row justify-center align-items-center  approve-div" (click)="changeStatus(item, {status: 'approved'})">
+                <ion-icon class="font-20 success" name="checkmark"></ion-icon>
+                <span class="margin-left-7">
+                  {{'Approve'}}
+                </span>
+              </div>
+            </ion-col>
+            <ion-col class="margin-left-8 margin-right-8 padding-0">
+              <div class="padding-16 cursor-pointer border-radius-5 display-flex flex-direction-row justify-center align-items-center reject-div" (click)="changeStatus(item, {status: 'rejected'})">
+                <ion-icon class="font-20 danger"  name="close"></ion-icon>
+                <span class="margin-left-7">
+                  {{'Reject'}}
+                </span>
+              </div>
+            </ion-col>
+            <ion-col class="margin-left-8 padding-0">
+              <div class="padding-16 cursor-pointer border-radius-5 display-flex flex-direction-row justify-center align-items-center cancel-div" (click)="showStatusChange(item)">
+                <span class="margin-left-7">
+                  {{'Cancel'}}
+                </span>
+              </div>
+            </ion-col>
+          </ion-row>   
+
+        </ion-label>
+      </ion-item>
+    </ion-list>
+  </div>
+</ion-content>

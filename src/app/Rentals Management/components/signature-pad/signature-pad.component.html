@@ -1,0 +1,32 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="{{transService.getCurrentDirection()==='rtl'? 'end':'start'}}">
+      <ion-button (click)="closeModal()"><ion-icon class="icon-25" name="arrow-back"></ion-icon></ion-button>
+    </ion-buttons>
+    <ion-title class="{{transService.getCurrentDirection()==='rtl'?'':'padding-left-0'}}">
+      {{data?.stage}} {{transService.getTranslatedData(' Signature')}}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="grey-back">
+  <div class="bg-white margin-10">
+    <ion-buttons class="float-right">
+      <ion-button  (click)="clear()" class="gotham font-16 text-transform-capitalize">{{transService.getTranslatedData('clear')}}</ion-button>
+    </ion-buttons>
+    <canvas #signaturePad width="700" height="200"></canvas>
+    <!-- <signature-pad [options]="signaturePadOptions" id="signatureCanvas"> -->
+    <!-- </signature-pad> -->
+
+  </div>
+</ion-content>
+
+<ion-footer>
+  <ion-toolbar>
+    <ion-row class="bg-white">
+      <ion-col> <ion-button expand="block" fill="outline" class="height-40 text-transform-capitalize"
+          (click)="closeModal()">{{transService.getTranslatedData('Cancel')}}</ion-button></ion-col>
+      <ion-col> <ion-button expand="block" class="height-40 text-transform-capitalize"
+          (click)="save()">{{transService.getTranslatedData('Confirm')}}</ion-button></ion-col>
+    </ion-row>
+  </ion-toolbar>
+</ion-footer>

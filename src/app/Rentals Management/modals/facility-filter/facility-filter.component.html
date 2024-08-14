@@ -1,0 +1,369 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="end">
+      <ion-button (click)="resetFilter()">
+        <ion-icon slot="start" name="refresh"></ion-icon>Reset
+      </ion-button>
+      <ion-button (click)="closeModal(false)">
+        <ion-icon name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>Facility Filter</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="max-available-height full-width">
+    <div class="">
+      <ion-row class="">
+        <ion-list class="full-width">
+          <ion-grid fixed>
+            <ion-list-header class="font-17">Status </ion-list-header>
+            <div [ngSwitch]="check">
+              <ion-row *ngSwitchCase="'facilities'">
+                <ion-col class="padding-left-10">
+                  <ion-chip
+                    [ngClass]="
+                      facilityFilter.status.indexOf('active') != -1
+                        ? 'selected'
+                        : 'a'
+                    "
+                    outline="true"
+                    color="primary"
+                    (click)="selectFilterStatus('active')"
+                  >
+                    <ion-label class="font-16 font-weight-500"
+                      >Active
+                    </ion-label>
+                  </ion-chip>
+
+                  <ion-chip
+                    [ngClass]="
+                      facilityFilter.status.indexOf('inactive') != -1
+                        ? 'selected'
+                        : 'a'
+                    "
+                    outline="true"
+                    color="primary"
+                    (click)="selectFilterStatus('inactive')"
+                  >
+                    <ion-label class="font-16 font-weight-500">
+                      Inactive</ion-label
+                    >
+                  </ion-chip>
+                </ion-col>
+              </ion-row>
+
+              <ion-row *ngSwitchCase="'bookingHistory'">
+                <ion-col class="padding-left-10">
+                  <ion-chip
+                    [ngClass]="
+                      bookingFilter.status.indexOf('approved') != -1
+                        ? 'selected'
+                        : 'a'
+                    "
+                    outline="true"
+                    color="primary"
+                    (click)="selectBookingStatus('approved')"
+                  >
+                    <ion-label class="font-16 font-weight-500"
+                      >Approved
+                    </ion-label>
+                  </ion-chip>
+
+                  <ion-chip
+                    [ngClass]="
+                      bookingFilter.status.indexOf('rejected') != -1
+                        ? 'selected'
+                        : 'a'
+                    "
+                    outline="true"
+                    color="primary"
+                    (click)="selectBookingStatus('rejected')"
+                  >
+                    <ion-label class="font-16 font-weight-500">
+                      Rejected</ion-label
+                    >
+                  </ion-chip>
+                  <ion-chip
+                    [ngClass]="
+                      bookingFilter.status.indexOf('pending') != -1
+                        ? 'selected'
+                        : 'a'
+                    "
+                    outline="true"
+                    color="primary"
+                    (click)="selectBookingStatus('pending')"
+                  >
+                    <ion-label class="font-16 font-weight-500">
+                      Pending</ion-label
+                    >
+                  </ion-chip>
+                </ion-col>
+              </ion-row>
+              <ion-row  *ngSwitchCase="'bookingHistory'">
+                <ion-list-header class="font-17">Search by</ion-list-header>
+                <ion-col class="padding-left-10">
+                  <ion-chip
+                  [ngClass]="
+                  bookingFilter.searchBy.indexOf('Facility') != -1
+                    ? 'selected'
+                    : 'a'
+                "
+                    outline="true"
+                    color="primary"
+                    (click)="searchBy('Facility')"
+                  >
+                    <ion-label class="font-16 font-weight-500"
+                      >Facility 
+                    </ion-label>
+                  </ion-chip>
+
+                  <ion-chip
+                  [ngClass]="
+                  bookingFilter.searchBy.indexOf('ReferenceNumber') != -1
+                    ? 'selected'
+                    : 'a'
+                "
+                    outline="true"
+                    color="primary"
+                    (click)="searchBy('ReferenceNumber')"
+                  >
+                    <ion-label class="font-16 font-weight-500">
+                      Booking Id</ion-label
+                    >
+                  </ion-chip>
+                </ion-col>
+              </ion-row>
+
+              <div *ngIf="bookingFilter.searchBy=='Facility'">
+              <div  *ngSwitchCase="'bookingHistory'">
+              <ion-list-header class="font-17">Facility</ion-list-header>
+              <ion-item (click)="openFacilityModal()" class="ion-padding-start-0">
+                <ion-label class="gotham margin-left-16" [ngClass]="{'txt-slate-grey': !facilitiBookingName}">
+                  {{facilitiBookingName ? facilitiBookingName : transService.getTranslatedData('Click here to select a facility')}}
+                </ion-label>
+                <ion-icon
+                  slot="end"
+                  *ngIf="!facilitiBookingName"
+                  name="arrow-dropdown"
+                ></ion-icon>
+                <ion-icon
+                  slot="end"
+                  *ngIf="facilitiBookingName"
+                  (click)="removeData($event, 'Project')"
+                  name="close"
+                >
+                </ion-icon>
+              </ion-item>
+            </div>
+          </div>
+            </div>
+
+           
+            <div *ngIf="check === 'facilities'">
+              <ion-list-header class="font-17">Category</ion-list-header>
+              <ion-row>
+                <ion-col class="padding-left-10">
+                  <ion-chip
+                    [ngClass]="
+                      facilityFilter.category.indexOf('services') != -1
+                        ? 'selected'
+                        : 'a'
+                    "
+                    outline="true"
+                    color="primary"
+                    (click)="selectFilterCategory('services')"
+                  >
+                    <ion-label class="font-16 font-weight-500"
+                      >Services
+                    </ion-label>
+                  </ion-chip>
+
+                  <ion-chip
+                    [ngClass]="
+                      facilityFilter.category.indexOf('Club events') != -1
+                        ? 'selected'
+                        : 'a'
+                    "
+                    outline="true"
+                    color="primary"
+                    (click)="selectFilterCategory('Club events')"
+                  >
+                    <ion-label class="font-16 font-weight-500">
+                      Club Events</ion-label
+                    >
+                  </ion-chip>
+
+                  <ion-chip
+                    [ngClass]="
+                      facilityFilter.category.indexOf('facilities') != -1
+                        ? 'selected'
+                        : 'a'
+                    "
+                    outline="true"
+                    color="primary"
+                    (click)="selectFilterCategory('facilities')"
+                  >
+                    <ion-label class="font-16 font-weight-500">
+                      Facilities</ion-label
+                    >
+                  </ion-chip>
+                </ion-col>
+              </ion-row>
+            </div>
+            <br />
+            <ion-list-header class="font-17">Property</ion-list-header>
+            <ion-item (click)="openPropertyModal()" class="ion-padding-start-0">
+              <!-- <ion-input
+                inputmode="text"
+                readonly="true"
+                placeholder="Click here to select a project"
+                value="{{
+                  check === 'facilities'
+                    ? propertySearchValueForFacility
+                    : propertySearchValueForBooking
+                }}"
+              ></ion-input> -->
+              <ion-label *ngIf="check === 'facilities' else bookingLabel" class="gotham margin-left-16" [ngClass]="{'txt-slate-grey': !propertySearchValueForFacility}">
+                {{propertySearchValueForFacility ? propertySearchValueForFacility : transService.getTranslatedData('Click here to select a project')}}
+              </ion-label>
+              <ng-template #bookingLabel>
+                <ion-label class="gotham margin-left-16" [ngClass]="{'txt-slate-grey': !propertySearchValueForBooking}">
+                  {{propertySearchValueForBooking ? propertySearchValueForBooking : transService.getTranslatedData('Click here to select a project')}}
+                </ion-label>
+              </ng-template>
+              <ion-icon
+                slot="end"
+                *ngIf="
+                  (check === 'facilities' &&
+                    facilityFilter.projects.length === 0) ||
+                  (check === 'bookingHistory' &&
+                    bookingFilter.projects.length === 0)
+                "
+                name="arrow-dropdown"
+              ></ion-icon>
+              <ion-icon
+                slot="end"
+                *ngIf="
+                  (check === 'facilities' &&
+                    facilityFilter.projects.length !== 0) ||
+                  (check === 'bookingHistory' &&
+                    bookingFilter.projects.length !== 0)
+                "
+                (click)="removeData($event, 'Project')"
+                name="close"
+              >
+              </ion-icon>
+            </ion-item>
+
+            <br />
+            <div [ngSwitch]="check">
+              <div  *ngSwitchCase="'bookingHistory'">
+              <ion-list-header class="font-17">Booking date</ion-list-header>
+              <ion-item >
+                <ion-row >
+                  <ion-datetime
+                    displayFormat="DD-MMMM-YYYY"
+                    placeholder="DD-MMM-YYYY"
+                    picker-format="DD-MMMM-YYYY"
+                    class="padding-0"
+                    [(ngModel)]="bookingFilter.startDate"
+                    [doneText]="'Done'"
+                    [cancelText]="'Cancel'"
+                  >
+                  </ion-datetime>
+                </ion-row>
+                <ion-icon slot="end" name="arrow-dropdown" class="margin-top-0"></ion-icon>
+              </ion-item>
+            </div>
+            </div>
+            <!-- <div *ngIf="check === 'bookingHistory'"> -->
+              <!-- <ion-list-header class="margin-top-30 font-17"
+                >Sort By
+              </ion-list-header> -->
+              <!-- <ion-row *ngSwitchCase="'facilities'">
+                <ion-list>
+                  <ion-radio-group [(ngModel)]="facilityFilter.sort[0]">
+                    <ion-item
+                      lines="none"
+                      (click)="selectFilterSort('createdAt')"
+                    >
+                      <ion-label>Booked On Asc</ion-label>
+                      <ion-radio slot="start" value="createdAt"></ion-radio>
+                    </ion-item>
+
+                    <ion-item
+                      lines="none"
+                      (click)="selectFilterSort('-createdAt')"
+                    >
+                      <ion-label>Booked On Desc</ion-label>
+                      <ion-radio slot="start" value="-createdAt"></ion-radio>
+                    </ion-item>
+
+                    <ion-item
+                      lines="none"
+                      (click)="selectFilterSort('startDate')"
+                    >
+                      <ion-label>Booking Start Time Asc</ion-label>
+                      <ion-radio slot="start" value="startDate"></ion-radio>
+                    </ion-item>
+
+                    <ion-item
+                      lines="none"
+                      (click)="selectFilterSort('-startDate')"
+                    >
+                      <ion-label>Booking Start Time Desc</ion-label>
+                      <ion-radio slot="start" value="-startDate"></ion-radio>
+                    </ion-item>
+                  </ion-radio-group>
+                </ion-list>
+              </ion-row> -->
+
+              <!-- <ion-row>
+                <ion-list>
+                  <ion-radio-group [(ngModel)]="bookingFilter.sort[0]">
+                    <ion-item
+                      lines="none"
+                      (click)="selectFilterSort('createdAt')"
+                    >
+                      <ion-label>BookedOn Asc</ion-label>
+                      <ion-radio slot="start" value="createdAt"></ion-radio>
+                    </ion-item>
+
+                    <ion-item
+                      lines="none"
+                      (click)="selectFilterSort('-createdAt')"
+                    >
+                      <ion-label>BookedOn Desc</ion-label>
+                      <ion-radio slot="start" value="-createdAt"></ion-radio>
+                    </ion-item>
+
+                    <ion-item
+                      lines="none"
+                      (click)="selectFilterSort('startDate')"
+                    >
+                      <ion-label>Booking Start Time Asc</ion-label>
+                      <ion-radio slot="start" value="startDate"></ion-radio>
+                    </ion-item>
+
+                    <ion-item
+                      lines="none"
+                      (click)="selectFilterSort('-startDate')"
+                    >
+                      <ion-label>Booking Start Time Desc</ion-label>
+                      <ion-radio slot="start" value="-startDate"></ion-radio>
+                    </ion-item>
+                  </ion-radio-group>
+                </ion-list>
+              </ion-row> -->
+            <!-- </div> -->
+          </ion-grid>
+        </ion-list>
+      </ion-row>
+    </div>
+  </div>
+</ion-content>
+<ion-button size="large" (click)="closeModal(true)" color="danger">
+  Apply</ion-button
+>

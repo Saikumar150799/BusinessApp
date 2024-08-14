@@ -1,0 +1,145 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="{{transService.getCurrentDirection()==='rtl'? 'end':'start'}}">
+      <ion-back-button defaultHref="rentals-notice-board"></ion-back-button>
+    </ion-buttons>
+    <ion-title [ngClass]="{'padding-0': transService.getCurrentDirection()==='ltr'}">
+      {{transService.getTranslatedData('Notice Details')}}</ion-title>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+  <div>
+    <ion-card class="ticket-details-list padding-10 margin-5">
+      <ion-row class="padding-top-5">
+        <ion-col size="2" class="padding-top-0">
+          <ngx-avatar initialsSize="2" name="{{notice.createdBy?.firstName}} {{notice.createdBy?.lastName}}">
+          </ngx-avatar>
+        </ion-col>
+        <ion-col size="6" class="margin-right-8 margin-left-8">
+          <p class="gotham-medium font-14 dark-grey margin-padding-zero">{{notice.createdBy?.firstName}}
+            {{notice.createdBy?.lastName}}</p>
+          <p class="txt-warm-grey font-14 Gotham-medium margin-bottom-0
+            margin-top-5 font-weight-500 txt-nowrap">
+            <!-- {{notice.listing?.block}} {{notice.listing?.door}} {{notice.listing?.block?notice.listing?.door?'-':'-':''}} -->
+            {{notice.createdBy?.roleName}}
+          </p>
+          <p *ngIf="notice.selectedProjects.length>0"
+            class="txt-warm-grey font-14 Gotham-medium margin-bottom-0 margin-top-5 font-weight-500 display-flex align-items-center flex-wrap-wrap">
+            {{transService.getTranslatedData('for')}} {{notice.selectedProjects[0].name}}
+            <ion-badge color="light" *ngIf="notice.selectedProjects.length>1" class="underline-text ion-badge-style"
+              (click)="presentNoticeListModal(notice._id)">+ {{notice.selectedProjects.length - 1}}
+              {{transService.getTranslatedData('more')}}</ion-badge>
+            <!-- <a *ngIf="notice.selectedProjects.length>1" class="underline-text"
+              (click)="presentNoticeListModal(notice._id)"> + {{notice.selectedProjects.length - 1}} more</a> -->
+          </p>
+          <p *ngIf="notice.selectedProjects.length===0"
+            class="txt-warm-grey font-14 Gotham-medium margin-bottom-0 margin-top-5 font-weight-500 txt-nowrap">
+            {{transService.getTranslatedData('for all projects')}}
+          </p>
+        </ion-col>
+        <ion-col class="text-align-end">
+          <ion-badge color="warning" *ngIf="notice.discussionType" class="border-radius-10">
+            {{transService.getTranslatedData(notice.discussionType)}}
+          </ion-badge>
+          <p class="txt-warm-grey font-11 Gotham-medium margin-bottom-0 margin-padding-zero font-weight-500 txt-nowrap">
+            {{notice.createdAt |agoFilter}}
+          </p>
+        </ion-col>
+      </ion-row>
+      <div class="padding-5">
+        <p class="Gotham-medium font-14 font-weight-500 margin-bottom-5 dark-grey margin-top-5">
+          {{notice.title}}
+        </p>
+        <p class="txt-warm-grey font-14 Gotham-medium margin-bottom-0 margin-top-5 font-weight-500"
+          [innerHTML]="notice.body">
+        </p>
+      </div>
+
+      <ion-row class="center-text" *ngIf="notice.files?.length> 0">
+        <br>
+        <ion-col class="display-flex justify-center">
+          <img src="{{notice.files[0].aws_original_url}}" style="max-width:100%; max-height:250px !important; width:auto;
+            height:auto;" (click)="openImage(notice.files[0].aws_original_url)">
+        </ion-col>
+        <br><br>
+      </ion-row>
+
+      <ion-grid>
+        <ion-row>
+          <ion-col>
+            <span [ngClass]="{'padding-right-20': transService.getCurrentDirection()==='ltr'}">
+              <ion-icon (click)="likeDiscussion(notice._id)" [ngClass]="{'btn-color':notice.hasLiked}"
+                class="icon font-25 gotham margin-right-5" name="heart-empty"></ion-icon>
+              <!-- <ion-icon *ngIf="!notice.hasLiked" (click)="likeDiscussion(notice._id)"
+                class="icon font-25 gotham margin-right-5" name="heart-empty"></ion-icon>
+              <ion-icon *ngIf="notice.hasLiked" (click)="likeDiscussion(notice._id)" color="danger"
+                class="icon font-25 gotham margin-right-5" name="heart-empty"></ion-icon> -->
+              <span class="text font-20">{{notice.likesCount}}</span>
+            </span>
+            <span class="padding-right-20">
+              <ion-icon class="icon font-25 gotham margin-right-5" name="eye"
+                (click)="presentSeenUserModal(notice._id)"></ion-icon>
+              <span class="text font-20">{{notice.seenByCount}}</span>
+            </span>
+            <span class="padding-right-20">
+              <ion-icon class="icon font-25 gotham margin-right-5" name="chatboxes"></ion-icon>
+              <span class="text font-20">{{notice.commentCount}}</span>
+            </span>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-card>
+
+    <div class="ticket-comment-detail" *ngFor="let comment of comments">
+      <ion-row size="9" class="padding-0">
+        <ion-col size="2">
+          <ngx-avatar initialsSize="2" name="{{comment.createdBy.firstName}} {{comment.createdBy.lastName}}">
+          </ngx-avatar>
+        </ion-col>
+        <ion-col class="margin-left-8">
+          <ion-row>
+            <ion-col class="padding-right-0 padding-left-0">
+              <span class="gotham-medium font-14 dark-grey margin-padding-zero">
+                {{comment.createdBy.firstName}} {{comment.createdBy.lastName}}
+              </span>
+            </ion-col>
+            <ion-col class="padding-0">
+              <span class="float-left font-12 txt-warm-grey gotham-medium font-weight-500"
+                [ngClass]="{'float-left': transService.getCurrentDirection()==='rtl','float-right': transService.getCurrentDirection()==='ltr'}">
+                {{comment.createdAt |agoFilter}}</span>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col size="9" class="padding-0">
+              <p class="txt-warm-grey gotham-medium font-14 font-weight-500 margin-0 comment-full-visible">
+                {{comment.text}}
+              </p>
+            </ion-col>
+            <ion-col size="3" class="padding-0 text-align-end">
+              <a (click)='deleteComment(comment._id)' *ngIf="user_id===comment.createdBy._id"
+                class="gotham-medium font-12 dark-grey margin-padding-zero margin-top-1 underline-text">{{transService.getTranslatedData('delete')}}</a>
+            </ion-col>
+
+          </ion-row>
+
+
+        </ion-col>
+      </ion-row>
+    </div>
+
+  </div>
+
+</ion-content>
+
+<ion-footer>
+  <ion-item no-padding lines="none" dir="ltr">
+    <label class="grey-back full-width"
+      [ngClass]="{'text-align-start': transService.getCurrentDirection()==='ltr','text-align-end': transService.getCurrentDirection()==='rtl'}">
+      <ion-input placeholder="{{transService.getTranslatedData('comment here...')}}" [(ngModel)]="notice.commentText"
+        class="font-14 height-50 gotham border-0 padding-left-10"></ion-input>
+    </label>
+    <ion-button (click)="createComment()" [disabled]="!notice.commentText">
+      <ion-icon style="font-size: x-large !important" name="paper-plane"></ion-icon>
+    </ion-button>
+  </ion-item>
+</ion-footer>

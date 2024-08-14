@@ -1,0 +1,22 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="{{transService.getCurrentDirection()==='rtl'? 'end':'start'}}">
+      <ion-button (click)="closeModal()"><ion-icon class="icon-25" name="arrow-back"></ion-icon></ion-button>
+    </ion-buttons>
+    <ion-title class="{{transService.getCurrentDirection()==='rtl'?'':'padding-left-0'}}">
+      {{transService.getTranslatedData('View Photo')}}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-list *ngIf="images && images.length > 0">
+    <ion-item *ngFor="let url of images;let i = index" lines="none" class="margin-top-15">
+      <!-- reconfirm -->
+      <img *ngIf="url.aws_original_url" class="width-100-percent height-200 border-radius-10"
+      [src]="url.aws_original_url">
+   
+      <img *ngIf="!url.aws_original_url" class="width-100-percent height-200 border-radius-10"
+      [src]="device.platform?.toLowerCase()=='ios'?this.domSanatice.bypassSecurityTrustUrl(url) :webview.convertFileSrc(url)">
+    </ion-item>
+  </ion-list>
+</ion-content>

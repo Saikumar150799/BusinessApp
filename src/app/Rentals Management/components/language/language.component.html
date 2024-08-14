@@ -1,0 +1,14 @@
+<ion-list class="padding-0">
+  <ion-radio-group [(ngModel)]="lang">
+    <ion-list-header color="primary" class="justify-center gotham padding-0">
+      {{translateService.getTranslatedData("Select Language")}}</ion-list-header>
+    <ion-item lines="full" *ngFor="let lang of languageArray">
+      <img [src]="lang.imagePath" alt="Language Flag"
+        class="icon-20 {{translateService.getCurrentDirection()==='rtl'?'margin-left-10-percent':'margin-right-10-percent'}}">
+      <ion-label class="gotham">
+        {{lang.name}}
+      </ion-label>
+      <ion-radio (click)="close(lang.locale)" mode="md" [value]="lang.locale"></ion-radio>
+    </ion-item>
+  </ion-radio-group>
+</ion-list>

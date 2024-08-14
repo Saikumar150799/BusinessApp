@@ -1,0 +1,135 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="end">
+      <ion-button (click)="reset()">
+        <ion-icon slot="start" name="refresh"></ion-icon>{{transService.getTranslatedData('Reset')}}
+      </ion-button>
+      <ion-button (click)="closeModal()">
+        <ion-icon name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>{{transService.getTranslatedData('Filter')}}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div>
+    <ion-grid fixed>
+      <ion-list-header class="font-17">{{transService.getTranslatedData('Status')}}
+      </ion-list-header>
+      <ion-row>
+
+        <ion-col class="padding-left-10">
+
+          <ion-chip [ngClass]="gatepassFilter.status.indexOf('open') != -1 ? 'selected' : 'a'" outline="true"
+            color="primary" (click)="selectGatePassStatus('open')">
+            <ion-label class="font-16 font-weight-500">{{transService.getTranslatedData('Open')}}
+            </ion-label>
+          </ion-chip>
+
+          <ion-chip [ngClass]="gatepassFilter.status.indexOf('in-progress') != -1 ? 'selected' : 'a'" outline="true"
+            color="primary" (click)="selectGatePassStatus('in-progress')">
+            <ion-label class="font-16 font-weight-500">
+              {{transService.getTranslatedData('In Progress')}}</ion-label>
+          </ion-chip>
+
+          <ion-chip [ngClass]="gatepassFilter.status.indexOf('approved') != -1 ? 'selected' : 'a'" outline="true"
+            color="primary" (click)="selectGatePassStatus('approved')">
+            <ion-label class="font-16 font-weight-500">
+              {{transService.getTranslatedData('Approved')}}</ion-label>
+          </ion-chip>
+
+          <ion-chip [ngClass]="gatepassFilter.status.indexOf('rejected') != -1 ? 'selected' : 'a'" outline="true"
+            color="primary" (click)="selectGatePassStatus('rejected')">
+            <ion-label class="font-16 font-weight-500">
+              {{transService.getTranslatedData('Rejected')}}</ion-label>
+          </ion-chip>
+
+        </ion-col>
+      </ion-row>
+
+    </ion-grid>
+
+    <ion-grid class="margin-top-10" fixed>
+      <ion-list-header class="font-17">{{transService.getTranslatedData('Raised For')}}
+      </ion-list-header>
+      <ion-row>
+
+        <ion-col class="padding-left-10">
+          <ion-chip [ngClass]="gatepassFilter.gatepassBelongsTo.indexOf('returnable') != -1 ? 'selected' : 'a'"
+            outline="true" color="primary" (click)="selectgatepassBelongsTo('returnable')">
+            <ion-label class="font-16 font-weight-500">{{transService.getTranslatedData('Returnable')}}
+            </ion-label>
+          </ion-chip>
+
+          <ion-chip [ngClass]="gatepassFilter.gatepassBelongsTo.indexOf('non-returnable') != -1 ? 'selected' : 'a'"
+            outline="true" color="primary" (click)="selectgatepassBelongsTo('non-returnable')">
+            <ion-label class="font-16 font-weight-500">
+              {{transService.getTranslatedData('Non-Returnable')}}</ion-label>
+          </ion-chip>
+        </ion-col>
+      </ion-row>
+
+    </ion-grid>
+
+    <ion-list>
+      <ion-list-header class="gotham font-16 font-weight-500">
+        {{transService.getTranslatedData('UNIT')}}
+      </ion-list-header>
+      <ion-item (click)="openUnitSearchModal()" class="ion-padding-start-0">
+        <ion-label class="gotham margin-left-16" [ngClass]="{'txt-slate-grey': !listingsSelectedText}">
+          {{listingsSelectedText ? listingsSelectedText : transService.getTranslatedData('Click here to select a unit')}}
+        </ion-label>
+        <ion-icon slot="end" name="arrow-dropdown"></ion-icon>
+      </ion-item>
+    </ion-list>
+
+    <ion-list>
+      <ion-list-header class="gotham font-16 font-weight-500">
+        {{transService.getTranslatedData('INWARD DATE')}}
+      </ion-list-header>
+      <ion-item>
+
+        <ion-datetime displayFormat="DD-MMMM-YYYY" placeholder="{{transService.getTranslatedData('DD-MMM-YYYY')}}"
+          picker-format="DD-MMMM-YYYY" class=" padding-0" [(ngModel)]="gatepassFilter.inwardDate"
+          [doneText]="transService.getTranslatedData('Done')"
+          [cancelText]="transService.getTranslatedData('Cancel')">
+        </ion-datetime>
+        <ion-icon slot="end" name="arrow-dropdown" class="margin-top-0"></ion-icon>
+      </ion-item>
+    </ion-list>
+
+    <ion-list>
+      <ion-list-header class="gotham font-16 font-weight-500">
+        {{transService.getTranslatedData('OUTWARD DATE')}}
+      </ion-list-header>
+      <ion-item>
+
+        <ion-datetime displayFormat="DD-MMMM-YYYY" placeholder="{{transService.getTranslatedData('DD-MMM-YYYY')}}"
+          picker-format="DD-MMMM-YYYY" class=" padding-0" [(ngModel)]="gatepassFilter.outwardDate"
+          [doneText]="transService.getTranslatedData('Done')"
+          [cancelText]="transService.getTranslatedData('Cancel')">
+        </ion-datetime>
+        <ion-icon slot="end" name="arrow-dropdown" class="margin-top-0"></ion-icon>
+      </ion-item>
+    </ion-list>
+
+    <ion-list>
+      <ion-list-header class="gotham font-16 font-weight-500">
+        {{transService.getTranslatedData('CREATED DATE')}}
+      </ion-list-header>
+      <ion-item>
+
+        <ion-datetime displayFormat="DD-MMMM-YYYY" placeholder="{{transService.getTranslatedData('DD-MMM-YYYY')}}"
+          picker-format="DD-MMMM-YYYY" class=" padding-0" [(ngModel)]="gatepassFilter.createdDate"
+          [doneText]="transService.getTranslatedData('Done')"
+          [cancelText]="transService.getTranslatedData('Cancel')">
+        </ion-datetime>
+        <ion-icon slot="end" name="arrow-dropdown" class="margin-top-0"></ion-icon>
+      </ion-item>
+    </ion-list>
+  </div>
+</ion-content>
+
+<ion-button size="large" (click)="apply()" color="danger">
+  {{transService.getTranslatedData('APPLY')}}</ion-button>

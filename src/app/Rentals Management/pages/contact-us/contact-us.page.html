@@ -1,0 +1,45 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="{{transService.getCurrentDirection()==='rtl'? 'end':'start'}}">
+      <ion-back-button defaultHref="rentals-home"></ion-back-button>
+    </ion-buttons>
+    <ion-title class="gotham-bold center-text padding-left-0">{{transService.getTranslatedData('Contact Us')}}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="grey-back full-width max-available-height">
+    <ion-grid>
+      <p class="txt-medium gotham-medium center-text margin-bottom-0">
+        {{transService.getTranslatedData('Send Us An Email')}}</p>
+      <ion-row class="padding-20 ">
+        <ion-col>
+          <textarea [(ngModel)]="data.data.feedback" no-border rows="10"
+            class="font-12 full-width txt-warm-grey gotham border-0 padding-20 "
+            placeholder="{{transService.getTranslatedData('Drop your comment here ...')}}" autofocus>
+                </textarea>
+          <ion-button (click)="sendContactUsRequest()" [disabled]="!data.data.feedback"
+            class="full-button margin-0 height-50 margin-top-20" color="danger">
+            <p class="gotham font-14 margin-padding-zero">{{transService.getTranslatedData('Submit')}}
+            </p>
+          </ion-button>
+          <ion-button *ngIf="app==='com.aqaraty.fm'" class="full-button height-50 margin-top-30" expand="full"
+            color="danger" (click)="call('+96566662664')">{{transService.getTranslatedData("Call Us")}}</ion-button>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+    <!-- <ion-grid *ngIf="app==='com.aqaraty.fm'">
+      <p class="txt-medium margin-bottom-20 gotham-medium center-text">
+        {{transService.getTranslatedData('Call Us')}}</p>
+      <ion-row class="padding-20 ">
+        <ion-col>
+          <ion-item class="margin-5" lines="full">
+            <ion-icon name="call" slot="{{transService.getCurrentLanguage()==='ar'? 'start':'end'}}" (click)="call('0000000000')" ></ion-icon>
+            <ion-label class="{{transService.getCurrentLanguage()==='ar'? 'text-align-end':'text-align-start'}}">Tiffany Cox</ion-label>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+    </ion-grid> -->
+  </div>
+
+</ion-content>

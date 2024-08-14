@@ -1,0 +1,16 @@
+.delete-chip {
+    position: absolute !important;
+    top: 0px;
+    border-radius: 30px !important;
+    right: 15px !important;
+    --background: #f25454;
+    --color: white;
+
+}
+
+.selfie{
+    width: 200px !important;
+    height: 200px !important;
+    border-radius: 50%;
+    border: 3px solid var(--ion-color-secondary);
+}

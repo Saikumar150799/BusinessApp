@@ -1,0 +1,81 @@
+ion-content {
+  --overflow: hidden !important;
+}
+
+ion-item {
+  --background: transparent !important;
+  --background-activated: transparent !important;
+  --transition: background-color 15ms linear;
+  --inner-padding-bottom: 0px;
+  --inner-padding-end: 0px;
+  --inner-padding-start: 0px;
+  --inner-padding-top: 0px;
+  --padding-bottom: 0px;
+  --padding-end: 0px;
+  --padding-start: 0px;
+  --padding-top: 0px;
+}
+
+.grandient-background {
+  background: rgba(226, 226, 226, 1);
+  background: -moz-linear-gradient(
+    -45deg,
+    rgba(226, 226, 226, 1) 0%,
+    rgba(209, 209, 209, 1) 0%,
+    rgba(219, 219, 219, 1) 0%,
+    rgba(254, 254, 254, 1) 88%,
+    rgba(254, 254, 254, 1) 100%
+  );
+  background: -webkit-gradient(
+    left top,
+    right bottom,
+    color-stop(0%, rgba(226, 226, 226, 1)),
+    color-stop(0%, rgba(209, 209, 209, 1)),
+    color-stop(0%, rgba(219, 219, 219, 1)),
+    color-stop(88%, rgba(254, 254, 254, 1)),
+    color-stop(100%, rgba(254, 254, 254, 1))
+  );
+  background: -webkit-linear-gradient(
+    -45deg,
+    rgba(226, 226, 226, 1) 0%,
+    rgba(209, 209, 209, 1) 0%,
+    rgba(219, 219, 219, 1) 0%,
+    rgba(254, 254, 254, 1) 88%,
+    rgba(254, 254, 254, 1) 100%
+  );
+  background: -o-linear-gradient(
+    -45deg,
+    rgba(226, 226, 226, 1) 0%,
+    rgba(209, 209, 209, 1) 0%,
+    rgba(219, 219, 219, 1) 0%,
+    rgba(254, 254, 254, 1) 88%,
+    rgba(254, 254, 254, 1) 100%
+  );
+  background: -ms-linear-gradient(
+    -45deg,
+    rgba(226, 226, 226, 1) 0%,
+    rgba(209, 209, 209, 1) 0%,
+    rgba(219, 219, 219, 1) 0%,
+    rgba(254, 254, 254, 1) 88%,
+    rgba(254, 254, 254, 1) 100%
+  );
+  background: linear-gradient(
+    135deg,
+    rgba(226, 226, 226, 1) 0%,
+    rgba(209, 209, 209, 1) 0%,
+    rgba(219, 219, 219, 1) 0%,
+    rgba(254, 254, 254, 1) 88%,
+    rgba(254, 254, 254, 1) 100%
+  );
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#e2e2e2', endColorstr='#fefefe', GradientType=1 );
+}
+
+.rtl-label-floating {
+  transform: translate3d(25%, 50%, 0) scale(0.75) !important;
+}
+
+.aqaraty-login-background {
+  --background: #f6f3e2 !important;
+}
+
+

@@ -1,0 +1,194 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="end">
+      <ion-button (click)="closeModal(false)">
+        <ion-icon name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>{{transService.getTranslatedData('ticket-filter.title')}}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="max-available-height full-width ">
+    <div class="">
+      <ion-row class="">
+        <ion-list class="full-width">
+
+          <ion-grid fixed>
+            <ion-list-header class="font-17">{{transService.getTranslatedData('ticket-filter.ticket-status')}}
+            </ion-list-header>
+            <ion-row>
+
+              <ion-col class="padding-left-10">
+
+                <ion-chip [ngClass]="ticketFilter.status.indexOf('open') != -1 ? 'selected' : 'a'" outline="true"
+                  color="primary" (click)="selectTicketStatus('open')">
+                  <ion-label class="font-16 font-weight-500">{{transService.getTranslatedData('ticket-filter.open')}}
+                  </ion-label>
+                </ion-chip>
+
+                <ion-chip [ngClass]="ticketFilter.status.indexOf('in-progress') != -1 ? 'selected' : 'a'" outline="true"
+                  color="primary" (click)="selectTicketStatus('in-progress')">
+                  <ion-label class="font-16 font-weight-500">
+                    {{transService.getTranslatedData('ticket-filter.in-progress')}}</ion-label>
+                </ion-chip>
+
+                <ion-chip [ngClass]="ticketFilter.status.indexOf('resolved') != -1 ? 'selected' : 'a'" outline="true"
+                  color="primary" (click)="selectTicketStatus('resolved')">
+                  <ion-label class="font-16 font-weight-500">
+                    {{transService.getTranslatedData('ticket-filter.resolved')}}</ion-label>
+                </ion-chip>
+
+                <ion-chip [ngClass]="ticketFilter.status.indexOf('rejected') != -1 ? 'selected' : 'a'" outline="true"
+                  color="primary" (click)="selectTicketStatus('rejected')">
+                  <ion-label class="font-16 font-weight-500">
+                    {{transService.getTranslatedData('ticket-filter.rejected')}}</ion-label>
+                </ion-chip>
+
+                <!-- <ion-chip [ngClass]="ticketFilter.status == 'all' ? 'all' : 'b'" outline="true" color="primary"
+                    (click)="selectTicketStatus('all')">
+                    <ion-label class="font-16 font-weight-500">All</ion-label>
+                  </ion-chip> -->
+
+              </ion-col>
+            </ion-row>
+
+          </ion-grid>
+
+          <ion-grid class="margin-top-10" fixed>
+            <ion-list-header class="font-17">{{transService.getTranslatedData('ticket-filter.raised-for')}}
+            </ion-list-header>
+            <ion-row>
+
+              <ion-col class="padding-left-10">
+                <ion-chip [ngClass]="ticketFilter.ticketBelongsTo.indexOf('Home') != -1 ? 'selected' : 'a'"
+                  outline="true" color="primary" (click)="selectTicketBelongsTo('Home')">
+                  <ion-label class="font-16 font-weight-500">{{transService.getTranslatedData('ticket-filter.unit')}}
+                  </ion-label>
+                </ion-chip>
+
+                <ion-chip [ngClass]="ticketFilter.ticketBelongsTo.indexOf('Project') != -1 ? 'selected' : 'a'"
+                  outline="true" color="primary" (click)="selectTicketBelongsTo('Project')">
+                  <ion-label class="font-16 font-weight-500">
+                    {{transService.getTranslatedData('ticket-filter.common-area')}}</ion-label>
+                </ion-chip>
+              </ion-col>
+            </ion-row>
+
+          </ion-grid>
+
+          <ion-grid class="margin-top-10" fixed>
+            <ion-list-header class="font-17">{{transService.getTranslatedData('ticket-filter.ticket-type')}}
+            </ion-list-header>
+            <ion-row>
+              <ion-col class="padding-left-10">
+
+                <ion-chip [ngClass]="ticketFilter.type.indexOf('on-demand') != -1 ? 'selected' : 'a'" outline="true"
+                  color="primary" (click)="selectTicketType('on-demand')">
+                  <ion-label class="font-16 font-weight-500">
+                    {{transService.getTranslatedData('ticket-filter.on-demand')}}</ion-label>
+                </ion-chip>
+
+                <ion-chip [ngClass]="ticketFilter.type.indexOf('ppm') != -1 ? 'selected' : 'a'" outline="true"
+                  color="primary" (click)="selectTicketType('ppm')">
+                  <ion-label class="font-16 font-weight-500">{{transService.getTranslatedData('ticket-filter.ppm')}}
+                  </ion-label>
+                </ion-chip>
+
+              </ion-col>
+            </ion-row>
+          </ion-grid>
+
+          <ion-grid class="margin-top-10" fixed>
+            <ion-list-header class="font-17">{{transService.getTranslatedData('ticket-filter.priority')}}
+            </ion-list-header>
+            <ion-row>
+              <ion-col class="padding-left-10">
+
+                <ion-chip [ngClass]="ticketFilter.priority.indexOf('low') != -1 ? 'selected' : 'a'" outline="true"
+                  color="primary" (click)="selectTicketPriority('low')">
+                  <ion-label class="font-16 font-weight-500">{{transService.getTranslatedData('ticket-filter.low')}}
+                  </ion-label>
+                </ion-chip>
+
+                <ion-chip [ngClass]="ticketFilter.priority.indexOf('high') != -1 ? 'selected' : 'a'" outline="true"
+                  color="primary" (click)="selectTicketPriority('high')">
+                  <ion-label class="font-16 font-weight-500">{{transService.getTranslatedData('ticket-filter.high')}}
+                  </ion-label>
+                </ion-chip>
+
+              </ion-col>
+            </ion-row>
+          </ion-grid>
+
+
+          <ion-item class="margin-bottom-10">
+            <ion-label position="stacked" class="font-20">{{transService.getTranslatedData('ticket-filter.project')}}
+            </ion-label>
+            <ion-input inputmode="text" [(ngModel)]="ticketFilter.ticketBelongsToName" class="margin-top-10" readonly="true"
+              placeholder="{{transService.getTranslatedData('ticket-filter.project-placeholder')}}"
+              (click)="openProjectSearchModal()"></ion-input>
+            <ion-icon slot="end" name="ios-arrow-down"></ion-icon>
+          </ion-item>
+
+          <ion-item class="margin-bottom-10">
+            <ion-label position="stacked" class="font-20">{{transService.getTranslatedData('ticket-filter.poc')}}
+            </ion-label>
+            <ion-input inputmode="text" [(ngModel)]="ticketFilter.contactPointName" class="margin-top-10"
+              placeholder="{{transService.getTranslatedData('ticket-filter.poc-placeholder')}}" readonly="true"
+              (click)="openUserSearchModal('poc')">
+            </ion-input>
+            <ion-icon slot="end" name="ios-arrow-down"></ion-icon>
+          </ion-item>
+
+          <ion-item class="margin-bottom-10">
+            <ion-label position="stacked" class="font-20">
+              {{transService.getTranslatedData('ticket-filter.technician')}}</ion-label>
+            <ion-input inputmode="text" [(ngModel)]="ticketFilter.agentName" class="margin-top-10"
+              placeholder="{{transService.getTranslatedData('ticket-filter.technician')}}" readonly="true"
+              (click)="openUserSearchModal('agent')"></ion-input>
+            <ion-icon slot="end" name="ios-arrow-down"></ion-icon>
+          </ion-item>
+
+          <ion-item class="margin-bottom-10">
+            <ion-label position="stacked" class="font-20">
+              {{transService.getTranslatedData('ticket-filter.assets')}}</ion-label>
+            <ion-input inputmode="text" [(ngModel)]="ticketFilter.assetId" class="margin-top-10"
+              placeholder="{{transService.getTranslatedData('ticket-filter.assets')}}" readonly="true"
+              (click)="openScanner()"></ion-input>
+            <ion-icon slot="end" name="ios-arrow-down"></ion-icon>
+          </ion-item>
+
+          <ion-item class="margin-bottom-10">
+            <ion-label position="stacked" class="font-20">{{transService.getTranslatedData('ticket-filter.SJD')}}
+            </ion-label>
+            <ion-datetime displayFormat="DD-MMM-YYYY"
+              placeholder="{{transService.getTranslatedData('ticket-filter.date-placeholder')}}"
+              picker-format="DD-MMM-YYYY" [(ngModel)]="ticketFilter.startDate"></ion-datetime>
+            <ion-icon slot="end" name="ios-arrow-down"></ion-icon>
+          </ion-item>
+
+          <ion-item class="margin-bottom-10">
+            <ion-label position="stacked" class="font-20">{{transService.getTranslatedData('ticket-filter.EJD')}}
+            </ion-label>
+            <ion-datetime displayFormat="DD-MMM-YYYY"
+              placeholder="{{transService.getTranslatedData('ticket-filter.date-placeholder')}}"
+              picker-format="DD-MMM-YYYY" [(ngModel)]="ticketFilter.endDate"></ion-datetime>
+            <ion-icon slot="end" name="ios-arrow-down"></ion-icon>
+          </ion-item>
+
+          <!-- <ion-item class="margin-bottom-10">
+              <ion-label position="stacked" class="font-20">ASSET</ion-label>
+              <ion-input class="margin-top-10" type="text" placeholder="Awesome Input"></ion-input>
+              <ion-icon slot="end" name="ios-arrow-down"></ion-icon>
+            </ion-item> -->
+        </ion-list>
+      </ion-row>
+    </div>
+  </div>
+
+
+</ion-content>
+<ion-button size="large" (click)="closeModal(true)" color="danger">
+  {{transService.getTranslatedData('ticket-filter.apply')}}</ion-button>

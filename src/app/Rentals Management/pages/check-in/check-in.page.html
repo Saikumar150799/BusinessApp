@@ -1,0 +1,100 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="{{transService.getCurrentDirection()==='rtl'? 'end':'start'}}">
+      <ion-back-button defaultHref="rentals-home"></ion-back-button>
+    </ion-buttons>
+    <ion-title class="{{transService.getCurrentDirection()==='rtl'?'':'padding-left-0'}}">
+      {{transService.getTranslatedData('Check-in')}}</ion-title>
+  </ion-toolbar>
+  <ion-toolbar mode="md" class="ion-no-border border-radius-inherit center-text">
+    <ion-buttons slot="start" (click)="prevDay()">
+      <ion-button class="ion-button">
+        <ion-icon slot="start" class="font-25" mode="ios" name="arrow-back"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+
+    <div class="display-flex justify-center">
+
+      <ion-chip class="date-chip">
+        <ion-datetime class="padding-0 gotham-medium date-time" style="margin-top: 3px;" [(ngModel)]="selectedDate" (ionChange)="dateCahnge()"
+        displayFormat="DD MMMM YYYY"></ion-datetime>
+      </ion-chip>
+      <ion-chip class="today-chip" outline="true" *ngIf="showTodayButton" (click)="today()">{{transService.getTranslatedData('Today')}}</ion-chip>
+    </div>
+
+
+    <ion-buttons slot="end" (click)="nextDay()">
+      <ion-button class="ion-button">
+        <ion-icon slot="end" class="font-25" mode="ios" name="arrow-forward"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="border-top-2-light-grey">
+
+  <ion-segment [(ngModel)]="selectedTab" (ionChange)="onTabChange()" class="bg-white">
+    <ion-segment-button value="upcoming">
+      <ion-label
+        class="text-transform-capitalize gotham font-weight-600">{{transService.getTranslatedData('Upcoming')}}</ion-label>
+    </ion-segment-button>
+    <ion-segment-button value="re-confirm">
+      <ion-label
+        class="text-transform-capitalize gotham font-weight-600">{{transService.getTranslatedData('Re-Confirm')}}</ion-label>
+    </ion-segment-button>
+    <ion-segment-button value="completed">
+      <ion-label
+        class="text-transform-capitalize gotham font-weight-600">{{transService.getTranslatedData('Completed')}}</ion-label>
+    </ion-segment-button>
+  </ion-segment>
+
+  <div class="margin-top-3">
+    <ion-searchbar [(ngModel)]="filterData.searchText" placeholder="Search" debounce="300"
+    (ngModelChange)="searchUnits('search')" class="padding-0"></ion-searchbar>
+  </div>
+
+  <div class="center-text margin-top-10" *ngIf="loader">
+    <ion-spinner name="lines"></ion-spinner>
+  </div>
+
+  <div *ngIf="units.length > 0" class="margin-top-1">
+    <ion-list class=" padding-bottom-0">
+      <ion-item *ngFor="let unit of units" [routerLink]="['/rentals-check-in-details']" detail
+        [queryParams]="{type: selectedTab , unitId: unit._id}" lines="full">
+        <ion-label class="margin-5">
+          <p class="gotham-medium margin-bottom-8 " text-wrap>
+            <ion-grid class="padding-0">
+              <ion-row class="padding-0">
+                <ion-col class="padding-0" class="padding-0" size="7">
+                  <span
+                    [ngClass]="{'float-right': transService.getCurrentDirection()==='rtl','float-left':transService.getCurrentDirection()==='ltr'}" class="font-15">{{transService.getTranslatedData('Unit no: ')}} {{unit.block}} {{unit.door}}</span>
+                </ion-col>
+              </ion-row>
+            </ion-grid>
+          </p>
+          <p class="gotham display-flex align-items-centerfont-weight-600 txt-grey margin-bottom-8 white-space-initial" *ngIf="unit.tenants.length > 0">
+           {{transService.getTranslatedData("Tenant's name: ")}} {{unit.tenants[0].firstName}} {{unit.tenants[0].lastName}}
+           <!-- <ion-badge color="light" class="margin-left-10 gotham" *ngIf="unit.tenants.length > 1">+ {{unit.tenants.length - 1}} {{transService.getTranslatedData('more')}}</ion-badge> -->
+          </p>
+          <ion-chip class="rejected-chip font-weight-bold" color="danger" *ngIf="selectedTab === 're-confirm'">
+            <ion-icon name="close-circle-outline"></ion-icon>
+            <ion-label class="gotham">{{transService.getTranslatedData('Rejected - ')}}</ion-label>
+            <span> {{unit.rejectedItems}}</span>
+          </ion-chip>
+        </ion-label>
+      </ion-item>
+    </ion-list>
+  </div>
+
+  <div *ngIf="units.length === 0 && emptyScreen === true" class="display-flex display-direction-column align-items-center margin-top-60">
+    <img class="object-fit-none" src="/assets/svg-icons/ci-co-empty.svg">
+    <ion-label class="gotham-medium margin-top-20 font-20 font-weight-900">{{transService.getTranslatedData('No Check-ins')}}</ion-label>
+    <p class="txt-slate-grey">{{transService.getTranslatedData('There are no check-ins scheduled for this day')}}</p>
+  </div>
+
+  <ion-infinite-scroll threshold="5px" (ionInfinite)="getCheckInsList($event, selectedTab)">
+    <ion-infinite-scroll-content loadingSpinner="bubbles"
+      loadingText="{{transService.getTranslatedData('Loading more data...')}}">
+    </ion-infinite-scroll-content>
+  </ion-infinite-scroll>
+</ion-content>

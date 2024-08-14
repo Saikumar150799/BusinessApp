@@ -1,0 +1,21 @@
+<div class="padding-left-16 padding-right-16 padding-top-16">
+  <div class="display-flex flex-direction-row justify-space-between">
+    <div>
+      {{"Others Members"}}
+    </div>
+    <div (click)="closeModal()" class="txt-color-submit font-18">
+      <ion-buttons slot="end">
+        <ion-button (click)="closeModal()">
+          <ion-icon name="close"></ion-icon>
+        </ion-button>
+      </ion-buttons>
+    </div>
+  </div>
+  <ion-list class="padding-left-0 padding-bottom-0">
+    <ion-item class="padding-0" *ngFor="let user of items" lines="none">
+      <ion-label class="margin-0 padding-0">
+        {{user.firstName || '' + (user.firstName ? ' ' : '') + user.lastName || ''}}
+      </ion-label>
+    </ion-item>
+  </ion-list>
+</div>

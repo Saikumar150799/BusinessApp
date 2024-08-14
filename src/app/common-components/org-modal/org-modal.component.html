@@ -1,0 +1,61 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>{{translateService.getTranslatedData("Select")}} {{title}}</ion-title>
+    <ion-buttons slot="{{translateService.getCurrentDirection()==='rtl'?'start':'end'}}">
+      <ion-button (click)="close('')" class="font-weight-600 font-19">
+        <ion-icon name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+<ion-content class="grey-back">
+  <div class="full-width grey-back max-available-height">
+
+    <!-- <p class="grey-back font-weight-500 margin-top-0 margin-bottom-0 margin-left-10 padding-top-10">
+      CHOOSE A MAINTENANCE ACTIVITY <sup style="font-size : 18px !important;"> * </sup></p> -->
+    <ion-list class="margin-top-10 padding-bottom-0 grey-back padding-top-0" *ngIf="modalType==='org'">
+      <ion-radio-group>
+        <ion-item class="item-border">
+          <ion-label>{{org.bm.organization.name}}</ion-label>
+          <ion-radio mode="ios" value="org.bm.organization._id" (click)="close(org.bm)"></ion-radio>
+        </ion-item>
+        <ion-item class="item-border">
+          <ion-label>{{org.rm.organization.name}}</ion-label>
+          <ion-radio mode="ios" value="org.rm.organization._id" (click)="close(org.rm)"></ion-radio>
+        </ion-item>
+      </ion-radio-group>
+    </ion-list>
+
+    <ion-list class="margin-top-10 padding-bottom-0 padding-top-0 grey-back" *ngIf="modalType=='project'">
+
+      <ion-searchbar placeholder="{{translateService.getTranslatedData('Search')}}" [(ngModel)]="searchText"
+        class="padding-0 padding-bottom-10 grey-back" inputmode="text" type="decimal" (ionChange)="searchProject()"
+        [debounce]="250"></ion-searchbar>
+      <p *ngIf="projects.length==0" class="center-text margin-0 padding-top-20 grey-back">
+        {{translateService.getTranslatedData("No Projects Available")}}</p>
+      <ion-radio-group *ngIf="projects.length>0">
+        <div>
+          <ion-item class="item-border" *ngFor="let project of projects">
+            <ion-label>{{project.name}}</ion-label>
+            <ion-radio mode="ios" (click)="close(project)"></ion-radio>
+          </ion-item>
+        </div>
+      </ion-radio-group>
+    </ion-list>
+    <ion-list class="margin-top-10 padding-bottom-0 padding-top-0" *ngIf="modalType=='door'">
+      <ion-searchbar placeholder="{{translateService.getTranslatedData('Search')}}" [(ngModel)]="searchText"
+        class="padding-0 padding-bottom-10" inputmode="text" type="decimal" (ionChange)="searchDoor()" [debounce]="250">
+      </ion-searchbar>
+      <p *ngIf="doors.length==0" class="center-text margin-0 padding-top-20 grey-back">
+        {{translateService.getTranslatedData("No Doors Available")}}</p>
+      <ion-radio-group *ngIf="doors.length>0">
+        <div>
+          <ion-item class="item-border" *ngFor="let door of doors">
+            <ion-label>{{door.block}} - {{door.floor}} - {{door.door}}</ion-label>
+            <ion-radio mode="ios" (click)="close(door)"></ion-radio>
+          </ion-item>
+        </div>
+      </ion-radio-group>
+    </ion-list>
+  </div>
+</ion-content>

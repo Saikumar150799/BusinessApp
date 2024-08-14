@@ -1,0 +1,48 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="end">
+      <ion-button (click)="closeModal(false)">
+        <ion-icon name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>{{transService.getTranslatedData('unit-search.title')}}</ion-title>
+  </ion-toolbar>
+  <ion-searchbar [(ngModel)]="filterData.searchText"
+    placeholder="{{transService.getTranslatedData('Search')}}" (ngModelChange)="resetFilterAndSearch()">
+  </ion-searchbar>
+</ion-header>
+
+<ion-content>
+
+  <div class="center-text margin-top-10" [hidden]="!loading">
+    <ion-spinner></ion-spinner>
+  </div>
+
+  <!-- <ion-list>
+    
+        <ion-radio-group>
+          <ion-item *ngFor="let project of projects">
+            <ion-label>{{project.name}} {{selectedProject}}</ion-label>
+            <ion-radio value="project._id" slot="end" [(ngModel)]="selectedProject"></ion-radio>
+          </ion-item>
+        </ion-radio-group>
+    
+      </ion-list> -->
+  <p class="center-text" *ngIf="!loading && units.length==0">No Unit Available</p>
+  <ion-list>
+    <ion-radio-group [(ngModel)]="selectedUnit.ticketBelongsToRefId">
+      <ion-item *ngFor="let unit of units">
+        <ion-label>{{unit.block}}{{unit.door?unit.door+",":''}} {{unit.name}}</ion-label>
+        <ion-radio value="{{unit._id}}" slot="end" (click)="selectUnit(unit)"></ion-radio>
+      </ion-item>
+    </ion-radio-group>
+  </ion-list>
+
+  <ion-infinite-scroll [hidden]="disableInfiniteScroll" threshold="5px" (ionInfinite)="searchUnit($event)">
+    <ion-infinite-scroll-content loadingSpinner="bubbles"
+      loadingText="{{transService.getTranslatedData('Loading more data...')}}">
+    </ion-infinite-scroll-content>
+  </ion-infinite-scroll>
+
+</ion-content>
+<!-- <ion-button size="large" (click)="closeModal(true)" color="success">Submit</ion-button> -->

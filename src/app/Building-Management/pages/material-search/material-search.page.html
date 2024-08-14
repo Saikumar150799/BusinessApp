@@ -1,0 +1,34 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="end">
+      <ion-button (click)="closeModal(false)">
+        <ion-icon name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>Material search</ion-title>
+  </ion-toolbar>
+  <ion-searchbar [(ngModel)]="filterData.searchText" (ngModelChange)="resetFilterAndSearch()">
+  </ion-searchbar>
+</ion-header>
+
+<ion-content>
+
+  <div class="center-text margin-top-10" [hidden]="!loading">
+    <ion-spinner></ion-spinner>
+  </div>
+
+  <ion-list>
+    <ion-radio-group>
+      <ion-item *ngFor="let material of materials">
+        <ion-label>{{material.name}}</ion-label>
+        <ion-radio slot="end" (click)="selectMaterial(material)"></ion-radio>
+      </ion-item>
+    </ion-radio-group>
+  </ion-list>
+
+  <ion-infinite-scroll [hidden]="disableInfiniteScroll" threshold="5px" (ionInfinite)="searchMaterial($event)">
+    <ion-infinite-scroll-content loadingSpinner="bubbles" loadingText="Loading more data...">
+    </ion-infinite-scroll-content>
+  </ion-infinite-scroll>
+
+</ion-content>

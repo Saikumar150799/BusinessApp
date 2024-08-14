@@ -1,0 +1,101 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="{{translateService.getCurrentDirection()==='rtl'?'end':'start'}}">
+      <ion-back-button defaultHref="/rentals-home" class="font-weight-600 font-20"></ion-back-button>
+    </ion-buttons>
+    <ion-title [ngClass]="{'padding-0': translateService.getCurrentDirection()==='ltr'}">
+      {{translateService.getTranslatedData("Estimate")}}</ion-title>
+
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="grey-back ">
+  <div class="full-width grey-back max-available-height">
+    <div class="margin-padding-zero bg-img-overlay-paymentdetails">
+      <ion-row class="">
+        <ion-col class=" txt-white padding-left-10 padding-right-10">
+          {{translateService.getTranslatedData("Estimate ID")}} {{translateService.getCurrentDirection()==='rtl'? estimate.uid + "#" : "#" + estimate.uid}}
+        </ion-col>
+        <ion-col class=" txt-white text-align-end padding-right-10 padding-left-10" style="text-transform: capitalize">
+          <!-- <button class="button button-small"> -->
+          <ion-badge mode="md" color="{{estimate.status.toLowerCase()}}" *ngIf="estimate.status">
+            <ion-label>{{translateService.getTranslatedData(estimate.status)}} </ion-label>
+          </ion-badge>
+          <!-- </button> -->
+        </ion-col>
+      </ion-row>
+      <ion-row class="padding-24">
+        <ion-col class="center-text margin-top-10">
+          <p class=" txt-white center-text font-25 margin-0 direction-ltr">
+
+            {{orgFile.default.appBundleId==='com.aqaraty.fm'?alertService.getNumberFormat(estimate.totalAmount)+' '+'KWD':alertService.getNumberFormat(estimate.totalAmount)}}
+          </p>,
+          <p class=" center-text margin-top-minus-10  margin-bottom-10 txt-white font-12 ">
+            {{translateService.getTranslatedData("Raised on: ")}}
+            <span class="direction-ltr">
+              {{estimate.createdAt | date:'MMM dd yyyy'}}  
+            </span>
+          </p>
+          <p class=" txt-white txt-small margin-top-0 margin-bottom-10 " *ngIf="estimate.status">
+            {{translateService.getTranslatedData(estimate.status)}} : {{estimate.estimateBelongsTo}} </p>
+
+        </ion-col>
+      </ion-row>
+    </div>
+    <ion-list class="padding-bottom-0">
+      <ion-item lines="full">
+        <ion-grid>
+          <ion-row>
+            <ion-col size="5" class="padding-left-10">{{translateService.getTranslatedData("ITEM")}}</ion-col>
+            <ion-col size="4">
+              {{translateService.getTranslatedData("PRICE")}}
+            </ion-col>
+            <ion-col size="3">
+              {{translateService.getTranslatedData("TAX")}}
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </ion-item>
+
+    </ion-list>
+    <ion-list class="padding-top-0">
+      <ion-item lines="full" *ngFor="let data of estimate.itemDetails">
+        <ion-grid>
+          <ion-row class="padding-0">
+            <ion-col size="5" class="padding-left-10">
+              <p class=" font-12 margin-top-5 margin-bottom-5">{{data.product?.name}}</p>
+            </ion-col>
+            <ion-col size="4">
+              <p
+                class=" font-12 margin-top-5 margin-bottom-5 {{translateService.getCurrentDirection()==='rtl'?'text-align-end':'text-align-start'}} direction-ltr">
+                {{orgFile.default.appBundleId==='com.aqaraty.fm'?alertService.getNumberFormat(data.amount)+' '+'KWD':alertService.getNumberFormat(data.amount)}}
+              </p>
+            </ion-col>
+            <ion-col size="3">
+              <p
+                class=" font-12 margin-top-5 margin-bottom-5 {{translateService.getCurrentDirection()==='rtl'?'text-align-end':'text-align-start'}} direction-ltr">
+                {{orgFile.default.appBundleId==='com.aqaraty.fm'?alertService.getNumberFormat(data.taxAmount)+' '+'KWD':alertService.getNumberFormat(data.taxAmount)}}
+              </p>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </ion-item>
+      <!-- <ion-item lines="none">
+        <ion-grid>
+          <ion-row>
+            <ion-col size="6">
+              <p class=" font-12 margin-top-bottom-5"></p>
+            </ion-col>
+            <ion-col size="3">
+              <p class=" font-12 margin-top-bottom-5">{{translateService.getTranslatedData("TOTAL")}}</p>
+            </ion-col>
+            <ion-col size="3">
+              <p class="gotham font-12 margin-top-bottom-5"></p>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </ion-item> -->
+    </ion-list>
+  </div>
+
+</ion-content>

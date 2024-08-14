@@ -1,0 +1,37 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="{{transService.getCurrentDirection()==='rtl'? 'end':'start'}}">
+      <ion-button (click)="closeModal()"><ion-icon class="icon-25" name="arrow-back"></ion-icon></ion-button>
+    </ion-buttons>
+    <ion-title class="{{transService.getCurrentDirection()==='rtl'?'':'padding-left-0'}}">
+      {{transService.getTranslatedData('Checklist')}}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-searchbar class="padding-0 margin-bottom-10" [(ngModel)]="filterData.searchText" debounce="500"
+    placeholder="{{transService.getTranslatedData('Search')}}" (ngModelChange)="resetFilterAndSearch()">
+  </ion-searchbar>
+
+  <div class="center-text margin-top-10" [hidden]="!loading">
+    <ion-spinner name="lines"></ion-spinner>
+  </div>
+
+  <p class="gotham center-text" *ngIf="searchData.length==0 && !loading">
+    {{transService.getTranslatedData(emptyString)}}</p>
+
+  <ion-list>
+    <ion-radio-group>
+      <ion-item *ngFor="let data of searchData">
+        <ion-label class="white-space-normal">{{data.name}} <br> <span class="font-13 txt-grey" text-wrap>{{data?.description}}</span></ion-label>
+        <ion-radio value="{{data._id}}" slot="end" (click)="closeModal(data)" [checked]="checked(data)"></ion-radio>
+      </ion-item>
+    </ion-radio-group>
+  </ion-list>
+
+  <ion-infinite-scroll threshold="5px" (ionInfinite)="getData($event)">
+    <ion-infinite-scroll-content loadingSpinner="bubbles"
+      loadingText="{{transService.getTranslatedData('Loading more data...')}}">
+    </ion-infinite-scroll-content>
+  </ion-infinite-scroll>
+</ion-content>

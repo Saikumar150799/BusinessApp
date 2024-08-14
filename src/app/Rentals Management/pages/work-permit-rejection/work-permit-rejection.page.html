@@ -1,0 +1,24 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="end">
+      <ion-button (click)="close()">
+        <ion-icon name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>{{"Reason for " + title}}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="padding-16">
+    <ion-item class="ion-item">
+      <ion-textarea rows="1" auto-grow (ionChange)="handleChange()" placeholder="{{transSerivce.getTranslatedData('Write here...')}}" [(ngModel)]="rejectionData.rejectionReason"></ion-textarea>
+    </ion-item>
+    <div>
+      <p class="font-13 txt-slate-grey text-align-end">{{transSerivce.getTranslatedData('No of Character: ')}} {{reasonCount}}</p>
+    </div>
+  </div>
+</ion-content>
+
+<ion-button [disabled]="(type === 'reject' && reasonCount === 0) || (type !== 'reject' && reasonCount < 1)" size="large" (click)="rejectWorkPermit()" color="danger">
+  {{transSerivce.getTranslatedData('Submit')}}</ion-button>

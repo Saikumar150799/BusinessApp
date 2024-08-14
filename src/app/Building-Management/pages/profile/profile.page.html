@@ -1,0 +1,126 @@
+<ion-header class="margin-bottom-minus-1">
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+      <ion-title class="padding-0">{{transService.getTranslatedData('profile.title')}}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<!-- Profile Modal -->
+<ion-content class="full-width grey-back max-available-height">
+  <div class="profile-cover-head">
+    <!-- Place to add the heading-->
+    <div class="profile-main-head center-text">
+      <b>
+        <span class=" txt-white float-right font-weight-600"
+          (click)="logOut()">{{transService.getTranslatedData('profile.logout-tag')}}</span>
+      </b>
+    </div>
+    <!-- Name of the PM -->
+    <div class="center-text">
+      <h4 class="txt-white font-weight-600 ">{{data.firstName}} {{data.lastName}}</h4>
+    </div>
+    <div class="profile-pic margin-top-10 center-text">
+      <img class="img-circle" src="assets/placeholder-person.jpg" height="120" width="120">
+    </div>
+
+  </div>
+  <ion-list class="padding-top-0">
+    <ion-header no-border class=" grey-back">
+      <ion-title class="center-text padding-bottom-10 padding-top-30  ">
+        {{transService.getTranslatedData('profile.contact-information')}}</ion-title>
+    </ion-header>
+    <ion-item>
+      <ion-grid>
+        <ion-row>
+          <ion-col size="5">
+            <p class=" font-14 gotham">{{transService.getTranslatedData('profile.phone-number')}}</p>
+          </ion-col>
+          <ion-col size="7">
+            <p class=" font-14 gotham">{{data.phoneNumber}}</p>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-item>
+    <ion-item>
+      <ion-grid>
+        <ion-row>
+          <ion-col size="4.8">
+            <p class=" font-14 gotham">{{transService.getTranslatedData('profile.email')}}</p>
+          </ion-col>
+          <ion-col size="7.2">
+            <p class=" font-14 gotham">{{data.email}}</p>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-item>
+    <ion-header no-border class="padding-top-bottom-10 grey-back">
+      <ion-title class="center-text gotham ">{{transService.getTranslatedData('profile.personal-information')}}
+      </ion-title>
+    </ion-header>
+    <ion-item>
+      <ion-grid>
+        <ion-row>
+          <ion-col size="4.8">
+            <p class=" font-14 gotham">{{transService.getTranslatedData('profile.dob')}}</p>
+          </ion-col>
+          <ion-col size="7.2">
+            <p class=" font-14 gotham">{{data.dob|date:'dd/MM/yyyy'}}</p>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-item>
+    <ion-item>
+      <ion-grid>
+        <ion-row>
+          <ion-col size="4.8">
+            <p class=" font-14 gotham">{{transService.getTranslatedData('profile.gender')}}</p>
+          </ion-col>
+          <ion-col size="7.2">
+            <p class=" font-14 gotham">{{data.gender}}</p>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-item>
+    <ion-item>
+      <ion-grid>
+        <ion-row>
+          <ion-col size="4.8">
+            <p class=" font-14 gotham">{{transService.getTranslatedData('profile.address')}}</p>
+          </ion-col>
+          <ion-col size="7.2">
+            <p><span class=" font-14 gotham">{{data.address}}</span></p>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-item>
+    <ion-header no-border class="padding-top-bottom-10 grey-back">
+      <ion-title class="center-text gotham ">{{transService.getTranslatedData('profile.bank-information')}}</ion-title>
+    </ion-header>
+    <ion-item>
+      <ion-grid>
+        <ion-row>
+          <ion-col size="4.8">
+            <p class=" font-14 gotham">{{transService.getTranslatedData('profile.account-number')}}</p>
+          </ion-col>
+          <ion-col size="7.2">
+            <p class="font-14 gotham" *ngIf="data.bankAccount">{{data.bankAccount.number}}</p>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-item>
+    <ion-item>
+      <ion-grid>
+        <ion-row>
+          <ion-col size="4.8">
+            <p class=" font-14 gotham">{{transService.getTranslatedData('profile.ifsc')}}</p>
+          </ion-col>
+          <ion-col size="7.2">
+            <p class=" font-14 gotham">{{data.ifsc}}</p>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-item>
+  </ion-list>
+</ion-content>

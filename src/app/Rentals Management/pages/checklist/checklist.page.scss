@@ -1,0 +1,53 @@
+ion-content {
+    --background: #ecebe6 !important;
+}
+canvas {
+    border: 1px dashed gray;
+    width: 100%;
+}
+
+.not-selected{
+    padding: 0  !important;
+    margin-bottom: 10px !important;
+    border: 1px solid  #ecebe6;
+}
+
+.selected{
+    padding: 0  !important;
+    margin-bottom: 10px !important;
+    border: 1px solid  var(--ion-color-secondary);
+    --background: var(--ion-checklist-option-background-color);
+}
+.container {
+    border: 1px dashed #000;
+    margin-bottom: 20px;
+    width: 400px;
+  }
+  
+.img-icon {
+    // used in form with images addition feature  (to remove image)
+    background: rgba(196, 196, 196, 0.3) !important;
+    backdrop-filter: blur(11px) !important;
+    position: absolute !important;
+    top: 0px;
+    border-radius: 50% !important;
+    right: 4px !important;
+}
+
+ion-checkbox{
+    --background-checked: var(--ion-color-secondary);
+    --border-color-checked: var(--ion-color-secondary);
+}
+
+ion-radio{
+    --color-checked	: var(--ion-color-secondary);
+}
+
+.media{
+    border: 1px solid var(--ion-color-primary);
+    border-radius: 3px;
+}
+
+.add-media-btn{
+    color: var(--ion-color-secondary);
+}

@@ -1,0 +1,32 @@
+<ion-content>
+  <br>
+  <p class="font-14 gotham margin-5  margin-bottom-10 line-height-22">{{transService.getTranslatedData(title)}}
+  </p>
+
+  <ion-item *ngIf="val=='reject'" lines='full'>
+    <ion-label>{{transService.getTranslatedData('Add reject reason')}}</ion-label>
+    <ion-toggle [(ngModel)]="flag" mode="ios" class="rotate-180-deg"></ion-toggle>
+  </ion-item>
+  <br>
+  <ion-textarea class='padding-5' [(ngModel)]="notes" *ngIf="flag" rows='4' maxlength='130'
+    placeholder="{{transService.getTranslatedData('Enter user rejection reason.')}}">
+  </ion-textarea>
+</ion-content>
+
+<ion-footer>
+  <ion-label>
+    <ion-row dir="ltr">
+      <ion-col size="6" class="padding-0">
+        <ion-button (click)="cancel()" style=" margin-top: 0px; margin-right: 1px; margin-left: 0px;margin-bottom: 0px;"
+          expand="full">{{transService.getTranslatedData('Cancel')}}</ion-button>
+      </ion-col>
+      <ion-col size="6" class="padding-0">
+        <ion-button (click)="dismiss()"
+          style=" margin-top: 0px; margin-left: 1px; margin-right: 0px;margin-bottom: 0px;" expand="full"
+          color="danger">{{transService.getTranslatedData('Ok')}}</ion-button>
+      </ion-col>
+
+    </ion-row>
+  </ion-label>
+
+</ion-footer>

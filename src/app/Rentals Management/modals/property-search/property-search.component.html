@@ -1,0 +1,46 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="end">
+      <!-- <ion-button (click)="resetFilter()">
+        <ion-icon slot="start" name="refresh"></ion-icon>Reset
+      </ion-button> -->
+      <ion-button (click)="closeModal(false)">
+        <ion-icon name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>Property Search</ion-title>
+  </ion-toolbar>
+  <ion-searchbar
+    [(ngModel)]="filterData.searchTextProperty"
+    placeholder="Search"
+    (ngModelChange)="viewProperties($event)"
+  ></ion-searchbar>
+</ion-header>
+
+<ion-content>
+  <div class="center-text margin-top-10" [hidden]="!loading">
+    <ion-spinner></ion-spinner>
+  </div>
+  <ion-list>
+    <ion-item *ngFor="let project of projects"
+    (click)="selectProject(project._id)"
+    >
+      <ion-label class="white-space-initial font-15 line-height-20">{{ project.name }}</ion-label>
+      <ion-checkbox
+        slot="end"
+        [checked]="checkForSingleProject(project)"
+      ></ion-checkbox>
+    </ion-item>
+  </ion-list>
+  <ion-infinite-scroll threshold="5px" (ionInfinite)="loadMoreProjects($event)">
+    <ion-infinite-scroll-content
+      loadingSpinner="bubbles"
+      loadingText="loading..."
+    >
+    </ion-infinite-scroll-content>
+  </ion-infinite-scroll>
+</ion-content>
+
+<ion-button size="large" (click)="closeModal(true)" color="danger">
+  Apply</ion-button
+>

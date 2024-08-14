@@ -1,0 +1,63 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+    <ion-buttons slot="end">
+      <ion-button (click)="popOverOption()">
+        <ion-icon name="funnel" mode="ios"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title class="padding-0">Projects</ion-title>
+  </ion-toolbar>
+  <ion-searchbar [(ngModel)]="filterData.searchText" placeholder="Search here.."
+    (ngModelChange)="resetFilterAndSearch($event)">
+  </ion-searchbar>
+</ion-header>
+
+<ion-content>
+  <ion-list class="border-top padding-bottom-0">
+    <ion-item detail="true" lines="none" *ngFor="let item of projectList">
+      <ion-label class="margin-0">
+        <p class="gotham-medium " style="
+        display: flex;
+        font-size: 16px;
+        margin-bottom: 10px;">
+          <span class="float-left" style="
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;">Name :- {{item.name}} -</span>
+          <span class="center-text">{{item.locality}}</span>
+
+        </p>
+        <p class="gotham font-weight-600 txt-grey" style="margin-bottom: 4px;">
+          <span class="" style="color: #666666;"> Created at :- </span>{{item.createdAt|date:'dd MMM yyyy'}}
+        </p>
+        <p class="gotham font-weight-600 txt-grey" style="margin-bottom: 5px;"><span style="color: #666666; ">POC (primary) :-
+          </span> {{item.users[0]?.firstName||''}}
+          {{item.users[0]?.lastName||''}} {{item.users?.length>0?'and more':item.users?.length==0?'not available':''}}
+        </p>
+
+        <!-- <ion-badge *ngIf="ticket.jobStartTime"
+          class="gotham font-weight-600 date-bedge-color padding-bottom-3 padding-top-6" mode="md">
+          {{ticket.jobDate | date:'dd MMM yyyy'}} {{ticket.jobStartTime | date:'hh:mm a'}}
+        </ion-badge> -->
+        <ion-badge class="gotham font-weight-600 padding-top-5" color="{{item.status}}" mode="md">
+          <!--[ngClass]="{'margin-left-20': 'ticket.jobStartTime'}"-->
+          {{item.status}}
+        </ion-badge>
+      </ion-label>
+    </ion-item>
+  </ion-list>
+
+  <ion-infinite-scroll [hidden]="disableInfiniteScroll" threshold="5px" (ionInfinite)="resetFilterAndSearch($event)">
+    <ion-infinite-scroll-content loadingSpinner="bubbles" loadingText="Loading more data...">
+    </ion-infinite-scroll-content>
+  </ion-infinite-scroll>
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button color="primary">
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+
+</ion-content>

@@ -1,0 +1,130 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="{{transService.getCurrentDirection()==='rtl'? 'end':'start'}}">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+    <ion-title [ngClass]="{'padding-0': transService.getCurrentDirection()==='ltr'}">
+      {{transService.getTranslatedData('Calendar')}}
+    </ion-title>
+
+    <ion-grid slot="end">
+      <ion-row class="padding-top-0 padding-bottom-0 padding-left-15 padding-right-15">
+          <ion-col class="padding-0 display-flex align-items-center justify-flex-end">
+            <p class="font-14 gotham txt-grey">{{transService.getTranslatedData('Type: ')}}</p>
+            <ion-select label="Fixed label" class="gotham font-14 align-items-center margin-left-5 margin-top-3 padding-0"
+            [(ngModel)]="filterData.type"
+            (ionChange)="filterTickets()" 
+            value="" mode="md"
+            interface="popover">
+              <ion-select-option class="gotham font-14" value="">
+                {{transService.getTranslatedData('All')}}
+              </ion-select-option>
+              <ion-select-option class="gotham font-14" value="on-demand">
+                {{transService.getTranslatedData('On Demand')}}
+              </ion-select-option>
+              <ion-select-option class="gotham font-14" value="ppm">
+                {{transService.getTranslatedData('PPM')}}
+              </ion-select-option>
+              <ion-select-option class="gotham font-14" value="automated">
+                {{transService.getTranslatedData('Automated')}}
+              </ion-select-option>
+            </ion-select>
+          </ion-col>
+      </ion-row>
+    </ion-grid>
+  </ion-toolbar>
+
+  <ion-progress-bar type="indeterminate" [hidden]="!showprogressLoader" 
+    color="{{app==='com.thehousemonk.business' || app==='com.thehousemonk.biz'?'primary':'secondary'}}">
+  </ion-progress-bar>
+  
+  <ion-toolbar>
+    <ion-segment scrollable mode="md" class="shadow margin-padding-zero direction-ltr" value="4">
+      <ion-segment-button mode="md" *ngFor="let date of dateList let i= index"
+        class="margin-padding-zero min-width-37 font-12" value="{{i}}" [disabled]="disableSegmentButton"
+        (click)="resetDate(date)" style="opacity: 1;">
+        <ion-label class="margin-padding-zero gotham txt-warm-grey">
+          {{date | date:'EEE'}}</ion-label>
+        <span class="padding-0 margin-top-5 margin-bottom-5 gotham font-30 black-color">{{date | date:'dd'}}</span>
+        <ion-label class="margin-padding-zero txt-warm-grey">{{date | date:'MMM'}}
+        </ion-label>
+      </ion-segment-button>
+    </ion-segment>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+
+  <!-- <span class="font-14 gotham" *ngIf="tickets?.length == 0" style="margin-top:5px; padding-left:15px">No tasks
+    found</span> -->
+  <ion-list class="margin-top-10">
+    <ion-item *ngFor="let ticket of tickets" lines="none" [routerLink]="['/rentals-ticket-details']"
+      [queryParams]="{ticketId: ticket._id}">
+      <ion-label class="margin-0">
+        <p class="gotham-medium margin-bottom-8" text-wrap>
+          <ion-grid fixed class="padding-0">
+            <ion-row class="padding-0">
+              <ion-col class="padding-0" size="8">
+                <span class="{{transService.getCurrentDirection()==='rtl'?'float-right':'float-left'}}">#{{ticket.uid}}
+                  - </span>
+                <span class=""> {{ticket.ticketCategory}}</span>
+              </ion-col>
+              <ion-col class="padding-0">
+                <span class="gotham {{transService.getCurrentDirection()==='rtl'?'float-left':'float-right'}}">
+                  {{ticket.createdAt |agoFilter}}</span>
+              </ion-col>
+            </ion-row>
+          </ion-grid>
+        </p>
+        <!-- <p class="gotham font-weight-600 txt-grey">{{d.address}}</p> -->
+        <p class="gotham font-weight-600 txt-grey margin-bottom-8 white-space-initial">
+          <!-- {{ticket.block?ticket.block+' - ':''}}{{ticket.door}} {{ticket.propertyName}} - {{ticket.propertyLocality}} -->
+          {{ticket.displayName || ''}}
+        </p>
+        <!-- <p class="gotham font-weight-600 txt-grey">For -
+          {{ticket.ticketBelongsTo == 'Home' ? 'Unit' : ticket.ticketBelongsTo}}</p> -->
+
+        <ion-grid class="padding-0">
+          <ion-row class="padding-0 align-items-center">
+            <ion-col class="padding-0" size="auto">
+              <ion-badge
+                class="gotham font-weight-600 padding-top-7 date-bedge-color {{transService.getCurrentDirection()==='rtl'?'margin-left-10':'margin-right-10'}}"
+                mode="md" *ngIf="ticket.jobDate||ticket.jobStartTime">
+                {{ticket.jobDate | date:'dd MMM yyyy'}}
+                {{ticket.jobStartTime | date:'hh:mm a'}}
+              </ion-badge>
+            </ion-col>
+            <ion-col class="padding-0" size="auto">
+              <ion-badge
+                class="gotham font-weight-600 padding-top-6 {{transService.getCurrentDirection()==='rtl'?'margin-left-10':'margin-right-10'}}"
+                color="{{ticket.status}}" mode="md">
+                {{ticket.status == 'in-progress' ? transService.getTranslatedData('In Progress') :
+                transService.getTranslatedData(ticket.status)}}
+              </ion-badge>
+            </ion-col>
+            <ion-col class="padding-0" size="auto" *ngIf="ticket.type==='PPM'">
+              <ion-badge
+                class="gotham font-weight-600 padding-top-6 ppp-badge-color {{transService.getCurrentDirection()==='rtl'?'margin-left-10':'margin-right-10'}}"
+                mode="md" color="light">
+                PPM
+              </ion-badge>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </ion-label>
+      <ion-icon slot="end" class="font-20 ion-item-detail-icon-color"
+        [name]="transService.getCurrentDirection()==='rtl'? 'ios-arrow-back':'ios-arrow-forward'">
+      </ion-icon>
+    </ion-item>
+  </ion-list>
+
+  <p class="gotham center-text" *ngIf="noTickets&&tickets.length==0">
+    {{transService.getTranslatedData('No Tickets Available')}}</p>
+
+  <ion-infinite-scroll [hidden]="disableInfiniteScroll" threshold="5px" (ionInfinite)="searchTicket($event)">
+    <ion-infinite-scroll-content loadingSpinner="bubbles"
+      loadingText="{{transService.getTranslatedData('Loading more data...')}}">
+    </ion-infinite-scroll-content>
+  </ion-infinite-scroll>
+
+</ion-content>

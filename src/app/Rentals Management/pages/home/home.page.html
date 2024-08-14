@@ -1,0 +1,199 @@
+<ion-header no-border>
+  <ion-toolbar no-border class="{{app==='com.thehousemonk.business' || app==='com.thehousemonk.biz'?'thehousemonk-ion-toolbar':'default-ion-toolbar'}}">
+    <ion-buttons slot="start">
+      <ion-menu-button
+        class="{{app==='com.thehousemonk.business' || app==='com.thehousemonk.biz'?'thehousemonk-ion-menu-button':'default-ion-menu-button'}}">
+      </ion-menu-button>
+    </ion-buttons>
+    <ion-buttons slot="end" class="padding-5">
+      <ion-button (click)="popOverOption()" *ngIf="app==='com.aqaraty.fm'">
+        <ion-icon *ngIf="lang.length>0" slot="{{transService.getCurrentDirection()==='rtl'? 'start':'end'}}"
+          style="color: white;" name="arrow-dropdown"></ion-icon>
+        <img *ngIf="lang=='en'" src="assets/lang-icons/USA.png" class="icon-20">
+        <img *ngIf="lang=='ar'" src="assets/lang-icons/kuwait.png" class="icon-20">
+        <img *ngIf="lang=='pt'" src="assets/lang-icons/portugal.svg" class="icon-20">
+      </ion-button>
+      <ion-button *ngIf="moduleAccess.tickets.read" style="color: black" (click)="openScanner()">
+        <ion-icon src="/assets/svg-icons/qr-code.svg" class="icon-30"></ion-icon>
+      </ion-button>
+      <!-- ../../../assets/icon/language.svg -->
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+  <div
+    class=" home-top-container padding-right-15 padding-left-15 {{app==='com.thehousemonk.business' || app==='com.thehousemonk.biz'?'background-thehousemonk':'default-background'}} display-flex">
+    <span class="font-22 gotham txt-nowrap"> {{transService.getTranslatedData('Hi')}} {{userDetails?.firstName}}
+      {{userDetails?.lastName}}</span>
+    <br>
+    <span *ngIf="moduleAccess.tickets.read" class="font-14 gotham"
+      style="margin-top:5px ;top: 23px;position: absolute;">{{transService.getTranslatedData('Ticket Status')}}</span>
+  </div>
+  <ion-card *ngIf="moduleAccess.tickets.read" style="margin-top: -45px">
+    <ion-card-content class="padding-6">
+      <ion-grid class="text-align-start">
+        <ion-row>
+          <ion-col>
+            <p class="gotham font-weight-600 txt-grey">{{transService.getTranslatedData('Open')}}</p>
+            <p class="font-18 gotham">
+              {{ticketStats?.ticket['open']||0}}</p>
+          </ion-col>
+          <ion-col>
+            <p class="gotham font-weight-600 txt-grey">{{transService.getTranslatedData('In Progress')}}</p>
+            <p class="font-18 gotham">
+              {{ticketStats?.ticket['in-progress']||0}}
+            </p>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card class="margin-top-10 margin-bottom-5" [hidden]="organizationType !== 'residential'">
+    <ion-card-content class="padding-0">
+      <ion-grid >
+        <ion-row>
+          <ion-col class="padding-0 border-right-1-light-grey display-flex align-items-center" [routerLink]="['/rentals-check-in']">
+            <div class="width-75-percent display-flex align-items-center">
+              <ion-icon class="icon-25 margin-right-10" src="../../../../assets/svg-icons/check-in.svg"></ion-icon>
+              <ion-label class="font-16 gotham txt-black">{{transService.getTranslatedData('Check-In')}}</ion-label>
+            </div>
+            <ion-badge class="width-30 ci-co-bedge-color">{{checkInCount}}</ion-badge>
+          </ion-col>
+          <ion-col class="padding-0 display-flex align-items-center" [routerLink]="['/rentals-check-out']">
+            <div class="width-75-percent display-flex align-items-center margin-left-10">
+              <ion-icon class="icon-25 margin-right-10" src="../../../../assets/svg-icons/check-out.svg"></ion-icon>
+              <ion-label class="font-16 gotham txt-black">{{transService.getTranslatedData('Check-Out')}}</ion-label>
+            </div>
+            <ion-badge class="width-30 ci-co-bedge-color">{{checkOutCount}}</ion-badge>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-card-content>
+  </ion-card>
+
+
+  <ion-grid dir="ltr">
+    <ion-row>
+      <!-- [hidden]="ownerAccess[route.ModuleName] === false" -->
+      <ion-col size="4" class="center-text {{route.borderClass}}" *ngFor="let route of routing;index as i"
+        (click)="navigate(route.url,route?.type)" [hidden]="moduleAccess[route.ModuleName] && moduleAccess[route.ModuleName][route?.operation] === false">
+        <ion-icon class="tile-option margin-bottom-10 svg-color-primary" src="/assets/svg-icons/{{route.src}}">
+        </ion-icon>
+        <p class="font-14 gotham margin-bottom-20">{{transService.getTranslatedData(route.title)}}</p>
+      </ion-col>
+
+    </ion-row>
+  </ion-grid>
+
+  <br>
+  <ion-grid>
+    <ion-row class="display-flex align-items-baseline padding-top-0 padding-bottom-0">
+      <ion-col class="padding-0 display-flex align-items-center"><span *ngIf="moduleAccess.tickets.read" class="font-15 gotham "
+          style="margin-top:5px;">{{transService.getTranslatedData("Today's Tasks -")}}
+          <span class="gotham font-weight-600 txt-grey" *ngIf="ticketStats">{{totalTaskForToday}}</span>
+        </span></ion-col>
+        <ion-col class="padding-0 display-flex align-items-center justify-flex-end">
+          <p class="font-14 gotham txt-grey">{{transService.getTranslatedData('Type: ')}}</p>
+          <ion-select label="Fixed label" class="gotham font-14 align-items-center margin-left-5 padding-0" value="" mode="md"
+          [(ngModel)]="ticketListFilterData.type"
+          (ionChange)="filterTickets(ticketListFilterData.type)" 
+          interface="popover">
+            <ion-select-option class="gotham font-14" value="">
+                {{transService.getTranslatedData('All')}}
+            </ion-select-option>
+            <ion-select-option class="gotham font-14" value="on-demand">
+              {{transService.getTranslatedData('On Demand')}}
+            </ion-select-option>
+            <ion-select-option class="gotham font-14" value="ppm">
+              {{transService.getTranslatedData('PPM')}}
+            </ion-select-option>
+            <ion-select-option class="gotham font-14" value="automated">
+              {{transService.getTranslatedData('Automated')}}
+            </ion-select-option>
+          </ion-select>
+        </ion-col>
+      <!-- <ion-col class="padding-0" size="auto" *ngIf="moduleAccess.tickets && moduleAccess.tickets.read">
+        <span class="float-right  font-18 gotham" (click)="refreshTickets()" style="display: flex;
+    align-items: center;">
+          <ion-icon name="refresh" mode="md" class="font-20"></ion-icon>Refresh
+        </span>
+      </ion-col> -->
+    </ion-row>
+  </ion-grid>
+  <br>
+
+  <ion-progress-bar type="indeterminate" [hidden]="!showprogressLoader" 
+    color="{{app==='com.thehousemonk.business' || app==='com.thehousemonk.biz'?'primary':'secondary'}}">
+  </ion-progress-bar>
+  
+  <ion-list *ngIf="moduleAccess.tickets.read" class="border-top padding-bottom-0">
+    <ion-item *ngFor="let ticket of ticketStats?.todo" (click)="onTicketClick(ticket._id)" lines="none">
+      <ion-label class="margin-0">
+        <p class="gotham-medium margin-bottom-8 padding-top-2" text-wrap>
+          <ion-grid class="padding-0">
+            <ion-row class="padding-0">
+              <ion-col class="padding-0" size="8">
+                <span
+                  [ngClass]="{'float-right': transService.getCurrentDirection()==='rtl','float-left':transService.getCurrentDirection()==='ltr'}">#{{ticket.uid}}
+                  - </span>
+                <span class=""> {{ticket.ticketCategory}}</span>
+              </ion-col>
+              <ion-col class="padding-0">
+                <span class="gotham"
+                  [ngClass]="{'float-left': transService.getCurrentDirection()==='rtl','float-right':transService.getCurrentDirection()==='ltr'}">
+                  {{ticket.createdAt | agoFilter}}</span>
+              </ion-col>
+            </ion-row>
+          </ion-grid>
+
+
+
+        </p>
+        <p id="margin-top-bottom-5" class="gotham margin-bottom-8 font-weight-600 margin-bottom-5 txt-grey">
+          <!-- {{ticket.block?ticket.block+' - ':''}}{{ticket.door}} {{ticket.propertyName}} - {{ticket.propertyLocality}} -->
+          {{ticket.displayName || ''}}
+        </p>
+        <ion-grid class="padding-0">
+          <ion-row class="padding-0 align-items-center">
+            <ion-col class="padding-0" size="auto">
+              <ion-badge
+                class="gotham font-weight-600 padding-top-7 date-bedge-color {{transService.getCurrentDirection()==='rtl'?'margin-left-10':'margin-right-10'}}"
+                mode="md" *ngIf="ticket.jobDate||ticket.jobStartTime">
+                {{ticket.jobDate | date:'dd MMM yyyy'}}
+                {{ticket.jobStartTime | date:'hh:mm a'}}
+              </ion-badge>
+            </ion-col>
+            <ion-col class="padding-0" size="auto">
+              <ion-badge
+                class="gotham font-weight-600 padding-top-6 {{transService.getCurrentDirection()==='rtl'?'margin-left-10':'margin-right-10'}}"
+                color="{{ticket.status}}" mode="md">
+                {{ticket.status == 'in-progress' ? transService.getTranslatedData('In Progress') :
+                transService.getTranslatedData(ticket.status)}}
+              </ion-badge>
+            </ion-col>
+            <ion-col class="padding-0" size="auto" *ngIf="ticket.type==='PPM'">
+              <ion-badge
+                class="gotham font-weight-600 padding-top-6 ppp-badge-color {{transService.getCurrentDirection()==='rtl'?'margin-left-10':'margin-right-10'}}"
+                mode="md" color="light">
+                PPM
+              </ion-badge>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </ion-label>
+      <ion-icon slot="end" class="font-20 ion-item-detail-icon-color"
+        [name]="transService.getCurrentDirection()==='rtl'? 'ios-arrow-back':'ios-arrow-forward'">
+      </ion-icon>
+    </ion-item>
+  </ion-list>
+
+  <span class="font-14 gotham center-text display-block margin-top-10" *ngIf="ticketStats?.todo.length == 0 && moduleAccess.tickets && moduleAccess.tickets.read">
+    {{transService.getTranslatedData(ticketAPICalled===true?'No tasks found':'Loading data...')}}
+  </span>
+  <ion-infinite-scroll threshold="5px" (ionInfinite)="getTickets($event)">
+    <ion-infinite-scroll-content loadingSpinner="bubbles"
+      loadingText="{{transService.getTranslatedData('Loading more data...')}}">
+    </ion-infinite-scroll-content>
+  </ion-infinite-scroll>
+</ion-content>

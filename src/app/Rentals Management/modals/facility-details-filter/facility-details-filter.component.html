@@ -1,0 +1,115 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="end">
+      <ion-button (click)="resetFilter()">
+        <ion-icon slot="start" name="refresh"></ion-icon>Reset
+      </ion-button>
+      <ion-button (click)="closeModal(false)">
+        <ion-icon name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>Booking Filter</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-list-header class="font-17">Status </ion-list-header>
+  <div class="max-available-height full-width">
+<ion-row >
+  <ion-col class="padding-left-10">
+    <ion-chip
+      [ngClass]="
+        bookingFilter.status.indexOf('approved') != -1
+          ? 'selected'
+          : 'a'
+      "
+      outline="true"
+      color="primary"
+      (click)="selectBookingStatus('approved')"
+    >
+      <ion-label class="font-16 font-weight-500"
+        >Approved
+      </ion-label>
+    </ion-chip>
+
+    <ion-chip
+      [ngClass]="
+        bookingFilter.status.indexOf('rejected') != -1
+          ? 'selected'
+          : 'a'
+      "
+      outline="true"
+      color="primary"
+      (click)="selectBookingStatus('rejected')"
+    >
+      <ion-label class="font-16 font-weight-500">
+        Rejected</ion-label
+      >
+    </ion-chip>
+    <ion-chip
+      [ngClass]="
+        bookingFilter.status.indexOf('pending') != -1
+          ? 'selected'
+          : 'a'
+      "
+      outline="true"
+      color="primary"
+      (click)="selectBookingStatus('pending')"
+    >
+      <ion-label class="font-16 font-weight-500">
+        Pending</ion-label
+      >
+    </ion-chip>
+  </ion-col>
+</ion-row>
+
+
+<div >
+<ion-list-header class="margin-top-30 font-17"
+  >Sort By
+</ion-list-header>
+
+<ion-row>
+  <ion-list>
+    <ion-radio-group [(ngModel)]="bookingFilter.sort[0]">
+      <ion-item
+        lines="none"
+        (click)="selectFilterSort('createdAt')"
+      >
+        <ion-label>BookedOn Asc</ion-label>
+        <ion-radio slot="start" value="createdAt"></ion-radio>
+      </ion-item>
+
+      <ion-item
+        lines="none"
+        (click)="selectFilterSort('-createdAt')"
+      >
+        <ion-label>BookedOn Desc</ion-label>
+        <ion-radio slot="start" value="-createdAt"></ion-radio>
+      </ion-item>
+
+      <ion-item
+        lines="none"
+        (click)="selectFilterSort('startDate')"
+      >
+        <ion-label>Booking Start Time Asc</ion-label>
+        <ion-radio slot="start" value="startDate"></ion-radio>
+      </ion-item>
+
+      <ion-item
+        lines="none"
+        (click)="selectFilterSort('-startDate')"
+      >
+        <ion-label>Booking Start Time Desc</ion-label>
+        <ion-radio slot="start" value="-startDate"></ion-radio>
+      </ion-item>
+    </ion-radio-group>
+  </ion-list>
+</ion-row>
+</div>
+</div>
+</ion-content>
+<ion-button size="large" (click)="closeModal(true)" color="danger">
+  Apply</ion-button
+>
+

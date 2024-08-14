@@ -1,0 +1,305 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons>
+      <ion-back-button  defaultHref="rentals-gatepas-details"></ion-back-button>
+    </ion-buttons>
+  </ion-toolbar>
+
+  <ion-segment [(ngModel)]="selectedTab"  (ionChange)="tabChanged($event)"  class="selectedTab">
+    <ion-segment-button value="visitor-details" style="padding: 0px;">
+      <ion-label class="gotham text-transform-capitalize font-weight-600">{{transService.getTranslatedData('Basic & Visitor Details')}}</ion-label>
+    </ion-segment-button>
+
+    <ion-segment-button value="material">
+      <ion-label  class="gotham text-transform-capitalize font-weight-600">{{transService.getTranslatedData('Material')}}</ion-label>
+    </ion-segment-button>
+  </ion-segment>
+</ion-header>
+
+<ion-content>
+  <div [ngSwitch]="selectedTab">
+    <div *ngSwitchCase="'visitor-details'">
+      <div  class="gatepass-details-card" *ngIf="rejectedGatePass?.status === 'rejected'">
+        <ion-row class="ion-justify-content-between ion-align-items-center margin-bottom-10">
+          <ion-label class="gotham font-14">{{transService.getTranslatedData('Rejected reason: ')}}</ion-label>
+          <ion-badge class="padding-8" color="danger">{{transService.getTranslatedData('Rejected')}}</ion-badge>
+        </ion-row>
+        <ion-text class="gotham font-14 txt-slate-grey">{{rejectedGatePass?.reason}}</ion-text>
+      </div>
+      <div class="margin-bottom-10" *ngIf="gatePass?.approvalStatus === 'approved'">
+        <ion-item lines="none" class="">
+          <ion-label (click)="downloadGatePass()"  class="gotham display-flex align-items-center">{{transService.getTranslatedData('Download Gatepass ')}}
+            <ion-button fill="clear" >
+              <ion-icon class="icon-20" name="download"></ion-icon>
+            </ion-button>
+          </ion-label>
+          <ion-badge class="padding-8" slot="end" color="success">{{transService.getTranslatedData('Completed')}}</ion-badge>
+        </ion-item>
+      </div>
+      <div class="margin-bottom-10" *ngIf="gatePass?.approvalStatus === 'approved' && remarkReason">
+        <ion-item lines="none" class="ion-item">
+          <div class="display-flex margin-left-16">
+            <div class="margin-bottom-10 margin-top-10">
+              <span class="gotham font-14 txt-slate-grey">{{transService.getTranslatedData('Remark:')}}</span>
+            </div>
+            <div class="margin-bottom-10 margin-top-10">
+              <ion-text class="gotham font-14 margin-left-5"> {{remarkReason}}</ion-text>
+            </div>
+          </div>
+        </ion-item>
+      </div>
+      
+      <div class="gatepass-details-card">
+        <ion-row>
+          <ion-col>
+            <p class="txt-slate-grey gotham-medium font-14">
+              {{transService.getTranslatedData('Basic Details')}}</p>
+          </ion-col>
+          <ion-col>
+            <ion-button class="text-transform-capitalize float-right" fill="clear" (click)="viewApprovalLevels()">
+              {{transService.getTranslatedData('View Activity')}}
+            </ion-button>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col>
+            <p class="txt-slate-grey margin-padding-zero font-13 gotham margin-bottom-3">
+              {{transService.getTranslatedData('Movement Type')}}</p>
+            <p
+              class="gotham margin-top-10 font-14 black-color direction-ltr {{transService.getCurrentDirection()==='rtl'?'text-align-end':'text-align-start'}}">
+              {{gatePass?.basicDetails?.movementType}}</p>
+          </ion-col>
+          <ion-col>
+            <p class="txt-slate-grey margin-padding-zero font-13 gotham margin-bottom-3">
+              {{transService.getTranslatedData('Movement Direction')}}</p>
+            <p
+              class="gotham margin-top-10 font-14 black-color direction-ltr {{transService.getCurrentDirection()==='rtl'?'text-align-end':'text-align-start'}}">
+              {{gatePass?.basicDetails?.movementDirection}}</p>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col>
+            <p class="txt-slate-grey margin-padding-zero font-13 gotham margin-bottom-3">
+              {{transService.getTranslatedData('Outward Date')}}</p>
+            <p
+              class="gotham margin-top-10 font-14 black-color direction-ltr {{transService.getCurrentDirection()==='rtl'?'text-align-end':'text-align-start'}}">
+              {{gatePass?.basicDetails?.outwardDate | date : 'dd MMM yyyy'}}</p>
+          </ion-col>
+          <ion-col>
+            <p class="txt-slate-grey margin-padding-zero font-13 gotham margin-bottom-3">
+              {{transService.getTranslatedData('Inward Date')}}</p>
+            <p
+              class="gotham margin-top-10 font-14 black-color direction-ltr {{transService.getCurrentDirection()==='rtl'?'text-align-end':'text-align-start'}}">
+              {{gatePass?.basicDetails?.inwardDate | date : 'dd MMM yyyy'}}</p>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col *ngIf="gatePass?.outwardTime">
+            <p class="txt-slate-grey margin-padding-zero font-13 gotham margin-bottom-3">
+              {{transService.getTranslatedData('Outward Time')}}</p>
+            <p
+              class="gotham margin-top-10 font-14 black-color direction-ltr {{transService.getCurrentDirection()==='rtl'?'text-align-end':'text-align-start'}}">
+              {{formatTime(gatePass?.outwardTime)}}</p>
+          </ion-col>
+          <ion-col *ngIf="gatePass?.inwardTime">
+            <p class="txt-slate-grey margin-padding-zero font-13 gotham margin-bottom-3">
+              {{transService.getTranslatedData('Inward Time')}}</p>
+            <p
+              class="gotham margin-top-10 font-14 black-color direction-ltr {{transService.getCurrentDirection()==='rtl'?'text-align-end':'text-align-start'}}">
+              {{formatTime(gatePass?.inwardTime)}}</p>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col>
+            <p class="txt-slate-grey margin-padding-zero font-13 gotham margin-bottom-3">
+              {{transService.getTranslatedData('Gate pass raised by')}}</p>
+            <p
+              class="gotham margin-top-10 font-14 black-color direction-ltr {{transService.getCurrentDirection()==='rtl'?'text-align-end':'text-align-start'}}">
+              {{gatePass?.createdBy?.firstName}} {{gatePass?.createdBy?.lastName}}</p>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col>
+            <p class="txt-slate-grey margin-padding-zero font-13 gotham margin-bottom-3">
+              {{transService.getTranslatedData('Phone Number')}}</p>
+            <p
+              class="gotham margin-top-10 font-14 black-color direction-ltr {{transService.getCurrentDirection()==='rtl'?'text-align-end':'text-align-start'}}">
+              {{gatePass?.createdBy?.countryCode}} {{gatePass?.createdBy?.phoneNumber}}</p>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col>
+            <p class="txt-slate-grey margin-padding-zero font-13 gotham margin-bottom-3">
+              {{transService.getTranslatedData('Email Address')}}</p>
+            <p
+              class="gotham margin-top-10 font-14 direction-ltr {{transService.getCurrentDirection()==='rtl'?'text-align-end':'text-align-start'}}">
+              {{gatePass?.createdBy?.email}}</p>
+          </ion-col>
+        </ion-row>
+
+        <ion-row [hidden]="gatePass?.basicDetails?.customFields?.length === 0">
+          <ion-col *ngFor="let field of gatePass?.basicDetails?.customFields" size="auto">
+            <p class="txt-slate-grey margin-padding-zero font-13 gotham margin-bottom-3">
+              {{field.name}}</p>
+            <p
+              class="gotham margin-top-10 font-14 direction-ltr {{transService.getCurrentDirection()==='rtl'?'text-align-end':'text-align-start'}}">
+              {{getFieldValue(field)}}</p>
+          </ion-col>
+        </ion-row>
+      </div>
+
+      <div class="gatepass-details-card">
+        <ion-row>
+          <ion-col>
+            <p class="txt-slate-grey gotham-medium font-14">
+              {{transService.getTranslatedData("VISITOR'S DETAILS")}}</p>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col>
+            <p class="txt-slate-grey margin-padding-zero font-13 gotham margin-bottom-3">
+              {{transService.getTranslatedData('Company/Visitor Name')}}</p>
+            <p
+              class="gotham margin-top-10 font-14 black-color direction-ltr {{transService.getCurrentDirection()==='rtl'?'text-align-end':'text-align-start'}}">
+              {{gatePass?.visitorDetails?.name}}</p>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col>
+            <p class="txt-slate-grey margin-padding-zero font-13 gotham margin-bottom-3">
+              {{transService.getTranslatedData('Visitor Phone Number')}}</p>
+            <p
+              class="gotham margin-top-10 font-14 black-color direction-ltr {{transService.getCurrentDirection()==='rtl'?'text-align-end':'text-align-start'}}">
+              {{gatePass?.visitorDetails?.countryCode}} {{gatePass?.visitorDetails?.phoneNumber}}</p>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col>
+            <p class="txt-slate-grey margin-padding-zero font-13 gotham margin-bottom-3">
+              {{transService.getTranslatedData('Visitor Email Address')}}</p>
+            <p
+              class="gotham margin-top-10 font-14 black-color direction-ltr {{transService.getCurrentDirection()==='rtl'?'text-align-end':'text-align-start'}}">
+              {{gatePass?.visitorDetails?.email}}</p>
+          </ion-col>
+        </ion-row>
+      </div>
+
+      <div *ngIf="gatePass?.comment?.enabled === true" class="gatepass-details-card">
+        <p class="txt-slate-grey margin-padding-zero font-13 gotham margin-bottom-3">
+          {{transService.getTranslatedData('Comment')}}</p>
+        <p
+          class="gotham line-height-17 margin-top-10 font-14 black-color direction-ltr {{transService.getCurrentDirection()==='rtl'?'text-align-end':'text-align-start'}}">
+          {{gatePass.comment?.value}}</p>
+      </div>
+
+        <ion-list class="padding-top-10 padding-bottom-10" *ngIf="gatePass?.files?.length > 0">
+          <ion-list-header class="padding-bottom-10" style="border-bottom: 1px solid lightgrey !important">
+            <ion-label class="txt-slate-grey font-14 gotham-medium line-height-32 padding-0">
+              {{transService.getTranslatedData("Documents")}}</ion-label>
+          </ion-list-header>
+          <ion-item type="button" class="ion-item" lines="full" *ngFor="let doc of gatePass?.files" (click)="openImage(doc, doc?.aws_compressed_url)"
+            class="ion-activatable ripple-parent">
+            <ion-icon src="assets/svg-icons/Document.svg" class="icon-20 icon-padding">
+            </ion-icon>
+            <ion-label class="margin-top-10 margin-bottom-10 margin-left-8">
+              <h2 style="white-space: break-spaces;" class="action-text font-weight-600  line-height-17 font-13">
+                {{doc?.fileName || 'Document'}}</h2>
+            </ion-label>
+            <ion-ripple-effect></ion-ripple-effect>
+          </ion-item>
+        </ion-list>
+    </div>
+
+    <div *ngSwitchCase="'material'">
+      <div class="bg-white">
+        <ion-row class="border-bottom-grey-1 padding-left-10">
+            <ion-col size="2" class="gotham font-14 txt-slate-grey">
+              <p>{{transService.getTranslatedData('Sr.No')}}</p>
+            </ion-col>
+            <ion-col size="8" class="gotham font-14 txt-slate-grey ion-text-left">
+              <p>{{transService.getTranslatedData('Item Description')}}</p>
+            </ion-col>
+            <ion-col size="2" class="gotham font-14 txt-slate-grey">
+              <p>{{transService.getTranslatedData('Qty')}}</p>
+            </ion-col>
+        </ion-row>
+        <div *ngIf="materials.length > 0">
+          <ion-row *ngFor="let item of materials;let i = index" class="border-bottom-grey-1 padding-left-10" >
+            <ion-col size="2" class="gotham font-14">
+              <p>{{ i + 1}}</p>
+            </ion-col>
+            <ion-col size="8" class="gotham font-14">
+              <p class="line-height-18">{{item?.description}}</p>
+            </ion-col>
+            <ion-col size="2" class="gotham font-14" (click)="toggle(i)">
+              <p class="display-flex align-items-center">{{item?.quantity?.expected || 0}} 
+                <ion-icon mode="ios" name="{{expandIndex === i ? 'arrow-up' : 'arrow-down'}}" color="primary"  class="margin-left-10 icon-18"></ion-icon> 
+              </p>
+            </ion-col>
+            <div class="margin-top-0" *ngIf="expandIndex === i">
+              <div *ngIf="item?.customFields.length > 0">
+                <div *ngFor="let field of item?.customFields">
+                <div class="display-flex align-items-center margin-bottom-10" *ngIf="field.fieldType === 'text'">
+                  <p class="margin-top-0 margin-bottom-0 margin-right-5 gotham font-13 txt-slate-grey">{{field?.name}}:</p>
+                  <p class="margin-0 gotham font-14 line-height-17">{{getValue(field)}}</p>
+                </div>
+                <div class="display-flex align-items-center margin-bottom-10" *ngIf="field.fieldType === 'radio'">
+                  <p class="margin-top-0 margin-bottom-0 margin-right-5 gotham font-13 txt-slate-grey">{{field?.name}}:</p>
+                  <p class="gotham margin-0 font-14">{{getValue(field)}}</p>
+                </div>
+                <div class="display-flex align-items-center margin-bottom-10" *ngIf="field.fieldType === 'checkbox'">
+                  <p class="margin-top-0 margin-bottom-0 margin-right-5 gotham font-13 txt-slate-grey">{{field?.name}}:</p>
+                  <p  class="gotham margin-0 font-14">{{getValue(field)}}</p>
+                </div>
+                <div class="display-flex align-items-center margin-bottom-10" *ngIf="field.fieldType === 'date'">
+                  <p class="margin-top-0 margin-bottom-0 margin-right-5 gotham font-13 txt-slate-grey">{{field?.name}}:</p>
+                  <p class="margin-0 gotham font-14">{{getValue(field) | date: 'dd MMM yyyy'}}</p>
+                </div>
+                <div class="display-flex align-items-center margin-bottom-10" *ngIf="field.fieldType === 'textarea'">
+                  <p class="margin-top-0 margin-bottom-0 margin-right-5 gotham font-13 txt-slate-grey">{{field?.name}}:</p>
+                  <p class="margin-0 gotham font-14 line-height-17">{{getValue(field)}}</p>
+                </div>
+                <div class="display-flex align-items-center margin-bottom-10" *ngIf="field.fieldType === 'dropdown'">
+                  <p class="margin-top-0 margin-bottom-0 margin-right-5 gotham font-13 txt-slate-grey">{{field?.name}}:</p>
+                  <p class="gotham margin-0 font-14">{{getValue(field)}}</p>
+                </div>
+                <div class="display-flex align-items-center margin-bottom-10" *ngIf="field.fieldType === 'time'">
+                  <p class="margin-top-0 margin-bottom-0 margin-right-5 gotham font-13 txt-slate-grey">{{field?.name}}:</p>
+                  <p class="gotham margin-0 font-14">{{formatTime(field.fieldValue)}}</p>
+                </div>
+              </div>
+            </div>
+            </div>
+          </ion-row>
+        </div>
+      </div>
+    </div>
+  </div>
+</ion-content>
+
+<ion-footer *ngIf="gatePass?.approvalStatus!='rejected'">
+  <ion-toolbar *ngIf="selectedTab !='material'">
+    <div class="display-flex justify-center">
+      <ion-button  (click)="selectedTab = 'material'"
+      class="height-45 font-15 gotham-medium width-95-percent ion-item-shadow-none text-transform-capitalize margin-top-12 margin-bottom-24"
+      color="primary">
+      {{transService.getTranslatedData("Next")}}</ion-button>
+    </div>
+  </ion-toolbar>
+  <ion-toolbar *ngIf="selectedTab ==='material' && isApprover && !isApproved">
+    <div class="display-flex">
+      <ion-button fill="outline" (click)="routeToRejction('reject')"
+      class="padding-start-end-button height-45 font-15 flex-1 gotham-medium ion-item-shadow-none text-transform-capitalize margin-top-12 margin-bottom-24"
+      color="primary">
+      {{transService.getTranslatedData("Reject")}}</ion-button>
+      <ion-button fill="outline" (click)="routeToRejction('remark')"
+      class="padding-start-end-button height-45 font-15 flex-1 gotham-medium ion-item-shadow-none text-transform-capitalize margin-top-12 margin-bottom-24"
+      color="primary">
+      {{transService.getTranslatedData("Approve & Remarks")}}</ion-button>
+      <ion-button  (click)="approve()"
+      class="padding-start-end-button height-45 font-15 flex-1 gotham-medium ion-item-shadow-none text-transform-capitalize margin-top-12 margin-bottom-24"
+      color="primary">
+      {{transService.getTranslatedData("Approve")}}</ion-button>
+    </div>
+  </ion-toolbar>
+</ion-footer>

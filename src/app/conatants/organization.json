@@ -1,0 +1,156 @@
+{
+    "appName": "Real Estate Management App",
+    "connectTo": "production",
+    "organizations": [
+        ""
+    ],
+    "buildFor": "RM",
+    "appVersion": "84.0.3",
+    "appBundleId": "com.thehousemonk.biz",
+    "mixpanel-token": "1350cf4808c3adbdd9ef79625d091dc7",
+    "orgName": "TheHouseMonk",
+    "currencyCode": "INR",
+    "countryCode": "+91",
+    "displayFooter": false,
+    "oneSignalAppId": "8f1c9327-8ae8-4445-b073-23071793c170",
+    "CommonAuth": true,
+    "pages": [
+        {
+            "title": "Home",
+            "url": "-home",
+            "src": "/assets/svg-icons/my-home.svg",
+            "building-management": true,
+            "rentals": true,
+            "moduleName": "other"
+        },
+        {
+            "title": "Calendar",
+            "url": "-calendar",
+            "src": "/assets/svg-icons/calendar.svg",
+            "building-management": true,
+            "rentals": true,
+            "moduleName": "tickets",
+            "operation": "read"
+        },
+        {
+            "title": "Tickets",
+            "url": "-tickets",
+            "src": "/assets/svg-icons/ticket-history.svg",
+            "building-management": true,
+            "rentals": true,
+            "moduleName": "tickets",
+            "operation": "read"
+        },
+        {
+            "title": "Notice Board",
+            "url": "-notice-board",
+            "src": "/assets/svg-icons/communications.svg",
+            "building-management": true,
+            "rentals": true,
+            "moduleName": "noticeBoard",
+            "operation": "read"
+        },
+        {
+            "title": "Facility Booking",
+            "url": "-facility-booking",
+            "src": "/assets/svg-icons/calendar.svg",
+            "building-management": true,
+            "rentals": true,
+            "moduleName": "other"
+        },
+        {
+            "title": "Contact us",
+            "url": "-contact-us",
+            "src": "/assets/svg-icons/contact-us.svg",
+            "building-management": true,
+            "rentals": true,
+            "moduleName": "other"
+        },
+        {
+            "title": "Profile",
+            "url": "-profile",
+            "src": "/assets/svg-icons/profile.svg",
+            "building-management": true,
+            "rentals": true,
+            "moduleName": "other"
+        }
+    ],
+    "HomePageRouting": [
+        {
+            "title": "Raise Ticket",
+            "url": "-create-ticket",
+            "src": "create-notice.svg",
+            "borderClass": "border-1",
+            "ModuleName": "tickets",
+            "operation": "create"
+        },
+        {
+            "title": "Create Notice",
+            "url": "-create-notice",
+            "src": "create-notice.svg",
+            "borderClass": "border-1",
+            "ModuleName": "noticeBoard",
+            "operation": "create"
+        },
+        {
+            "title": "Calendar",
+            "url": "-calendar",
+            "src": "calendar.svg",
+            "borderClass": "border-1",
+            "ModuleName": "tickets",
+            "operation": "read"
+        },
+        {
+            "title": "Tickets",
+            "url": "-tickets",
+            "src": "ticket-history.svg",
+            "borderClass": "border-1",
+            "ModuleName": "tickets",
+            "type": "on-demand",
+            "operation": "read"
+        },
+        {
+            "title": "PPM",
+            "url": "-tickets",
+            "src": "ppm.svg",
+            "borderClass": "border-1",
+            "ModuleName": "tickets",
+            "type": "ppm",
+            "operation": "read"
+        },
+        {
+            "title": "Notice Board",
+            "url": "-notice-board",
+            "src": "communications.svg",
+            "borderClass": "border-1",
+            "ModuleName": "noticeBoard",
+            "operation": "read"
+        },
+        {
+            "title": "Gatepass",
+            "url": "-gatepass",
+            "src": "gatepass.svg",
+            "class": "border-right border-left",
+            "borderClass": "border-1",
+            "ModuleName": "gatePass",
+            "operation": "access"
+        },
+        {
+            "title": "Work Permit",
+            "url": "-work-permit",
+            "src": "workpermit.svg",
+            "class": "border-right border-left",
+            "borderClass": "border-1",
+            "ModuleName": "workPermit",
+            "operation": "access"
+        }
+    ],
+    "borderClass": [
+        "border-right border-top border-bottom",
+        "border-right border-top border-bottom",
+        "border-top border-bottom",
+        "border-right border-bottom",
+        "border-right border-bottom",
+        "border-bottom"
+    ]
+}

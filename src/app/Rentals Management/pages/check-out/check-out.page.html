@@ -1,0 +1,38 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="{{transService.getCurrentDirection()==='rtl'? 'end':'start'}}">
+      <ion-back-button defaultHref="rentals-home"></ion-back-button>
+    </ion-buttons>
+    <ion-title class="{{transService.getCurrentDirection()==='rtl'?'':'padding-left-0'}}">
+      {{transService.getTranslatedData('Check Out')}}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-card class="bg-white margin-bottom-20" [routerLink]="['/rentals-give-notice']" routerLinkActive="router-link-active">
+    <img alt="Silhouette of mountains" class="icon-25 margin-left-16 margin-top-16" src="assets/svg-icons/notice.svg" />
+    <ion-card-header class="padding-bottom-0 padding-top-5">
+      <ion-item class="ion-item" lines="none">
+        <ion-card-title class="gotham-medium ">{{transService.getTranslatedData('Give Notice')}}</ion-card-title>
+        <ion-icon slot="end" class="font-20 ion-item-detail-icon-color"
+        [name]="transService.getCurrentDirection()==='rtl'? 'ios-arrow-back':'ios-arrow-forward'"></ion-icon>
+      </ion-item>
+    </ion-card-header>
+    <ion-card-content>
+      <p class="gotham font-16  txt-grey">{{transService.getTranslatedData('Only for tenant who are out side their minimum lock-in period')}}</p>
+    </ion-card-content>
+  </ion-card>
+  <ion-card class="bg-white" [routerLink]="['/rentals-check-out-search']" routerLinkActive="router-link-active" >
+    <img alt="Silhouette of mountains" class="icon-25 margin-left-16 margin-top-16" src="assets/svg-icons/check-out-bold.svg" />
+    <ion-card-header class="padding-bottom-0 padding-top-5">
+      <ion-item class="ion-item" lines="none">
+        <ion-card-title class="gotham-medium">{{transService.getTranslatedData('Check Out Tenant')}}</ion-card-title>
+        <ion-icon slot="end" class="font-20 ion-item-detail-icon-color"
+        [name]="transService.getCurrentDirection()==='rtl'? 'ios-arrow-back':'ios-arrow-forward'"></ion-icon>
+      </ion-item>
+    </ion-card-header>
+    <ion-card-content>
+      <p class="gotham font-16 txt-grey">{{transService.getTranslatedData('Only for tenant who have already submitted their move out date')}}</p>
+    </ion-card-content>
+  </ion-card>
+</ion-content>

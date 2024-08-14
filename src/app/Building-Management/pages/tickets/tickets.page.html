@@ -1,0 +1,60 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+    <ion-buttons slot="end">
+      <ion-button (click)="openTicketFilterModal()">
+        <ion-icon name="funnel" mode="ios"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title class="padding-0">{{transService.getTranslatedData('ticket.title')}}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <p class="gotham center-text" *ngIf="noTicket&&tickets.length==0">
+    {{transService.getTranslatedData('ticket.empty-array')}}</p>
+  <ion-list class=" padding-bottom-0">
+    <ion-item *ngFor="let ticket of tickets" [routerLink]="['/building-management-ticket-details']"
+      [queryParams]="{ticketId: ticket._id}" detail="true" lines="none">
+      <ion-label class="margin-0">
+        <p class="gotham-medium margin-bottom-8 " text-wrap>
+          <ion-grid class="padding-0">
+            <ion-row class="padding-0">
+              <ion-col class="padding-0" class="padding-0" size="7">
+                <span class="float-left">#{{ticket.uid}}
+                  - </span>
+                <span class=""> {{ticket.ticketCategory}}</span>
+              </ion-col>
+              <ion-col class="padding-0">
+                <span class=" gotham"
+                  class="float-right">{{ticket.createdAt | agoFilter}}</span>
+              </ion-col>
+            </ion-row>
+          </ion-grid>
+
+
+        </p>
+        <p class="gotham font-weight-600 txt-grey margin-bottom-8 white-space-initial">
+          {{ticket.block?ticket.block+' - ':''}}{{ticket.door}} {{ticket.propertyName}} - {{ticket.propertyLocality}}
+        </p>
+
+        <ion-badge *ngIf="ticket.jobStartTime"
+          class="gotham font-weight-600 date-bedge-color padding-bottom-3 padding-top-6" mode="md">
+          {{ticket.jobDate | date:'dd MMM yyyy'}} {{ticket.jobStartTime | date:'hh:mm a'}}
+        </ion-badge>
+        <ion-badge class="gotham font-weight-600 padding-top-5" [ngClass]="{'margin-left-20': ticket.jobStartTime}"
+          color="{{ticket.status}}" mode="md">
+          {{ticket.status == 'in-progress' ? transService.getTranslatedData('ticket.in-progress') : ticket.status}}
+        </ion-badge>
+      </ion-label>
+    </ion-item>
+  </ion-list>
+
+  <ion-infinite-scroll [hidden]="disableInfiniteScroll" threshold="5px" (ionInfinite)="searchTicket($event)">
+    <ion-infinite-scroll-content loadingSpinner="bubbles"
+      loadingText="{{transService.getTranslatedData('Loading more data...')}}">
+    </ion-infinite-scroll-content>
+  </ion-infinite-scroll>
+</ion-content>

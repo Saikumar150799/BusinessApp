@@ -1,0 +1,99 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="{{transService.getCurrentDirection()==='rtl'? 'end':'start'}}">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+    <ion-title class="{{transService.getCurrentDirection()==='rtl'?'':'padding-left-0'}}">
+      {{transService.getTranslatedData('Your Invoices')}}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div *ngIf="!emptyInvoice">
+    <div class="bg-white margin-bottom-10" *ngIf="invoices?.totalAmount > 0">
+      <ion-item lines="none">
+        <ion-col>
+          <p class="txt-slate-grey font-14 gotham margin-bottom-3">
+            {{transService.getTranslatedData('Total Expenses')}}</p>
+          <p
+            class="gotham-medium margin-top-10 font-16 font-weight-600 margin-bottom-5 dark-grey direction-ltr {{transService.getCurrentDirection()==='rtl'?'text-align-end':'text-align-start'}}">
+            {{alertService.getNumberFormat(invoices.totalAmount)}}</p>
+        </ion-col>
+      </ion-item>
+    </div>
+
+    <div *ngIf="dueInvoices.length > 0" class="bg-white margin-bottom-10">
+      <ion-item lines="full" *ngFor="let invoice of dueInvoices">
+        <ion-col size="10">
+          <p class="txt-slate-grey font-14 display-flex align-items-center gotham margin-bottom-3">
+            {{invoice.itemDetails[0].product?.name}} 
+            <ion-badge *ngIf="invoice.itemDetails.length > 1" class="margin-left-10 padding-top-2 padding-bottom-2 padding-left-10 padding-right-10">+{{invoice.itemDetails.length - 1}}</ion-badge></p>
+          <p
+            class="gotham-medium margin-top-10 font-16 margin-bottom-5 dark-grey direction-ltr {{transService.getCurrentDirection()==='rtl'?'text-align-end':'text-align-start'}}">
+            {{alertService.getNumberFormat(invoice?.openingBalance)}}</p>
+        </ion-col>
+        <ion-col size="2" class="text-align-end">
+          <ion-badge class="badge-red">{{invoice?.status}}</ion-badge>
+        </ion-col>
+      </ion-item>
+    </div>
+
+    <div *ngIf="partialInvoices.length > 0" class="bg-white margin-bottom-10">
+      <ion-item lines="full" *ngFor="let invoice of partialInvoices">
+        <ion-col size="10">
+          <p class="txt-slate-grey font-14 gotham margin-bottom-3">
+            {{transService.getTranslatedData(invoice.itemDetails[0].product?.name)}}
+            <ion-badge *ngIf="invoice.itemDetails.length > 1" class="margin-left-10 padding-top-2 padding-bottom-2 padding-left-10 padding-right-10">+{{invoice.itemDetails.length - 1}}</ion-badge>
+          </p>
+          <p
+            class="gotham-medium margin-top-10 font-16 margin-bottom-5 dark-grey direction-ltr {{transService.getCurrentDirection()==='rtl'?'text-align-end':'text-align-start'}}">
+            {{alertService.getNumberFormat(invoice?.openingBalance)}}</p>
+        </ion-col>
+        <ion-col size="2" class="text-align-end">
+          <ion-badge class="badge-oragne">{{invoice?.status}}</ion-badge>
+        </ion-col>
+      </ion-item>
+    </div>
+
+    <div *ngIf="paidInvoices.length > 0" class="bg-white margin-bottom-10">
+      <ion-item lines="full" *ngFor="let invoice of paidInvoices">
+        <ion-col size="10">
+          <p class="txt-slate-grey font-14 gotham margin-bottom-3">
+            {{transService.getTranslatedData(invoice.itemDetails[0].product?.name)}}
+            <ion-badge *ngIf="invoice.itemDetails.length > 1" class="margin-left-10 padding-top-2 padding-bottom-2 padding-left-10 padding-right-10">+{{invoice.itemDetails.length - 1}}</ion-badge>
+          </p>
+          <p
+            class="gotham-medium margin-top-10 font-16 margin-bottom-5 dark-grey direction-ltr {{transService.getCurrentDirection()==='rtl'?'text-align-end':'text-align-start'}}">
+            {{alertService.getNumberFormat(invoice?.totalAmount)}}</p>
+        </ion-col>
+        <ion-col size="2" class="text-align-end">
+          <ion-badge class="badge-green">{{invoice?.status}}</ion-badge>
+        </ion-col>
+      </ion-item>
+    </div>
+  </div>
+
+  <div *ngIf="emptyInvoice">
+    <p class="center-text margin-top-10">{{transService.getTranslatedData('No invoices found')}}</p>
+  </div>
+</ion-content>
+
+<ion-footer class="margin-0 padding-0 shadow-top" mode="ios">
+  <ion-toolbar>
+    <ion-item lines="full" *ngIf="invoices?.totalDueAmount > 0">
+      <ion-col>
+        <p class="txt-slate-grey font-14 gotham margin-bottom-3">
+          {{transService.getTranslatedData('Outstanding Expenses')}}</p>
+        <p
+          class="gotham-medium margin-top-10 font-16  font-weight-600 margin-bottom-5 dark-grey direction-ltr {{transService.getCurrentDirection()==='rtl'?'text-align-end':'text-align-start'}}">
+          {{alertService.getNumberFormat(invoices?.totalDueAmount)}}</p>
+      </ion-col>
+    </ion-item>
+    <div class="display-flex justify-center">
+      <ion-button (click)="sign()"
+      class="height-50 font-16 gotham-medium width-95-percent ion-item-shadow-none text-transform-capitalize margin-top-15 margin-bottom-20"
+      expand="full" color="primary">
+      {{transService.getTranslatedData("Sign & Accept")}}</ion-button>
+  </div>
+  </ion-toolbar>
+</ion-footer>

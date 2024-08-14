@@ -1,0 +1,124 @@
+<ion-header>
+  <ion-toolbar color="primary" >
+    <ion-buttons *ngIf="flow !='edit'" slot="{{transService.getCurrentDirection()==='rtl'? 'end':'start'}}">
+      <ion-back-button ></ion-back-button>
+    </ion-buttons>
+    <ion-title class="{{transService.getCurrentDirection()==='rtl'?'':'padding-left-0'}}">
+      {{transService.getTranslatedData('Check-Out')}}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="padding-16 bg-white">
+    <ion-label class="gotham-medium">{{transService.getTranslatedData('Unit Check list')}}</ion-label>
+    <p class="gotham txt-slate-grey font-14 line-height-18 margin-bottom-0">{{transService.getTranslatedData('Please inspect the inventory and fittings before tenant leave')}}</p>
+  </div>
+
+  <div *ngIf="flow !='edit'">
+    <div *ngIf="formData.items?.length > 0">
+      <ion-list>
+        <div *ngFor="let item of formData.items" class="border-top-1-light-grey padding-bottom-20">
+          <ion-radio-group >
+            <ion-list-header>
+              <ion-label class="font-14 dark-grey gotham-medium">{{item.name}}</ion-label>
+              <ion-label class="font-14 dark-grey gotham-medium padding-right-16">{{transService.getTranslatedData('Quantity - ')}} {{item.quantity}}</ion-label>
+            </ion-list-header>
+
+            <!-- <ion-row  radio-group >
+              <ion-col  *ngFor="let option of item?.options" class="padding-0">
+                <ion-item lines="none" class="ion-item border-1-light-gray">
+                  <ion-label class="margin-0 gotham txt-slate-grey font-14">{{option.name}}</ion-label>
+                  <ion-radio color="secondary"   class="margin-right-5 margin-top-0 margin-bottom-0 ion-radio" slot="start" (ionSelect)="handleRadioChange(option,item)" [value]="option._id" ></ion-radio>
+                </ion-item>
+              </ion-col>
+            </ion-row> -->
+            <ion-grid>
+            <ion-row class="full-width">
+              <ion-list class="full-width">
+                <ion-radio-group class="display-flex flex-wrap-wrap" >
+                  <ion-item
+                    lines="none"
+                    class="ion-item border-1-light-gray border-radius-5 margin-bottom-10 padding-left-5 padding-right-5 padding-top-0 padding-bottom-0 margin-right-10"
+                    *ngFor="let option of item?.options"
+                  >
+                    <ion-label class="margin-0 gotham txt-slate-grey font-14">{{Options[option.name] || option.name}}</ion-label>
+                    <ion-radio color="secondary" [checked]="option.selected"  (ionSelect)="handleRadioChange(option,item)"  class="margin-right-5 margin-top-0 margin-bottom-0 ion-radio" slot="start" [value]="option._id"></ion-radio>
+                  </ion-item>
+            
+                </ion-radio-group>
+              </ion-list>
+            </ion-row>
+          </ion-grid>
+          
+          <!-- <ion-grid>
+            <ion-row >
+              <ion-col *ngFor="let option of item?.options" class="padding-0"><ion-item lines="none" class="ion-item border-1-light-gray">
+                <ion-label class="margin-0 gotham txt-slate-grey font-14">{{option.name}}</ion-label>
+                <ion-radio color="secondary"   class="margin-right-5 margin-top-0 margin-bottom-0 ion-radio" slot="start" (ionSelect)="handleRadioChange(option,item)" [value]="option._id" ></ion-radio>
+              </ion-item> </ion-col>
+            </ion-row>
+          </ion-grid>         -->
+          </ion-radio-group>
+          <div *ngIf="item?.handover?.type==='accept'" (click)="addPhoto(item);">
+            <a class="padding-left-16 underline-text gotham font-14"> {{transService.getTranslatedData( item?.handover?.files.length > 0 ? 'View Photo' : 'Add Photo')}}</a>
+          </div>
+          <div *ngIf="item?.handover?.type!='accept' && item?.handover?.files.length > 0" (click)="presentAddNote(item)">
+            <a class="padding-left-16 underline-text gotham font-14"> {{transService.getTranslatedData('View')}}</a>
+          </div>
+        </div>
+      </ion-list>
+    </div>
+
+    <ion-list *ngIf="terms.length > 0">
+      <div *ngFor="let term of terms; let i = index" lines="none">
+        <div class="display-flex align-items-start padding-16">
+          <div class="margin-right-10">
+            <ion-checkbox color="secondary check-box" [(ngModel)]="termCheckboxes[i]"></ion-checkbox>
+          </div>
+          <div [innerHTML]="term" class="gotham font-14 terms-conditions">
+          </div>
+        </div>
+      </div>
+    </ion-list>
+
+    <div *ngIf="emptyForm">
+      <p class="center-text">{{transService.getTranslatedData('No checklist found')}}</p>
+    </div>
+  </div>
+
+  <div *ngIf="flow ==='edit' && editItem" class="border-top-1-light-grey padding-bottom-20">
+    <ion-list class="full-width">
+      <ion-list-header>
+        <ion-label class="font-14 dark-grey gotham-medium">{{editItem.name}}</ion-label>
+        <ion-label class="font-14 dark-grey gotham-medium padding-right-16">{{transService.getTranslatedData('Quantity - ')}} {{editItem.quantity}}</ion-label>
+      </ion-list-header>
+      <ion-radio-group class="display-flex ion-justify-content-between flex-wrap-wrap  padding-left-16 padding-right-16 margin-bottom-10" [value]="">
+        <ion-item
+          lines="none"
+          class="ion-item border-1-light-gray border-radius-5 padding-left-5 padding-right-5 margin-bottom-10 padding-top-0 padding-bottom-0"
+          *ngFor="let option of editItem?.options"
+        >
+          <ion-label class="margin-0 gotham txt-slate-grey font-14">{{Options[option.name] || option.name}}</ion-label>
+          <ion-radio color="secondary"  [checked]="option.selected" (ionSelect)="handleRadioChange(option,editItem)"  class="margin-right-5 margin-top-0 margin-bottom-0 ion-radio" slot="start" [value]="option._id"></ion-radio>
+        </ion-item>
+  
+      </ion-radio-group>
+      <div *ngIf="editItem?.handover?.type==='accept'" (click)="addPhoto(editItem);" class="margin-bottom-10 margin-top-10">
+        <a class="padding-left-16 underline-text gotham font-14"> {{transService.getTranslatedData( editItem?.handover?.files.length > 0 ? 'View Photo' : 'Add Photo')}}</a>
+      </div>
+      <div *ngIf="editItem?.handover?.type!='accept' && editItem?.handover?.files.length > 0" (click)="presentAddNote(editItem)" class="margin-bottom-10 margin-top-10">
+        <a class="padding-left-16 underline-text gotham font-14"> {{transService.getTranslatedData('View')}}</a>
+      </div>
+    </ion-list>
+</div>
+</ion-content>
+
+<ion-footer >
+  <ion-toolbar >
+    <ion-row class="justify-center margin-top-20">
+      <ion-button [disabled]="!checkValidation() || emptyForm" class="full-width text-transform-math-auto height-50 font-16  margin-bottom-20" (click)="navigateToSummary()">
+        {{transService.getTranslatedData('Confirm')}}
+      </ion-button>
+    </ion-row>
+  </ion-toolbar>
+</ion-footer>

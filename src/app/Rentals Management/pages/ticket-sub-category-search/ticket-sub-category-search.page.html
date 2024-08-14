@@ -1,0 +1,33 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="end">
+      <ion-button (click)="closeModal(false)">
+        <ion-icon name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>{{transService.getTranslatedData('Select Ticket Sub Category')}}</ion-title>
+  </ion-toolbar>
+    <ion-searchbar [(ngModel)]="subCategorySearchText" placeholder="{{transService.getTranslatedData('Search')}}" debounce="300"
+      (ngModelChange)="searchSubCategory()" class="padding-0">
+    </ion-searchbar>
+</ion-header>
+
+<ion-content>
+  <!-- <div class="center-text margin-top-10" [hidden]="!loading">
+      <ion-spinner></ion-spinner>
+    </div> -->
+  <p class="gotham center-text" *ngIf="displayedSubCategories.length==0">
+    {{transService.getTranslatedData('No Sub-Category Available')}}</p>
+  <ion-list>
+    <ion-radio-group [(ngModel)]="selectedSubCategory.ticketSubCategory">
+      <ion-item *ngFor="let category of displayedSubCategories">
+        <ion-label>{{category.name}}</ion-label>
+        <ion-radio value="{{category._id}}" slot="end" (click)="selectSubCategory(category)"></ion-radio>
+      </ion-item>
+    </ion-radio-group>
+  </ion-list>
+  <ion-infinite-scroll threshold="5px" (ionInfinite)="loadData($event)">
+    <ion-infinite-scroll-content loadingSpinner="bubbles" loadingText="{{transService.getTranslatedData('Loading more data...')}}">
+    </ion-infinite-scroll-content>
+  </ion-infinite-scroll>
+</ion-content>

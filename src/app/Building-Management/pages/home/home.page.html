@@ -1,0 +1,159 @@
+<ion-header no-border>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-buttons slot="end" expand="full" class="ion-button" (click)="openScanner()">
+      <ion-button style="color: black">
+        <ion-icon src="/assets/svg-icons/qr-code.svg" class="icon-30"> </ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+  <div class="background-yellow home-top-container">
+    <span class="font-22 gotham">{{transService.getTranslatedData('home.string1')}} {{userDetails?.firstName}}
+      {{userDetails?.lastName}}</span>
+    <br>
+    <span class="font-14 gotham" style="margin-top:5px">{{transService.getTranslatedData('home.string2')}}</span>
+  </div>
+  <ion-card style="margin-top: -45px">
+    <ion-card-content class="padding-6">
+      <ion-grid>
+        <ion-row>
+          <ion-col>
+            <p class="gotham font-weight-600 txt-grey">{{transService.getTranslatedData('home.open')}}</p>
+            <p class="font-18 gotham">{{ticketStats?.ticket['open']||0}}</p>
+          </ion-col>
+          <ion-col>
+            <p class="gotham font-weight-600 txt-grey">{{transService.getTranslatedData('home.in-progress')}}</p>
+            <p class="font-18 gotham">{{ticketStats?.ticket['in-progress']||0}}</p>
+          </ion-col>
+          <!-- <ion-col>
+            <p class="gotham font-weight-600 txt-grey">{{transService.getTranslatedData('home.resolved')}}</p>
+            <p class="font-18 gotham">20</p>
+          </ion-col> -->
+        </ion-row>
+      </ion-grid>
+    </ion-card-content>
+  </ion-card>
+
+
+  <ion-grid>
+    <!-- <br>
+    <span class="font-18 gotham" style="margin-top:5px; padding-left:15px">Add/Approve</span>
+    <br> -->
+    <br>
+    <ion-row class="border-top">
+      <ion-col size="4" class="center-text {{route.borderClass}}" *ngFor="let route of routing" (click)="navigate(route.url)">
+        <ion-icon class="tile-option margin-bottom-10 svg-color-primary" src="/assets/svg-icons/{{route.src}}">
+        </ion-icon>
+        <p class="font-14 gotham margin-bottom-20">{{transService.getTranslatedData(route.title)}}</p>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+  <!-- <ion-grid>
+    <br>
+    <span class="font-18 gotham" style="margin-top:5px; padding-left:15px">Add/Approve</span>
+    <br>
+    <br>
+    <ion-row>
+      <ion-col size="4" class="padding-0">
+        <ion-card class="center-text margin-5" (click)="navigate('create-ticket')" style="display: grid">
+          <img class="tile-option margin-bottom-10 " style="justify-self: center" src="/assets/icon/raise-ticket.png">
+          <p class="font-14 gotham margin-bottom-20">Raise ticket</p>
+          <img src="assets/icon/add-green.png" class="icon-20 border-radius-10"
+            style="position: absolute; right: 2px; bottom: 2px;" />
+
+        </ion-card>
+      </ion-col>
+      <ion-col size="4" class="padding-0">
+        <ion-card class="center-text margin-5" style="display: grid" (click)="openCreateNoticeModal()">
+          <img class="tile-option margin-bottom-10 " style="justify-self: center" src="/assets/icon/create-notice.png">
+          <p class="font-14 gotham margin-bottom-20">Create notice</p>
+          <img src="assets/icon/add-green.png" class="icon-20 border-radius-10"
+            style="position: absolute; right: 2px; bottom: 2px;" />
+        </ion-card>
+      </ion-col>
+
+      <ion-col size="4" class="padding-0">
+        <ion-card class="center-text margin-5" style="display: grid" (click)="navigate('user-approval')">
+          <img class="tile-option margin-bottom-10 " style="justify-self: center" src="/assets/icon/approval.png">
+          <p class="font-14 gotham margin-bottom-20">User</p>
+          <img src="assets/icon/add-green.png" class="icon-20 border-radius-10"
+            style="position: absolute; right: 2px; bottom: 2px;" />
+        </ion-card>
+
+      </ion-col>
+    </ion-row>
+    <br>
+    <span class="font-18 gotham" style="margin-top:5px; padding-left:15px">View</span>
+    <br>
+    <br>
+    <ion-row>
+      <ion-col size="4" class="padding-0">
+        <ion-card class="center-text margin-5" style="display: grid" (click)="openCreateNoticeModal()">
+          <img class="tile-option margin-bottom-10 " style="justify-self: center" src="/assets/icon/ticket-history.png">
+          <p class="font-14 gotham margin-bottom-20">Tickets</p>
+        </ion-card>
+      </ion-col>
+      <ion-col size="4" class="padding-0">
+        <ion-card class="center-text margin-5" style="display: grid" (click)="openCreateNoticeModal()">
+          <img class="tile-option margin-bottom-10 " style="justify-self: center" src="/assets/icon/communications.png">
+          <p class="font-14 gotham margin-bottom-20">Discussion</p>
+        </ion-card>
+
+      </ion-col>
+      <ion-col size="4" class="padding-0">
+        <ion-card class="center-text margin-5" style="display: grid" (click)="openCreateNoticeModal()">
+          <img class="tile-option margin-bottom-10 " style="justify-self: center" src="/assets/icon/calendar.png">
+          <p class="font-14 gotham margin-bottom-20">Calendar</p>
+        </ion-card>
+
+      </ion-col>
+    </ion-row>
+  </ion-grid> -->
+
+  <br>
+  <span class="font-18 gotham"
+    style="margin-top:5px; padding-left:15px">{{transService.getTranslatedData('home.tasks-for-today')}}<span
+      class="gotham font-weight-600 txt-grey" *ngIf="ticketStats">{{ticketStats.todo.length}}</span></span>
+  <br>
+  <br>
+
+  <ion-list class="border-top padding-bottom-0">
+    <ion-item *ngFor="let ticket of ticketStats?.todo" [routerLink]="['/building-management-ticket-details']"
+      [queryParams]="{ticketId: ticket._id}" detail="true" lines="none">
+      <ion-label class="margin-0">
+        <p class="gotham-bold txt-grey margin-bottom-8 padding-top-2" text-wrap>
+          <ion-grid fixed class="padding-0">
+            <ion-row class="padding-0">
+              <ion-col class="padding-0" size="8">
+                <span class="float-left">#{{ticket.uid}}
+                  - </span>
+                <span class=""> {{ticket.ticketCategory}}</span>
+              </ion-col>
+              <ion-col class="padding-0">
+                <span class="float-right">{{ticket.createdAt | agoFilter}}</span>
+              </ion-col>
+            </ion-row>
+          </ion-grid>
+        <p id="margin-top-bottom-5" class="gotham margin-bottom-8 font-weight-600 margin-bottom-5 txt-grey">For -
+          {{ticket.ticketBelongsTo == 'Home' ? 'Unit' : ticket.ticketBelongsTo}}</p>
+        <p>
+          <ion-badge class="gotham font-weight-600 padding-top-7 date-bedge-color" mode="md">
+            {{ticket.jobDate | date:'dd MMM yyyy'}} {{ticket.jobStartTime | date:'hh:mm a'}}
+          </ion-badge>
+          <ion-badge class="gotham font-weight-600 margin-left-20 padding-top-6" color="{{ticket.status}}" mode="md">
+            {{ticket.status == 'in-progress' ? 'In Progress' : ticket.status}}
+          </ion-badge>
+        </p>
+      </ion-label>
+    </ion-item>
+  </ion-list>
+
+  <span class="font-14 gotham center-text display-block margin-top-10" *ngIf="ticketStats?.todo.length == 0">
+    {{transService.getTranslatedData('home.no-task-found')}}
+  </span>
+</ion-content>

@@ -1,0 +1,31 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title [ngClass]="{'padding-0': translateService.getCurrentDirection()==='rtl'}">
+      {{translateService.getTranslatedData("Picture")}}</ion-title>
+    <ion-buttons slot="{{translateService.getCurrentDirection()==='rtl'?'start':'end'}}">
+      <ion-button (click)="dismiss()">
+        <ion-icon slot="icon-only" name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+
+
+  <!-- <ion-item lines="none" color="primary" class="margin-padding-zero ">
+    <span class="font-weight-600 font-19  padding-left-10">Picture</span>
+    <ion-buttons slot="end">
+      <ion-button (click)="dismiss()">
+        <ion-icon slot="icon-only" name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-item> -->
+
+</ion-header>
+
+<ion-content>
+  <div class="padding-30">
+    <img [src]="device.platform?.toLowerCase()=='ios'?this.domSanatice.bypassSecurityTrustUrl(image):image" style="max-width:100%;
+      max-height:10%;
+      width:auto;
+      height:auto;">
+  </div>
+</ion-content>

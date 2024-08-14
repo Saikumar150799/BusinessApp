@@ -1,0 +1,25 @@
+<ion-list class="padding-0">
+  <ion-radio-group [(ngModel)]="data.status">
+    <ion-list-header color="primary" class="justify-center gotham padding-0">Sort By</ion-list-header>
+    <ion-item lines="full">
+      <ion-label class="gotham" style="color: #666666;">All <span>({{data.countInformation.totalCount}})</span>
+      </ion-label>
+      <ion-radio (click)="close('all')" mode="md" value="all"></ion-radio>
+    </ion-item>
+    <ion-item lines="full">
+      <ion-label class="gotham" style="color: #666666;">Completed
+        <span>({{data.countInformation.completedCount}})</span></ion-label>
+      <ion-radio (click)="close('completed')" mode="md" value="completed"></ion-radio>
+    </ion-item>
+    <ion-item lines="full">
+      <ion-label class="gotham" style="color: #666666;">Ongoing <span>({{data.countInformation.ongoingCount}})</span>
+      </ion-label>
+      <ion-radio (click)="close('ongoing')" mode="md" value="ongoing"></ion-radio>
+    </ion-item>
+    <ion-item lines="full">
+      <ion-label class="gotham" style="color: #666666;">Upcomming <span>({{data.countInformation.upcomingCount}})</span>
+      </ion-label>
+      <ion-radio (click)="close('upcoming')" mode="md" value="upcoming"></ion-radio>
+    </ion-item>
+  </ion-radio-group>
+</ion-list>

@@ -1,0 +1,28 @@
+.margin-padding-zero button .button-native {
+  padding: 0px !important;
+}
+toolbar-container {
+  background: #17375e;
+}
+.icon-position {
+  float: right;
+  margin-top: 10px;
+  margin-bottom: 9px;
+}
+.list-md {
+  padding-bottom: 0 !important;
+}
+
+ion-content {
+  --background: #ecebe6 !important;
+}
+// .active-status {
+//   color: #1bb293 !important;
+// }
+
+.rejected-active-status {
+  color: #c4153b !important;
+}
+.disabled-status {
+  color: grey !important;
+}

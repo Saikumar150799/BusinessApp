@@ -1,0 +1,121 @@
+.welcome-card ion-img {
+  max-height: 35vh;
+  overflow: hidden;
+}
+
+ion-toolbar {
+  border: none !important;
+  box-shadow: none !important;
+}
+
+.thehousemonk-ion-toolbar {
+  background-color: #feb900 !important;
+  color: #000000 !important;
+}
+
+.default-ion-toolbar {
+  background-color: var(--ion-color-primary) !important;
+  color: #ffffff !important;
+}
+
+.background-thehousemonk {
+  background-color: #feb900 !important;
+  color: #000000 !important;
+}
+
+.default-background {
+  background-color: var(--ion-color-primary) !important;
+  color: #ffffff !important;
+}
+
+.home-top-container {
+  height: 100px;
+}
+
+.font-22 {
+  font-size: 22px !important;
+}
+
+ion-item {
+  // border-top: 1px solid lightgray;
+  border-bottom: 1px solid lightgray;
+}
+
+ion-label {
+  padding-top: 10px !important;
+  padding-bottom: 10px !important;
+}
+
+ion-list {
+  padding-top: 0px !important;
+}
+
+.margin-bottom-20 {
+  margin-bottom: 20px !important;
+}
+.margin-bottom-10 {
+  margin-top: 10px !important;
+}
+
+.default-ion-menu-button {
+  color: #ffffff !important;
+}
+
+.thehousemonk-ion-menu-button {
+  color: #000000 !important;
+}
+
+ion-card-content {
+  background-color: white !important;
+}
+
+ion-toolbar {
+  --background: transparent;
+  --ion-color-base: transparent !important;
+}
+ion-badge {
+  --padding: 4px !important;
+  --padding-top: 5px !important;
+}
+
+p {
+  margin: 0px !important;
+  padding: 0px !important;
+}
+
+#margin-top-bottom-5 {
+  margin-top: 5px !important;
+  margin-bottom: 5px !important;
+}
+.border-top {
+  border-top: 1px solid lightgray;
+}
+.border-1 {
+  border: 1px solid lightgray !important;
+}
+.border-bottom {
+  border-bottom: 1px solid lightgray;
+}
+
+.border-right {
+  border-right: 1px solid lightgray !important;
+}
+
+.border-left {
+  border-left: 1px solid lightgray !important;
+}
+
+.border-right {
+  border-right: 1px solid lightgray !important;
+}
+.border-left {
+  border-left: 1px solid lightgray !important;
+}
+
+.border-top {
+  border-top: 1px solid lightgray !important;
+}
+
+.border-bottom {
+  border-bottom: 1px solid lightgray !important;
+}

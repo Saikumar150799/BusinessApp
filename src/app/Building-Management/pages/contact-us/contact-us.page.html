@@ -1,0 +1,32 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+    <ion-title class="gotham-bold center-text">{{transService.getTranslatedData('contact-us.title')}}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="grey-back full-width max-available-height">
+    <ion-grid>
+      <p class="txt-medium margin-bottom-20 gotham-medium center-text">
+        {{transService.getTranslatedData('contact-us.note')}}</p>
+      <ion-row class="padding-20 ">
+        <ion-col>
+          <textarea [(ngModel)]="contactUsData.data.feedback" no-border rows="10"
+            class="font-12 full-width txt-warm-grey gotham border-0 padding-20 "
+            placeholder="{{transService.getTranslatedData('contact-us.placeholder')}}" autofocus>
+                </textarea>
+          <ion-button (click)="sendContactUsRequest()" class="full-button margin-0 height-50 margin-top-20"
+            color="danger">
+            <p class="gotham font-14 margin-padding-zero">{{transService.getTranslatedData('contact-us.submit-button')}}
+            </p>
+          </ion-button>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+
+  </div>
+
+</ion-content>

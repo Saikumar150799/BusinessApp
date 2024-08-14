@@ -1,0 +1,42 @@
+sup {
+  color: red !important;
+  top: -0.1em !important;
+  font-size: 115% !important;
+}
+ion-button {
+  --box-shadow: none;
+}
+.red-border {
+  border: 1px solid #f04141 !important;
+}
+ion-back-button {
+  --icon-font-size: x-large !important;
+}
+.opecity-1 {
+  opacity: 1 !important;
+}
+.native-input[disabled].sc-ion-input-md {
+  opacity: 1 !important;
+}
+
+.ion-input {
+  --padding-bottom: 0px !important;
+  --padding-top: 0px !important;
+}
+ion-item {
+  
+ 
+  --inner-padding-bottom: 4px;
+  --inner-padding-end: 0px !important;
+  --inner-padding-start: 0px !important;
+  --inner-padding-top: 4px;
+  
+  --padding-bottom: 4px;
+  --padding-end: 0px !important;
+  --padding-start: 0px !important;
+  --padding-top: 4px;
+}
+
+.rtl-label-floating {
+  transform: translate3d(25%, 50%, 0) scale(0.75) !important;
+}

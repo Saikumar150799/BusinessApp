@@ -1,0 +1,98 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="{{transService.getCurrentDirection()==='rtl'? 'end':'start'}}">
+     <ion-icon class="icon-25 margin-left-10 margin-right-10" name="arrow-back"  (click)="goBack()" ></ion-icon>
+    </ion-buttons>
+    <ion-title class="padding-0">{{transService.getTranslatedData(flow==='document' ? 'Upload ID' : 'Add Image')}}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div *ngIf="flow==='document'">
+    <div class="padding-16">
+      <ion-label class="gotham">{{transService.getTranslatedData('Take a Picture of your ID card on both sides')}}</ion-label>
+      <p class="gotham txt-slate-grey font-14 line-height-18">{{transService.getTranslatedData('Note: We recommend you upload the same ID proof submitted during your booking process.')}}</p>
+    </div>
+    <ion-list>
+      <ion-item *ngFor="let url of images;let i = index" lines="none" class="margin-bottom-15">
+        <ion-chip class="delete-chip" (click)="removeImage(i)">
+          <ion-icon name="trash" mode="ios" class="icon-20 white-color margin-0"></ion-icon>
+          <ion-label class="gotham-medium">{{transService.getTranslatedData('Delete')}}</ion-label>
+        </ion-chip>
+        <img class="width-100-percent height-200 border-radius-10"
+        [src]="webview.convertFileSrc(url) | imageHelper">
+      </ion-item>
+    </ion-list>
+  </div>
+
+  <div *ngIf="flow === 'camera'">
+    <div class="padding-16">
+      <ion-label class="gotham">{{transService.getTranslatedData('Please take a picture of yourself')}}</ion-label>
+      <p class="gotham txt-slate-grey font-14 line-height-18">{{transService.getTranslatedData('This is to verify your identity with the Photo ID you have provided')}}</p>
+    </div>
+    <div *ngFor="let url of selfie" class="display-flex justify-center">
+        <img class="selfie"
+        [src]="webview.convertFileSrc(url) | imageHelper">
+    </div>
+  </div>
+</ion-content>
+
+<ion-footer class="margin-0 padding-0" *ngIf="flow === 'document'">
+  <ion-toolbar *ngIf="images.length != 2">
+    <ion-row>
+      <ion-col [hidden]="images.length > 0">
+        <div class="display-flex justify-center">
+          <ion-button [disabled]="images.length > 0"
+            class="height-50 font-16 gotham-medium width-95-percent ion-item-shadow-none text-transform-capitalize margin-top-15 margin-bottom-20"
+            color="primary" fill="outline" (click)="skip()">
+            {{transService.getTranslatedData("Skip")}}</ion-button>
+        </div>
+      </ion-col>
+      <ion-col>
+        <div class="display-flex justify-center">
+          <ion-button
+            class="height-50 font-16 gotham-medium width-95-percent ion-item-shadow-none text-transform-capitalize margin-top-15 margin-bottom-20"
+            color="primary" (click)="uploadDocument()">
+            {{transService.getTranslatedData("Take Picture")}}</ion-button>
+        </div>
+      </ion-col>
+    </ion-row>
+  </ion-toolbar>
+  <ion-toolbar *ngIf="images.length === 2">
+    <ion-row class="justify-center margin-top-20">
+      <ion-button class="full-width text-transform-math-auto height-50 font-16  margin-bottom-20"  (click)="skip()">
+        {{transService.getTranslatedData('Next')}}
+      </ion-button>
+    </ion-row>
+  </ion-toolbar>
+</ion-footer>
+
+<ion-footer *ngIf="flow === 'camera'">
+  <ion-toolbar *ngIf="selfie.length === 0">
+    <ion-row class="justify-center margin-top-20">
+      <ion-button class="full-width text-transform-math-auto height-50 font-16  margin-bottom-20"  (click)="openCamera()">
+        {{transService.getTranslatedData('Add Picture')}}
+      </ion-button>
+    </ion-row>
+  </ion-toolbar>
+  <ion-toolbar *ngIf="selfie.length > 0">
+    <ion-row>
+      <ion-col>
+        <div class="display-flex justify-center">
+          <ion-button
+            class="height-50 font-16 gotham-medium width-95-percent ion-item-shadow-none text-transform-capitalize margin-top-15 margin-bottom-20"
+            color="primary" fill="outline" (click)="openCamera()">
+            {{transService.getTranslatedData("Change")}}</ion-button>
+        </div>
+      </ion-col>
+      <ion-col>
+        <div class="display-flex justify-center">
+          <ion-button
+            class="height-50 font-16 gotham-medium width-95-percent ion-item-shadow-none text-transform-capitalize margin-top-15 margin-bottom-20"
+            color="primary" (click)="completeVerfication()">
+            {{transService.getTranslatedData("Proceed")}}</ion-button>
+        </div>
+      </ion-col>
+    </ion-row>
+  </ion-toolbar>
+</ion-footer>

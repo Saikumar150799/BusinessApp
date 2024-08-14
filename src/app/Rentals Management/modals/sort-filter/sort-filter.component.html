@@ -1,0 +1,37 @@
+<ion-row>
+  <ion-list>
+    <ion-radio-group [(ngModel)]="bookingFilter.sort[0]">
+      <ion-item
+        lines="none"
+        (click)="selectSortValue('createdAt')"
+      >
+        <ion-label>Booked on • oldest first</ion-label>
+        <ion-radio slot="start" value="createdAt"></ion-radio>
+      </ion-item>
+
+      <ion-item
+        lines="none"
+        (click)="selectSortValue('-createdAt')"
+      >
+        <ion-label>Booked on • Newest first</ion-label>
+        <ion-radio slot="start" value="-createdAt"></ion-radio>
+      </ion-item>
+
+      <ion-item
+        lines="none"
+        (click)="selectSortValue('startDate')"
+      >
+        <ion-label>Booking Start • oldest first</ion-label>
+        <ion-radio slot="start" value="startDate"></ion-radio>
+      </ion-item>
+
+      <ion-item
+        lines="none"
+        (click)="selectSortValue('-startDate')"
+      >
+        <ion-label>Booking Start • Newest first</ion-label>
+        <ion-radio slot="start" value="-startDate"></ion-radio>
+      </ion-item>
+    </ion-radio-group>
+  </ion-list>
+</ion-row>

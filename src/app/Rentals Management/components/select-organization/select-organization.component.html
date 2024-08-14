@@ -1,0 +1,19 @@
+<ion-content mode="md">
+  <ion-toolbar mode="md" class="padding-10">
+    <ion-title class="center-text margin-top-10 margin-bottom-10">
+      {{translateService.getTranslatedData("Select a platform")}}</ion-title>
+    <p class="margin-top-0 margin-right-4 margin-left-4 margin-bottom-5 center-text">
+      {{translateService.getTranslatedData("It seems you are part of multiple organizations, please select an organization to proceed.")}}
+    </p>
+  </ion-toolbar>
+  <ion-list class="padding-10 padding-top-0 margin-0" mode="md">
+    <ion-item lines="none" mode="md" *ngFor="let organisation of data.organizations">
+      <ion-card class="margin-6 margin-bottom-7 width-100-percent" button="true" mode="md" (click)="close(organisation)">
+        <ion-card-header mode="md">
+          <ion-card-title color="primary" class="font-14 line-height-15">{{organisation?.organizationName}}
+          </ion-card-title>
+        </ion-card-header>
+      </ion-card>
+    </ion-item>
+  </ion-list>
+</ion-content>

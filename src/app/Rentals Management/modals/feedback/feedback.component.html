@@ -1,0 +1,32 @@
+<ion-content>
+  <div class="border-bottom-grey-1 padding-16">
+    <ion-row class="ion-justify-content-center padding-0 ">
+      <ion-col size="6" class="ion-align-items-center padding-0 ion-justify-content-center margin-top-20 center-text">
+        <ion-icon color="success" src="/assets/svg-icons/sucess-light-alert.svg"
+          style="height: 50px !important; width: 50px !important;border: 10px solid #E4F3E5;border-radius: 50%;">
+        </ion-icon>
+      </ion-col>
+    </ion-row>
+    <ion-row class="ion-justify-content-center padding-0 margin-top-8">
+      <ion-col class="success-modal-subheader-styles padding-0 center-text">
+        <ion-text class="font-18 gotham">{{transService.getTranslatedData('Checked-Out Successfully')}}</ion-text>
+        <p class="gotham txt-slate-grey font-16 margin">{{transService.getTranslatedData('Unit no : ')}} {{data?.address}}</p>
+      </ion-col>
+    </ion-row>
+  </div>
+
+  <div class="padding-16 margin-bottom-20">
+    <p class="font-14 gotham margin-top-5 txt-slate-grey center-text">{{transService.getTranslatedData('Rate the checkout experience')}}</p>
+    <rating [(ngModel)]="formData.star" readonly="false" id="rate_div" size="default" class="margin-auto">
+    </rating>
+    <ion-item class="margin-top-10 ion-item">
+      <ion-label position="floating" class="font-19  gotham">{{transService.getTranslatedData('Write if you have any feedback')}}</ion-label>
+      <ion-input inputmode="text" [(ngModel)]="formData.message"
+        class="margin-top-10 font-14 gotham" placeholder="{{transService.getTranslatedData('Write here')}}">
+      </ion-input>
+    </ion-item>
+  </div>
+  <div class="padding-left-15 padding-right-15">
+    <ion-button (click)="submitFeedback()" [disabled]="formData.star <= 0" expand="block" class="text-transform-capitalize margin-bottom-10 height-40">{{transService.getTranslatedData('Submit')}}</ion-button>
+  </div>
+</ion-content>

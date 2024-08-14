@@ -1,0 +1,40 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>{{translateService.getTranslatedData('Putting Ticket #' + ticket?.uid +' On Hold')}}</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="closeModal()">
+        <ion-icon slot="icon-only" name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="padding-16">
+    <ion-item class="ion-item">
+      <ion-label position="floating" class="font-15 txt-slate-grey">{{translateService.getTranslatedData('Please state the reason for putting this ticket on hold')}}</ion-label>
+      <ion-textarea rows="1" auto-grow  (ionChange)="handleChange()" [(ngModel)]="rejectionData.reason"></ion-textarea>
+    </ion-item>
+    <div>
+      <p class="font-13 txt-slate-grey text-align-end">{{translateService.getTranslatedData('No of Character: ')}} {{reasonCount}}</p>
+    </div>
+    <div>
+      <p class="font-12 light-red-txt margin-bottom-3">{{translateService.getTranslatedData('Please ensure your reason for rejection is clear and detailed.')}}</p>
+      <p class="font-12 light-red-txt margin-0">{{translateService.getTranslatedData('50 characters required.')}}</p>
+    </div>
+    <ion-item class="ion-item" lines="none">
+      <ion-label>{{translateService.getTranslatedData('Send this as external comment to tenant')}}</ion-label>
+      <ion-checkbox class="margin-right-10 margin-left-0 icon-20" mode="md" color="secondary" slot="start" [(ngModel)]="rejectionData.externalComments"></ion-checkbox>
+    </ion-item>
+  </div>
+</ion-content>
+
+<ion-footer>
+    
+  <div class="display-flex justify-center">
+    <ion-button [disabled]="reasonCount <= 50"
+    class="button-text height-45 full-width font-16 text-transform-capitalize ion-item-shadow-none margin-top-5 margin-bottom-5"
+    color="primary" (click)="ticketOnHold()">
+    {{translateService.getTranslatedData("Submit")}}</ion-button>
+  </div>
+</ion-footer>

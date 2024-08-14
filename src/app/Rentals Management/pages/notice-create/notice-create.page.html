@@ -1,0 +1,64 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+    <ion-title>{{transService.getTranslatedData('create-notice.title')}}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+
+  <div class="full-width max-available-height webkit-center">
+    <ion-list>
+      <ion-item>
+        <ion-icon class="icon-15" name="home"></ion-icon>
+        <ion-input [(ngModel)]="notice.noticeBelongsToName" (click)="openProjectSearchModal()" inputmode="text"
+          class="gotham  margin-left-10"
+          placeholder="{{transService.getTranslatedData('create-notice.select-project-title')}}">
+        </ion-input>
+        <ion-icon class="float-right" name="arrow-dropdown"></ion-icon>
+      </ion-item>
+
+      <ion-item>
+        <!-- <ion-label>Default Label</ion-label> -->
+        <ion-input [(ngModel)]="notice.title" inputmode="text" class="gotham "
+          placeholder="{{transService.getTranslatedData('create-notice.topic')}}"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-textarea [(ngModel)]="notice.body" rows='7' class="gotham "
+          placeholder="{{transService.getTranslatedData('create-notice.message')}}"></ion-textarea>
+      </ion-item>
+
+      <ion-item-divider class="grey-back">
+        <ion-label>
+          {{transService.getTranslatedData('create-notice.select-file')}}
+        </ion-label>
+      </ion-item-divider>
+
+      <!-- <ion-header no-border class="grey-back padding-top-bottom">
+        <ion-title class="center-text gotham-bold ">Upload file</ion-title>
+      </ion-header> -->
+
+      <div class="ticket-details-list  center-text">
+        <ion-icon class="font-70 " name="cloud-upload"></ion-icon><br>
+        <ion-button no-border color="light" (click)="fileSourceOption('')" style="color:black;">
+          {{transService.getTranslatedData('create-notice.add-picture')}}</ion-button>
+      </div>
+    </ion-list>
+    <ion-row class="width-80-percent margin-10 justify-center margin-10 margin-bottom-20">
+      <div *ngIf="images.length > 0">
+        <ion-item *ngFor="let url of images" lines='none' class="ion-image-item">
+          <ion-thumbnail class="margin-0 icon-90 image" (click)="openImage(webView.convertFileSrc(url))">
+            <ion-icon class="img-icon" (click)="removeImage()" color="danger" name="close-circle">
+            </ion-icon>
+            <ion-img src="{{webView.convertFileSrc(url)}}"></ion-img>
+          </ion-thumbnail>
+        </ion-item>
+      </div>
+    </ion-row>
+
+  </div>
+</ion-content>
+<ion-button [disabled]="!notice.discussionBelongsToRefId || !notice.title || !notice.body" size="large"
+  (click)="createNotice()" color="success">{{transService.getTranslatedData('create-notice.submit')}}</ion-button>
